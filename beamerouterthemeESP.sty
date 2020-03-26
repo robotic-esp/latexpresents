@@ -1,0 +1,128 @@
+\mode<presentation>
+%%% Background %%%
+\setbeamertemplate{background canvas}%
+{%
+    \ifbeamercolorempty[bg]{background canvas}%
+    {%
+    }%
+    {%
+        \color{bg}\vrule width\paperwidth height\paperheight
+    }%
+}%
+\setbeamertemplate{background}{}%
+
+
+%%% Header/Footer %%%
+\setbeamertemplate{headline}{}% - Rendered immediately after \begin{document} to calculate a height that is then used for the rest of the presentation.
+\setbeamertemplate{footline}{}% - Rendered immediately after \begin{document} to calculate a height that is then used for the rest of the presentation.
+\setbeamertemplate{page number in head/foot}[pagenumber]% - The ESP theme actually renders this in the right-sidebar, but makes use of this standard template to do so.
+    %[default] The default option is empty.
+    %[framenumber] This option inserts the current frame number.
+    %[totalframenumber] In addition to the current frame number, this option also shows the total number of frames.
+    %[appendixframenumber] This options replicates the behaviour of the appendixnumberbeamer package. In the main part before the \appendix command the current frame number and the total number of frames in the main part is displayed. In the appendix only the frame number within the appendix and the total number of frames in the appendix are shown.
+    %[pagenumber] Shows the current page number.
+    %[totalpagenumber] In addition to the current page number also the total page number is displayed.
+%Sections (not used):
+\setbeamertemplate{section in head/foot}{}%
+\setbeamertemplate{section in head/foot shaded}{}%[default][20]%[default][⟨percentage⟩]
+\setbeamertemplate{subsection in head/foot}{}%
+\setbeamertemplate{subsection in head/foot shaded}[default][20]%[default][⟨percentage⟩]
+\setbeamertemplate{subsubsection in head/foot}{}%
+\setbeamertemplate{subsubsection in head/foot shaded}[default][20]%[default][⟨percentage⟩]
+
+
+%%% Sidebars %%%
+%Make sidebars take up zero width (i.e., make the entire width available for content
+\setbeamersize{sidebar width left=0pt, sidebar width right=0pt}%
+% Left (logos at bottom):
+\setbeamertemplate{sidebar canvas left}{}%
+\setbeamertemplate{sidebar left}%
+{%
+%    \fbox{\Gm@lmargin{}}%\Gm@lmargin{} is a macro, not a LaTeX length
+    \vfill%
+    \hskip\espbeamer@border@left%
+    \mbox%
+    {%
+        \usebeamertemplate*{logo}%
+    }%
+    \vskip\espbeamer@border@bottom%
+}%
+% Right (bio photos at top and page number at bottom):
+\setbeamertemplate{sidebar canvas right}{}%
+\setbeamertemplate{sidebar right}%
+{%
+%    \llap{\fbox{\Gm@rmargin{}}}%\Gm@rmargin{} is a macro, not a LaTeX length
+    \ifbeamertemplateempty{bio}{}%
+    {%
+        \vskip\espbeamer@border@top%
+        \llap%
+        {%
+            \usebeamertemplate*{bio}%
+            \hskip\espbeamer@border@right%
+        }%
+    }%
+    \vfill%
+    \llap%
+    {%
+        \usebeamertemplate*{page number in head/foot}
+        \hskip\espbeamer@border@right%
+    }%
+    \vskip\espbeamer@border@bottom%
+}%
+%Sections (not used):
+\setbeamertemplate{section in sidebar}{}%
+\setbeamertemplate{section in sidebar shaded}{}%
+\setbeamertemplate{subsection in sidebar}{}%
+\setbeamertemplate{subsection in sidebar shaded}{}%
+\setbeamertemplate{subsubsection in sidebar}{}%
+\setbeamertemplate{subsubsection in sidebar shaded}{}%
+
+
+%%% Frame elements %%%
+\setbeamertemplate{frametitle}%
+{%
+    \nointerlineskip%
+    \vskip\espbeamer@border@top%
+    \begin{beamercolorbox}[sep=0pt]{frametitle}%
+        \usebeamerfont*{frametitle}%
+        \usebeamercolor*[fg]{frametitle}%
+        \strut\insertframetitle{}%
+        %
+%        % Insert the subtitle on the same line
+%        \ifx\insertframesubtitle\@empty%
+%        \else%
+%            \hskip1ex%
+%            \usebeamerfont*{framesubtitle}%
+%            \usebeamercolor*[fg]{framesubtitle}%
+%            \insertframesubtitle
+%        \fi
+        %
+        % Insert the subtitle on a newline
+        \vskip-2pt%
+        \usebeamerfont*{framesubtitle}%
+        \usebeamercolor*[fg]{framesubtitle}%
+        \strut\insertframesubtitle{}%
+    \end{beamercolorbox}%
+}%
+\setbeamertemplate{logo}{}% - Set by the addLogo commands
+\setbeamertemplate{navigation symbols}{}% - Not used
+    %{} No symbols
+    %[default] Organizes the navigation symbols horizontally.
+    %[horizontal] This is an alias for the default.
+    %[vertical] Organizes the navigation symbols vertically.
+    %[only frame symbol] Shows only the navigational symbol for navigating frames.
+
+
+%%% Note page %%%
+\setbeamertemplate{note page}{}%
+
+
+%%% Mini frames (not used) %%%
+\setbeamertemplate{mini frames}[box]%
+    %[default] shows small circles as mini frames.
+    %[box] shows small rectangles as mini frames.
+    %[tick] shows small vertical bars as mini frames.
+\setbeamertemplate{mini frame}{}%
+\setbeamertemplate{mini frame in current subsection}{}%
+\setbeamertemplate{mini frame in other subsection}[default][20]%[default][⟨percentage⟩]
+\mode<all>

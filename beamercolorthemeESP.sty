@@ -1,0 +1,232 @@
+%%%%%%%%%%% NOTES %%%%%%%%%%%
+%
+% Only use colours defined in the LIGHT VS DARK section as those are switched with the light/dark option.
+%
+% "parent=" inherits from other definition
+% "use=" requires that the used definition is defined first. Useful for relative definitions (i.e., 50% darker)
+% "fg=structure.fg!25!bg" is 25% structure.fg and 75% structure.bg
+
+\input{oxford_colours}
+
+%%%%%% LIGHT VS DARK %%%%%%
+\ifespbeamer@dark
+    \colorlet{BACKGROUND}{black}
+    \colorlet{TEXT}{white}
+    \colorlet{BLUE}{OxfordPaletteLightBlue}
+    \colorlet{GREEN}{OxfordPaletteLightGreen}
+    \colorlet{YELLOW}{OxfordPaletteLightYellow}
+    \colorlet{ORANGE}{OxfordPaletteLightOrange}
+    \colorlet{RED}{OxfordPaletteLightRed}
+    \colorlet{GRAY}{OxfordPaletteGray}
+\else
+    \colorlet{BACKGROUND}{white}
+    \colorlet{TEXT}{OxfordBlue}
+    \colorlet{BLUE}{OxfordPaletteBlue}
+    \colorlet{GREEN}{OxfordPaletteGreen}
+    \colorlet{YELLOW}{OxfordPaletteYellow}
+    \colorlet{ORANGE}{OxfordPaletteOrange}
+    \colorlet{RED}{OxfordPaletteRed}
+    \colorlet{GRAY}{OxfordPaletteGray}
+\fi
+%%%%%% END LIGHT VS DARK %%%%%%
+
+\mode<presentation>
+%%% Palettes (colour only) %%%
+%Outer themes (should) base the color of navigational elements and, possibly, also of other elements,
+%on the four palette colors. The “primary” palette should be used for the most important navigational
+%elements, which are usually the ones that change most often and hence require the most attention by
+%the audience. The “secondary” and “tertiary” are less important, the “quaternary” one is the least
+%important. By default, the palette colors do not have a background and the foreground ranges from
+%structure.fg to black.
+\setbeamercolor{palette primary}{}%{use=structure,fg=structure.fg}
+\setbeamercolor{palette secondary}{}%{use=structure,fg=structure.fg!75!black}
+\setbeamercolor{palette tertiary}{}%{use=structure,fg=structure.fg!50!black}
+\setbeamercolor{palette quaternary}{}%{fg=black}
+\setbeamercolor{palette sidebar primary}{}%{use=normal text,fg=normal text.fg}
+\setbeamercolor{palette sidebar secondary}{}%{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar tertiary}{}%{use=normal text,fg=normal text.fg}
+\setbeamercolor{palette sidebar quaternary}{}%{use=structure,fg=structure.fg}
+
+
+%%% CUSTOM TO ESP %%%
+\setbeamercolor{titlelogo}{parent=titlelike}% Titlepage logos
+\setbeamercolor{bio}{parent=logo}% Biography photos
+\setbeamercolor{copyright}{fg=OxfordPaletteGray}% Copyright
+
+
+%%% Presentation %%%
+\setbeamercolor{background canvas}{fg=, bg=BACKGROUND}% Behind everything (i.e., a fill colour)
+\setbeamercolor{background}{parent=background canvas}% Behind everying *except* for the background canvas (e.g., a picture)
+\setbeamercolor{structure}{fg=TEXT, bg=}% High level "structural" text (as opposed to "content" text)
+\setbeamercolor{local structure}{parent=structure}% Local "structural" text that changes based on context
+\setbeamercolor{tiny structure}{parent=local structure}% Small "structural" text
+\setbeamercolor{titlelike}{parent=structure}% High level subset of "structural" for titles.
+\setbeamercolor{frametitle}{parent=titlelike}% Each frame's title.
+\setbeamercolor{framesubtitle}{parent=frametitle}% Each frame's subtitle
+\setbeamercolor{frametitle continuation}{parent=frametitle}% Text to denote title continuation when allowframebreaks option is set
+\setbeamercolor{normal text}{fg=TEXT, bg=}% High level "content" text (as opposed to "structural")
+
+
+%%% Title page %%%
+\setbeamercolor{title page}{parent=structure}% For contents of the \maketitle
+%Individual entries:
+\setbeamercolor{title}{parent=titlelike}
+\setbeamercolor{subtitle}{parent=title}% No doc, found in example themes. Difference with framesubtitle is unclear
+\setbeamercolor{titlegraphic}{parent=title}% No doc, found in example themes
+\setbeamercolor{author}{parent=title}
+\setbeamercolor{institute}{parent=title}
+\setbeamercolor{date}{parent=title}
+%Irrelevant
+\setbeamercolor{frametitle right}{parent=title}% Used with frametitle=[shadow theme] to create a gradiant
+
+
+%%% Lists %%%
+\setbeamercolor{itemize/enumerate body}{parent=normal text}% Beginning of a first-level itemize/enumerate environment (i.e., content)
+\setbeamercolor{itemize/enumerate subbody}{parent=itemize/enumerate body}% Second-level
+\setbeamercolor{itemize/enumerate subsubbody}{parent=itemize/enumerate subbody}% Third-level
+\setbeamercolor{item}{parent=normal text}% Parent for first-level itemize/enumerate items
+\setbeamercolor{subitem}{parent=item}% Second-level
+\setbeamercolor{subsubitem}{parent=subitem}% Third-level
+\setbeamercolor{item projected}{use=item,fg=white, bg=item.fg}% Parent for first-level itemize/enumerate items with text projected onto shapes
+\setbeamercolor{subitem projected}{parent=item projected}% Second-level
+\setbeamercolor{subsubitem projected}{parent=subitem projected}% Third-level
+%Itemize:
+\setbeamercolor{itemize item}{parent=item}% First-level itemize marker
+\setbeamercolor{itemize subitem}{parent=subitem}% Second-level
+\setbeamercolor{itemize subsubitem}{parent=subsubitem}% Third-level
+%Enumerate:
+\setbeamercolor{enumerate item}{parent=item}% First-level enumerate marker
+\setbeamercolor{enumerate subitem}{parent=subitem}% Second-level
+\setbeamercolor{enumerate subsubitem}{parent=subsubitem}% Third-level
+\setbeamercolor{enumerate mini template}{parent=item}% "The number that arises from a mini template"
+%Description:
+\setbeamercolor{description body}{parent=itemize/enumerate body}% Beginning of a description environment
+\setbeamercolor{description item}{parent=item}% Description "marker" (i.e., text)
+
+
+%%% Figures %%%
+\setbeamercolor{caption name}{parent=structure}% e.g., "Figure"
+\setbeamercolor{caption}{parent=structure}
+
+
+%%% Math %%%
+\setbeamercolor{math text}{parent=normal text}% High level math, colour only
+\setbeamercolor{math text inlined}{parent=math text}% Colour only
+\setbeamercolor{math text displayed}{parent=math text}% Colour only
+\setbeamercolor{normal text in math text}{parent=normal text}% Colour only
+\setbeamercolor{qed symbol}{parent=math text}
+
+
+%%% Bibliography %%%
+\setbeamercolor{bibliography item}{parent=item}% Mark (e.g., bullet) for bibliography list
+\setbeamercolor{bibliography entry author}{parent=normal text}
+\setbeamercolor{bibliography entry title}{parent=bibliography entry author}
+\setbeamercolor{bibliography entry location}{parent=bibliography entry author}% This is where published, i.e., the journal
+\setbeamercolor{bibliography entry note}{parent=bibliography entry author}
+
+
+%%% Misc. Elements %%%
+\setbeamercolor{alerted text}{fg=BLUE, bg=}% \alert
+\setbeamercolor{example text}{parent=normal text}% Text in example blocks
+\setbeamercolor{button}{use=local structure,bg=local structure.fg!50!bg,fg=BACKGROUND}% Content of \beamerbutton
+\setbeamercolor{button border}{use=button, fg=button.bg!50!fg}%Colour only
+\setbeamercolor{footnote}{parent=local structure}
+\setbeamercolor{footnote mark}{parent=normal text}
+\setbeamercolor{logo}{parent=structure}
+\setbeamercolor{separation line}{parent=structure}% High level separtion lines, colour only
+
+
+%%% Misc. Environments %%%
+\setbeamercolor{abstract}{parent=normal text}
+\setbeamercolor{abstract title}{parent=titlelike}
+\setbeamercolor{quotation}{parent=normal text}
+\setbeamercolor{quote}{parent=normal text}
+\setbeamercolor{verse}{parent=normal text}
+
+
+%%% Blocks %%%
+\setbeamercolor{block title}{parent=titlelike}% \begin{block}{title}{...}\end{block}
+\setbeamercolor{block body}{parent=normal text}
+\setbeamercolor{block title alerted}{parent=alerted text}% "alertblock" Title is alerted, body is normal
+\setbeamercolor{block body alerted}{parent=block body}
+\setbeamercolor{block title example}{parent=example text}% "exampleblock". Title is italicized, body is "example text"
+\setbeamercolor{block body example}{parent=example text}
+
+
+%%% TOC %%%
+\setbeamercolor{section in toc}{parent=structure}
+\setbeamercolor{subsection in toc}{parent=section in toc}
+\setbeamercolor{subsubsection in toc}{parent=subsection in toc}
+\setbeamercolor{section in toc shaded}{use=section in toc, fg=section in toc.fg!50!bg, bg=section in toc.bg}% Shaded when not current
+\setbeamercolor{subsection in toc shaded}{use=subsection in toc, fg=subsection in toc.fg!50!bg, bg=subsection in toc.bg}% Shaded when not current
+\setbeamercolor{subsubsection in toc shaded}{use=subsubsection in toc, fg=subsubsection in toc.fg!50!bg, bg=subsubsection in toc.bg}% Shaded when not current
+\setbeamercolor{section number projected}{parent=item projected}% Used when "section/subsection in toc" is set to [circle]
+\setbeamercolor{subsection number projected}{parent=subitem projected}% No doc, found in example themes.
+\setbeamercolor{subsubsection number projected}{parent=subsubitem projected}% No doc, found in example themes.
+
+
+%%% Part/Section/Subsection Pages (i.e., internal titlepages) %%%
+\setbeamercolor{part name}{parent=titlelike}% For contents of \partpage
+\setbeamercolor{part title}{parent=titlelike}% For contents of \partpage
+\setbeamercolor{section name}{parent=titlelike}% For contents of \sectionpage
+\setbeamercolor{section title}{parent=titlelike}% For contents of \sectionpage
+\setbeamercolor{subsection name}{parent=titlelike}% For contents of \subsectionpage
+\setbeamercolor{subsection title}{parent=titlelike}% For contents of \subsectionpage
+
+
+%%% Head and Foot %%%
+\setbeamercolor{headline}{}
+\setbeamercolor{footline}{}
+%Individual entries:
+\setbeamercolor{title in head/foot}{parent=structure}% No doc, found in example themes
+\setbeamercolor{author in head/foot}{parent=structure}% No doc, found in example themes
+\setbeamercolor{institute in head/foot}{parent=structure}% No doc, found in example themes
+\setbeamercolor{date in head/foot}{parent=structure}% No doc, found in example themes
+\setbeamercolor{page number in head/foot}{parent=local structure}
+\setbeamercolor{section in head/foot}{parent=local structure}
+\setbeamercolor{subsection in head/foot}{parent=section in head/foot}
+\setbeamercolor{subsubsection in head/foot}{parent=subsection in head/foot}
+\setbeamercolor{upper separation line head}{parent=separation line}% Uppermost line in a headline, colour only
+\setbeamercolor{middle separation line head}{parent=separation line}% Middle lines in a headline, colour only
+\setbeamercolor{lower separation line head}{parent=separation line}% Lowest line in a headline, colour only
+\setbeamercolor{upper separation line foot}{parent=separation line}% Uppermost line in a footline, colour only
+\setbeamercolor{middle separation line foot}{parent=separation line}% Middle line in a footline, colour only
+\setbeamercolor{lower separation line foot}{parent=separation line}% Lower line in a footline, colour only
+
+
+%%% Sidebars %%%
+\setbeamercolor{sidebar}{}
+\setbeamercolor{sidebar canvas left}{parent=sidebar}
+\setbeamercolor{sidebar left}{parent=sidebar canvas left}
+\setbeamercolor{sidebar canvas right}{parent=sidebar}
+\setbeamercolor{sidebar right}{parent=sidebar canvas right}
+%Individual entries:
+\setbeamercolor{title in sidebar}{parent=structure}% No doc, found in example themes
+\setbeamercolor{author in sidebar}{use=structure}% No doc, found in example themes
+\setbeamercolor{institute in sidebar}{use=structure}% No doc, found in example themes
+\setbeamercolor{date in sidebar}{use=structure}% No doc, found in example themes
+\setbeamercolor{section in sidebar}{parent=local structure}
+\setbeamercolor{subsection in sidebar}{parent=section in sidebar}
+\setbeamercolor{subsubsection in sidebar}{parent=subsection in sidebar}
+\setbeamercolor{section in sidebar shaded}{use=section in sidebar, fg=section in toc.fg!50!bg, bg=section in toc.bg}% Shaded when not current, colour only
+\setbeamercolor{subsection in sidebar shaded}{use=subsection in sidebar, fg=subsection in toc.fg!50!bg, bg=subsection in toc.bg}% Shaded when not current, colour only
+\setbeamercolor{subsubsection in sidebar shaded}{use=subsubsection in sidebar, fg=subsubsection in toc.fg!50!bg, bg=subsubsection in toc.bg}% Shaded when not current, colour only
+
+
+%%% Navigation %%%
+\setbeamercolor{navigation symbols}{use=structure, fg=structure.fg!40!bg}
+\setbeamercolor{navigation symbols dimmed}{use=structure, fg=structure.fg!20!bg}% No doc, found in example themes
+\setbeamercolor{mini frame}{parent=section in head/foot}% A miniature rendering of the current frame
+
+
+%%% Presentation Notes %%%
+\setbeamercolor{note page}{fg=black, bg=white}% \note
+\setbeamercolor{note title}{parent=note page}% No doc, found in example themes.
+\setbeamercolor{note date}{parent=note page}% No doc, found in example themes.
+
+
+%%% Unknown %%%
+%\setbeamercolor{projected text}{}% No doc, found in example themes.
+
+\mode
+<all>

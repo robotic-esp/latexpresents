@@ -1,0 +1,684 @@
+%Sources
+%https://tex.stackexchange.com/questions/146529/design-a-custom-beamer-theme-from-scratch
+%https://bitbucket.org/marczellm/beamerports/src/master/
+
+%%%%%%%%%%%% CLASS OPTIONS %%%%%%%%%%%%
+% Setup
+\RequirePackage{kvoptions}% For defining package options as key-value pairs
+\SetupKeyvalOptions%
+{%
+    family = espbeamer,%
+    prefix = espbeamer@%
+}%
+
+% Colour theme
+\DeclareBoolOption[false]{dark}% espbeamer@dark
+\DeclareComplementaryOption{light}{dark}%
+%%Which multimedia package to use
+\DeclareBoolOption[false]{adobe}% espbeamer@adobe
+\DeclareComplementaryOption{pdfpc}{adobe}%
+\ProcessKeyvalOptions*%
+%%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
+
+%%%%%%%%%%%% PACKAGES %%%%%%%%%%%%
+\RequirePackage{amssymb,amsmath,amscd,amsthm}% Math is good
+\RequirePackage{tikz}% Part of Beamer, but seems like a good idea when specifying libraries
+\usetikzlibrary{positioning}%
+\RequirePackage{calc}% For adding lengths
+\RequirePackage{xparse}% For NewDocumentCommand which allows multiple optional arguments with defaults
+\RequirePackage{xkeyval}% For defining macro options as key-value pairs. Extends the base keyval package.
+\RequirePackage{xcolor}% You know, for colours.
+\RequirePackage[absolute,overlay]{textpos}% For absolutely positioned text boxes (titlepage)
+\usepackage{microtype}% Make pdflatex look more good.
+\RequirePackage{contour}% For a custom definition of \underline that looks better.
+\RequirePackage[normalem]{ulem}% For a custom definition of \underline that looks better, with option to not redefine \emph.
+%For media (depending on optional flag)
+\ifespbeamer@adobe%
+    \RequirePackage{media9}%
+\else%
+    \RequirePackage{multimedia}%
+\fi%
+%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% DIMENSIONS %%%%%%%%%%%%
+%%% Publically available lengths (Set by ESP) %%%
+\newlength{\contentwidth}% The total width for all content in a frame.
+\newlength{\contentheight}% The total height for all content in a frame.
+\newlength{\elementwidth}% The width of a frame element (e.g., column).
+\newlength{\elementheight}% The height of a frame element (e.g., column).
+
+%%% Internal Parameters %%%
+% Slide borders
+\newlength{\espbeamer@border@left}%
+\setlength{\espbeamer@border@left}{0.25cm}%
+\newlength{\espbeamer@border@right}%
+\setlength{\espbeamer@border@right}{0.25cm}%
+\newlength{\espbeamer@border@top}%
+\setlength{\espbeamer@border@top}{0.25cm}%
+\newlength{\espbeamer@border@bottom}%
+\setlength{\espbeamer@border@bottom}{0.25cm}%
+% Title logos
+\newlength{\espbeamer@titlelogo@height}%
+\setlength{\espbeamer@titlelogo@height}{2cm}%
+\newlength{\espbeamer@titlelogo@sep}%
+\setlength{\espbeamer@titlelogo@sep}{0.3cm}%
+% Footer logos
+\newlength{\espbeamer@footlogo@height}%
+\setlength{\espbeamer@footlogo@height}{1cm}%
+\newlength{\espbeamer@footlogo@sep}%
+\setlength{\espbeamer@footlogo@sep}{0.15cm}%
+% Biographical photos
+\newlength{\espbeamer@bio@height}%
+\setlength{\espbeamer@bio@height}{1.4cm}%
+\newlength{\espbeamer@bio@sep}%
+\setlength{\espbeamer@bio@sep}{0.05cm}%
+
+%%% Fixes %%%
+\setlength{\abovecaptionskip}{0pt}%
+\setlength{\belowcaptionskip}{0pt}%
+
+%%% Internally calculated lengths from Beamer %%%
+\newlength{\espbeamer@content@width}% Width for content on a regular slide.
+\newlength{\espbeamer@content@height}% Height for content on a regular slide.
+\newlength{\espbeamer@topmatter@height}% Height of everything above content
+\newlength{\espbeamer@bottommatter@height}% Height of everything below content
+\newlength{\espbeamer@frametitle@height}% Height of the frame title block
+
+
+%%% Manually specified lengths %%%
+\newlength{\espbeamer@beamer@heightdiff}% This is the difference between \pageheight and \textheight regardless of aspect ratio.
+\setlength{\espbeamer@beamer@heightdiff}{4pt}% Found experimentally. Documented without expected use.
+\newlength{\espbeamer@frametitle@sep}% This is the space after a frame title before Beamer starts setting text.
+\setlength{\espbeamer@frametitle@sep}{8.5pt}% Found experimentally.
+\newlength{\espbeamer@figure@aboveskip}{}% This is the space inserted before a figure environment.
+\setlength{\espbeamer@figure@aboveskip}{6pt}% Found experimentally.
+\newlength{\espbeamer@caption@height}% Height of a caption when typeset.
+\setlength{\espbeamer@caption@height}{22.5pt}% Found experimentally for a vertically-limited image with a caption in normalsize font with the 12pt option.
+\addtolength{\espbeamer@caption@height}{\abovecaptionskip + \belowcaptionskip}% Adjust by above/below skips
+%%%%%%%%%%%% END DIMENSIONS %%%%%%%%%%%%%%%%%% 
+
+
+
+%%%%%%%%%%%% BEAMER %%%%%%%%%%%%%%%%%% 
+% Pass options to Beamer
+\setbeamersize{text margin left=\espbeamer@border@left, text margin right=\espbeamer@border@right}%
+
+% Beamer specific divisions for elements of a theme. In theory, any entry can appear anywhere
+\usecolortheme{ESP}%
+\usefonttheme{ESP}%
+\useinnertheme{ESP}%
+\useoutertheme{ESP}%
+
+% Patch Beamer to always call the frametitle template even if no title is given
+\patchcmd{\endbeamer@frameslide}{\ifx\beamer@frametitle\@empty}{\iffalse}{}{\errmessage{failed to patch}}%
+
+% Calculate lengths from Beamer theme settings
+\settototalheight{\espbeamer@frametitle@height}% This needs to reflect the way the frametitle is built.
+{%
+    \parbox{100pt}%
+    {%
+        \usebeamerfont*{frametitle}\strut%
+        \vskip-2pt%
+        \usebeamerfont*{framesubtitle}\strut%
+    }%
+}%
+\setlength{\espbeamer@topmatter@height}%
+{%
+    \espbeamer@border@top + \espbeamer@frametitle@height + \espbeamer@frametitle@sep
+}%
+\setlength{\espbeamer@bottommatter@height}%
+{%
+    \espbeamer@footlogo@sep + \espbeamer@footlogo@height + \espbeamer@border@bottom
+}%
+\setlength{\espbeamer@content@height}%
+{%
+    \paperheight%
+    -\espbeamer@topmatter@height% top space
+    %content here%
+    -\espbeamer@bottommatter@height% bottom space
+}%
+\setlength{\espbeamer@content@width}%
+{%
+    \paperwidth%
+    - \espbeamer@border@left% left space
+    %content here%
+    - \espbeamer@border@right% right space
+}%
+%%%%%%%%%%%% END BEAMER %%%%%%%%%%%%%%%%%% 
+
+
+
+%%%%%%%%%%%% DOCUMENT INIT %%%%%%%%%%%%
+% Package initialization run at \begin{document}
+\AtBeginDocument%
+{%
+    % Load logos for theme
+    \ifespbeamer@dark%
+        \addlogo[logos/Oxford_rect_rev_v300px.png]{logos/Oxford_rev_300px.png}%
+        \addlogo{logos/ORI_rev_v300px.png}%
+        \addlogo{logos/ESP_rev_v300px.png}%
+    \else%
+        \addlogo[logos/Oxford_rect_v300px.png]{logos/Oxford_300px.png}%
+        \addlogo{logos/ORI_v300px.png}%
+        \addlogo{logos/ESP_v300px.png}%
+    \fi%
+    % Save as default
+    \savelogos{}%
+}
+%%%%%%%%%%%% END DOCUMENT INIT %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% FRAME ENVIRONMENTS %%%%%%%%%%%%
+%A frame for full screen media.
+\newenvironment{fullframe}%
+{%
+    \setbeamertemplate{background canvas}{\color{black}\vrule width\paperwidth height\paperheight}%
+    \setbeamertemplate{headline}{}%
+    \setbeamertemplate{footline}{}%
+    \setbeamertemplate{sidebar left}{}%
+    \setbeamertemplate{sidebar right}{}%
+    \setbeamertemplate{frametitle}{}%
+    \setlength{\contentwidth}{\paperwidth}%
+    \setlength{\contentheight}{\paperheight}%
+    \setlength{\elementwidth}{\contentwidth}%
+    \setlength{\elementheight}{\contentheight}%
+    \begin{frame}%
+}%
+{%
+    \end{frame}%
+}%
+%%%%%%%%%%%% END FRAME ENVIRONMENTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% HIGH-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
+%%% ONE-COLUMN LAYOUTS %%%
+\newcommand{\onecolumnfull}[1]{\threecolumnframe{1.0}{0}{#1}{}{}}%
+\NewDocumentCommand{\imagecenter}{O{} O{} m}{\onecolumnfull{\image[#1][#2]{#3}}}% Usage: see \image
+\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m}{\onecolumnfull{\video[#1][#2]{#3}{#4}}}% Usage: see \video
+\NewDocumentCommand{\listleft}{O{itemize} m}{\onecolumnfull{\begin{#1}#2\end{#1}}}% Usage: [itemize/enumerate/description]{\item content}
+
+%%% TWO-COLUMN LAYOUTS %%%
+\newcommand{\twocolumneven}[2]{\threecolumnframe{0.5}{0.5}{#1}{#2}{}}%
+\newcommand{\twocolumnbigleft}[2]{\threecolumnframe{0.6666}{0.3333}{#1}{#2}{}}%
+\newcommand{\twocolumnbigright}[2]{\threecolumnframe{0.3333}{0.6666}{#1}{#2}{}}%
+\NewDocumentCommand{\listleftmediaright}{O{itemize} m m}{\twocolumneven{\begin{#1}#2\end{#1}}{#3}}% Usage: [itemize/enumerate/description]{\item content}{media content}
+\NewDocumentCommand{\medialeftlistright}{m O{itemize} m}{\twocolumneven{#1}{\begin{#2}#3\end{#2}}}% Usage: {media content}[itemize/enumerate/description]{\item content}
+\NewDocumentCommand{\listleftright}{O{itemize} m O{itemize} m}{\twocolumneven{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}}% Usage: [itemize/enumerate/description]{\item content}[itemize/enumerate/description]{\item content}
+%%% END TWO-COLUMN LAYOUTS %%%
+
+%%% THREE-COLUMN LAYOUTS %%%
+\newcommand{\threecolumneven}[3]{\threecolumnframe{0.3333}{0.3333}{#1}{#2}{#3}}%
+\newcommand{\threecolumnbigleft}[3]{\threecolumnframe{0.5}{0.25}{#1}{#2}{#3}}%
+\newcommand{\threecolumnbigmiddle}[3]{\threecolumnframe{0.25}{0.5}{#1}{#2}{#3}}%
+\newcommand{\threecolumnbigright}[3]{\threecolumnframe{0.25}{0.25}{#1}{#2}{#3}}%
+%%% END THREE-COLUMN LAYOUTS %%%
+%%%%%%%%%%%% END HIGH-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
+
+
+%%%%%%%%%%%% LATEX FUNCTIONS %%%%%%%%%%%%
+%%% A helper function to define complimentary keys (i.e., key1 != key2)
+%
+% Usage: \definecomplimentarykeys{keyfamily}{macro}{key1}{key2}
+%
+% Generates keys of the form: macrokey1 and macrokey2 as would be created by:
+%   \define@boolkey{keyfamily}[macro]{key1}[true]{}
+%   \define@boolkey{keyfamily}[macro]{key2}[true]{}
+% but tied such that they are mutually exclusive
+% https://tex.stackexchange.com/a/53601
+\NewDocumentCommand{\definecomplimentarykeys}{m m m m}%{fam}{mp}{key1}{key2}
+{%
+    \define@boolkey{#1}[#2]{#3}[true]%
+    {%
+        \in@{true}{##1}% ##1 is the true/false arugment to the key
+        \ifin@%
+            \csname #2#4false\endcsname%
+        \else%
+            \csname #2#4true\endcsname%
+        \fi%
+    }%
+    \define@boolkey{#1}[#2]{#4}[true]%
+    {%
+        \in@{true}{##1}% ##1 is the true/false arugment to the key
+        \ifin@%
+            \csname #2#3false\endcsname%
+        \else%
+            \csname #2#3true\endcsname%
+        \fi%
+    }%
+    %Make sure the keys are consistent by explicitly setting the first key.
+    \setkeys{#1}{#3}
+}%
+%%%%%%%%%%%% END LATEX FUNCTIONS %%%%%%%%%%%%
+
+
+%%%%%%%%%%%% IMAGE COMMANDS %%%%%%%%%%%%
+%%% In column image %%%
+%
+% Usage: \image[optional caption][optional extra include options]{path/to/image}
+\newlength{\espbeamer@image@captionheight}%
+\NewDocumentCommand{\image}{O{} O{} m}%
+{%
+    % Calculate the height of the caption
+    \ifx\relax#1\relax%
+        \setlength{\espbeamer@image@captionheight}{0pt}%
+    \else%
+        \setlength{\espbeamer@image@captionheight}{\espbeamer@caption@height}%
+    \fi%
+    \vbox to \elementheight%
+    {%
+        \centering%
+        \vfil%
+        \begin{figure}%
+            \vskip-\espbeamer@figure@aboveskip%
+            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio,#2]{#3}%
+            \ifx\relax#1\relax%
+            \else%
+                \caption{#1}%
+            \fi%
+        \end{figure}%
+        \vfil%
+    }%
+}%
+
+%%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
+%
+% Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}
+%
+% Adapted from: https://www.ojdo.de/wp/2018/06/finally-the-definitive-full-frame-graphic-commands-for-beamer-in-latex/
+\newcommand{\fullimagelight}[2][]{\fullimage[#1][OxfordBlue][white]{#2}}%
+\newcommand{\fullimagedark}[2][]{\fullimage[#1][white][OxfordBlue]{#2}}%
+\NewDocumentCommand{\fullimage}{O{} O{white} O{OxfordBlue} m}% 
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \tikzset%
+        {%
+            ffgcaption/.style=%
+            {%
+                anchor=south east,%
+                font=\small,%
+                text=#2,%
+                text opacity=1,%
+                inner sep=0.25\baselineskip,%
+                fill=#3,%
+                fill opacity=.5,%
+                rounded corners=0.5ex%
+            }%
+        }%
+        \begin{tikzpicture}[remember picture, overlay]%
+        \node[at=(current page.center)]%
+        {%
+            \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio]{#4}%
+            \tikz[overlay, remember picture] \node (bottomright) {};%
+        };%
+        \ifx\relax#1\relax%
+        \else%
+            \node[above left = \espbeamer@border@bottom and \espbeamer@border@right of bottomright, ffgcaption]%
+            {%
+                #1%
+            };%
+        \fi%
+        \end{tikzpicture}%
+    \endgroup%
+}
+%%%%%%%%%%%% END IMAGE COMMANDS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% VIDEO COMMANDS %%%%%%%%%%%%
+%%% In column video %%%
+%
+% Usage: \video[optional caption][noprogress,autostart,loop]{path/to/thumbnail}{path/to/video}
+%
+% This is a hack because pdfpc (and most linux viewers) do not currently support \movie's autostart command
+% (see: https://github.com/pdfpc/pdfpc/issues/495).
+% This will be cleaned-up/simplified once that change makes it back.
+
+% A whole bunch of boxes and lengths for the \href hack
+\newsavebox{\espbeamer@video@posterbox}%
+\newlength{\espbeamer@video@fudgealignx}%
+\setlength{\espbeamer@video@fudgealignx}{-1pt}%
+\newlength{\espbeamer@video@fudgealigny}%
+\setlength{\espbeamer@video@fudgealigny}{-0.9pt}%
+\newlength{\espbeamer@video@fudgealignwidth}%
+\setlength{\espbeamer@video@fudgealignwidth}{-1pt}%-1pt
+\newlength{\espbeamer@video@fudgealignheight}%
+\setlength{\espbeamer@video@fudgealignheight}{-1.9pt}%-1.9pt
+\newbox\espbeamer@video@videobox%
+\newlength{\espbeamer@video@width}%
+\newlength{\espbeamer@video@height}%
+\newlength{\espbeamer@video@depth}%
+\newlength{\espbeamer@video@fudgeposy}%
+\setlength{\espbeamer@video@fudgeposy}{-12.35pt}% This appears to vary a little with aspect ratio, but -12.35pt is exact for 16:9
+
+% A string of parsed options to the underlying command. All videos receive autostarts as we achieve "onclick" by duplicating a static slide infront of an autostart slide.
+%%% BEAMER MULTIMEDIA %%%
+%\def\espbeamer@video@optionstring{autostart}% The video options.
+%%% BEAMER MULTIMEDIA %%%
+%%% HREF HACK %%%
+\def\espbeamer@video@optionstring{?autostart}% The video options.
+%%% HREF HACK %%%
+
+% Define keys
+\definecomplimentarykeys{espbeamer}{video@}{autostart}{onclick}%
+\definecomplimentarykeys{espbeamer}{video@}{loop}{once}%
+\definecomplimentarykeys{espbeamer}{video@}{noprogress}{progress}%
+
+\newlength{\espbeamer@video@captionheight}%
+\NewDocumentCommand{\video}{O{} O{} m m}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \setkeys{espbeamer}{#2}%
+        
+        %Parse the keys into the option string for the lower-level command. Autostart is already included
+        \ifvideo@noprogress%
+           %%% HREF HACK %%%
+           \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&noprogress}%
+           %%% HREF HACK %%%
+            %%% BEAMER MULTIMEDIA %%%
+            %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols==false}
+       %\else
+           %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols==true}
+            %%% BEAMER MULTIMEDIA %%%
+        \fi%
+        \ifvideo@loop%
+            %%% HREF HACK %%%
+            \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&loop}%
+            %%% HREF HACK %%%
+            %%% BEAMER MULTIMEDIA %%%
+            %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,loop}
+        %\else
+            %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,once}
+            %%% BEAMER MULTIMEDIA %%%
+        \fi%
+        
+        % TODO: Calculate the height of the caption and actually set it
+        %\ifx\relax#1\relax%
+            \setlength{\espbeamer@video@captionheight}{0pt}%
+        %\else%
+        %    \setlength{\espbeamer@video@captionheight}{\espbeamer@caption@height}%
+        %\fi%
+        
+        %%% HREF HACK: Poster/video size fixes %%%
+        % Fix the size of the \href video relative to the poster
+        % Save the poster so we know its size (and ratio).
+        \savebox{\espbeamer@video@posterbox}%
+        {%
+            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+        }%
+
+        % Calculate the size of the video from the poster
+        \settowidth{\espbeamer@video@width}{\usebox{\espbeamer@video@posterbox}}%
+        \settoheight{\espbeamer@video@height}{\usebox{\espbeamer@video@posterbox}}%
+        \settodepth{\espbeamer@video@depth}{\usebox{\espbeamer@video@posterbox}}%
+        %Then adjust to fix the difference in size
+        \addtolength{\espbeamer@video@width}{\espbeamer@video@fudgealignwidth}%
+        \addtolength{\espbeamer@video@height}{\espbeamer@video@fudgealignheight}%
+    
+        % Define a box to define the video size, and put the poster inside it.
+        \setbox\espbeamer@video@videobox=\vbox{\vspace{\espbeamer@video@fudgealigny}\usebox{\espbeamer@video@posterbox}}%
+        \wd\espbeamer@video@videobox=\espbeamer@video@width%
+        \ht\espbeamer@video@videobox=\espbeamer@video@height%
+        \dp\espbeamer@video@videobox=\espbeamer@video@depth%
+        %%% HREF HACK: Poster/video size fixes %%%
+    
+        % Actually typeset the poster & video
+        \vbox to \elementheight%
+        {%
+            \centering%
+            \vfil%
+            
+            %%% HREF HACK: Position fix %%%
+            % The href inserts some vertical white space, try to undo that.
+            \vskip\espbeamer@video@fudgeposy%
+            %%% HREF HACK: Position fix %%%
+            
+            %If we are starting onclick, create a copy of the video slide showing only the poster.
+            %We use an empty href inorder to keep spacing exactly the same.
+            \ifvideo@onclick%
+                \only<1>%
+                {%
+                    %%% BEAMER MULTIMEDIA %%%
+                    %\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio]{#3}
+                    %%% BEAMER MULTIMEDIA %%%
+                    %%% HREF HACK %%%
+                    \href%
+                    {%
+                        %Do nothing
+                    }%
+                    {%
+                        % Poster
+                        % Shift the poster to line up with the video
+                        \hskip\espbeamer@video@fudgealignx%
+                        % Insert the video box containing the poster
+                        \box\espbeamer@video@videobox%
+                    }%
+                    %%% HREF HACK %%%
+                }%
+                
+                % Start a second slide that will contain the autostart video
+                \only<2>%
+                {%
+            \fi%
+    
+            % This is the video slide, regardless of autostart/onclick
+            %%% BEAMER MULTIMEDIA %%%
+            %\movie[#2]{\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio]{#3}}{#4}
+            %%% BEAMER MULTIMEDIA %%%
+            %%% HREF HACK %%%
+            \href%
+            {%
+                % Video
+                run:#4\espbeamer@video@optionstring%
+            }%
+            {%
+                % Poster
+                % Shift the poster to line up with the video
+                \hskip\espbeamer@video@fudgealignx%
+                % Insert the video box containing the poster
+                \box\espbeamer@video@videobox%
+            }%
+            %%% HREF HACK %%%
+            
+            % Close the second slide created to support onclick
+            \ifvideo@onclick%
+                }%
+            \fi%
+            \vfil%
+        }%
+    \endgroup%
+}%
+
+%%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
+%
+% Usage: See \video for options
+\newlength{\espbeamer@fullvideo@fudgeposy}%
+\setlength{\espbeamer@fullvideo@fudgeposy}{7.2pt}% Found experimentally.
+\NewDocumentCommand{\fullvideo}{O{noprogress,autostart,loop} m m}% 
+{%
+    \begin{textblock*}{\elementwidth}(0pt,\espbeamer@fullvideo@fudgeposy)
+        \video[][#1]{#2}{#3}%
+    \end{textblock*}
+}
+%%%%%%%%%%%% END VIDEO COMMANDS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% APPERANCE COMMANDS %%%%%%%%%%%%
+%%% UNDERLINE %%%
+%From: https://alexwlchan.net/2017/10/latex-underlines/
+\renewcommand{\ULdepth}{1.45pt}
+\contourlength{0.7pt}
+\newcommand{\ul}[1]{\underline{#1}}
+\renewcommand{\underline}[1]%
+{%
+    \uline{\phantom{#1}}%
+    \llap%
+    {%
+        \usebeamercolor{background canvas}
+        \contour{background canvas.bg}{#1}%
+    }%
+}
+\newcommand*{\copyrighttext}[1]{\usebeamerfont*{copyright}\usebeamercolor*{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK}
+
+\newcommand*{\alertBlue}[1]{{\setBlueAlert{}\alert{#1}}}%
+\newcommand*{\alertGreen}[1]{{\setGreenAlert{}\alert{#1}}}%
+\newcommand*{\alertYellow}[1]{{\setYellowAlert{}\alert{#1}}}%
+\newcommand*{\alertOrange}[1]{{\setOrangeAlert{}\alert{#1}}}%
+\newcommand*{\alertRed}[1]{{\setRedAlert{}\alert{#1}}}%
+\newcommand*{\alertGray}[1]{{\setGrayAlert{}\alert{#1}}}%
+\newcommand*{\setBlueAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=BLUE, bg=}%
+}%
+\newcommand*{\setGreenAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=GREEN, bg=}%
+}%
+\newcommand*{\setYellowAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=YELLOW, bg=}%
+}%
+\newcommand*{\setOrangeAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=ORANGE, bg=}%
+}%
+\newcommand*{\setRedAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=RED, bg=}%
+}%
+\newcommand*{\setGrayAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=GRAY, bg=}%
+}%
+%%%%%%%%%%%% END APPERANCE COMMANDS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LOGO COMMANDS %%%%%%%%%%%%%%%%%%
+%
+% Usage: \addlogo[optional/path/to/special/titlepage/logo]{path/to/logo}
+\NewDocumentCommand{\addlogo}{O{#2} m}{\addtitlelogo{#1}\addfootlogo{#2}}%
+\newcommand*{\savelogos}{\savetitlelogos{}\savefootlogos{}}%
+\newcommand*{\resetlogos}{\resettitlelogos{}\resetfootlogos{}}%
+\newcommand*{\clearlogos}{\cleartitlelogos{}\clearfootlogos{}}%
+
+%%% TITLE LOGOS %%%
+% https://tex.stackexchange.com/questions/451/when-to-use-edef-noexpand-and-expandafter
+%
+% Usage: \addtitlelogo{path/to/titlelogo}
+\def\espbeamer@titlelogos{}%
+\def\espbeamer@defaulttitlelogos{}%
+\newcommand*{\addtitlelogo}[1]%
+{%
+    \edef\espbeamer@titlelogos{\espbeamer@titlelogos \includegraphics[height=\espbeamer@titlelogo@height]{#1} \hskip\espbeamer@titlelogo@sep}%
+    \setbeamertemplate{titlelogo}{\espbeamer@titlelogos}%
+}%
+% Usage: \resettitlelogo{}
+\newcommand*{\savetitlelogos}%
+{%
+    \edef\espbeamer@defaulttitlelogos{\espbeamer@titlelogos}%
+}%
+% Usage: \savetitlelogo{}
+\newcommand*{\resettitlelogos}%
+{%
+    \edef\espbeamer@titlelogos{\espbeamer@defaulttitlelogos}%
+    \setbeamertemplate{titlelogo}{\usebeamercolor*{titlelogo}\usebeamerfont*{titlelogo}\espbeamer@titlelogos}%
+}%
+% Usage: \cleartitlelogo{}
+\newcommand*{\cleartitlelogos}%
+{%
+    \def\espbeamer@titlelogos{}%
+    \setbeamertemplate{titlelogo}{}%
+}%
+
+%%% FOOT LOGOS %%%
+%
+% Usage: \addfootlogo{path/to/footerlogo}
+\def\espbeamer@footlogos{}%
+\def\espbeamer@defaultfootlogos{}%
+\newcommand*{\addfootlogo}[1]%
+{%
+    \edef\espbeamer@footlogos{\espbeamer@footlogos \includegraphics[height=\espbeamer@footlogo@height]{#1} \hskip\espbeamer@footlogo@sep}%
+    \setbeamertemplate{logo}{\espbeamer@footlogos}%
+}%
+% Usage: \savefootlogo{}
+\newcommand*{\savefootlogos}%
+{%
+    \edef\espbeamer@defaultfootlogos{\espbeamer@footlogos}%
+}%
+% Usage: \resetfootlogo{}
+\newcommand*{\resetfootlogos}%
+{%
+    \edef\espbeamer@footlogos{\espbeamer@defaultfootlogos}%
+    \setbeamertemplate{logo}{\usebeamercolor*{logo}\usebeamerfont*{logo}\espbeamer@footlogos}%
+}%
+% Usage: \clearfootlogo{}
+\newcommand*{\clearfootlogos}%
+{%
+    \def\espbeamer@footlogos{}%
+    \setbeamertemplate{logo}{}
+}%
+%%%%%%%%%%%% END LOGO COMMANDS %%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
+\def\espbeamer@bios{}%
+\newcommand*\addperson[1]%
+{%
+    \edef\espbeamer@bios{\hskip\espbeamer@bio@sep \includegraphics[height=\espbeamer@bio@height]{#1} \espbeamer@bios}%
+    \setbeamertemplate{bio}{\usebeamercolor*{bio}\usebeamerfont*{bio}\espbeamer@bios}%
+}%
+\newcommand*{\clearpeople}%
+{%
+    \def\espbeamer@bios{}%
+    \setbeamertemplate{bio}{}%
+}%
+%%%%%%%%%%%% END BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LOW-LEVEL FRAME LAYOUT %%%%%%%%%%%%
+%
+% Usage: \threecolumnframe{left fractional size}{middle fractional size}{left content}{middle content}{right content}
+\newlength{\espbeamer@columnlayout@leftwidth}%
+\newlength{\espbeamer@columnlayout@middlewidth}%
+\newlength{\espbeamer@columnlayout@rightwidth}%
+\newcommand{\threecolumnframe}[5]%
+{%
+    \setlength{\contentwidth}{\espbeamer@content@width}%
+    \setlength{\contentheight}{\espbeamer@content@height}%
+    \setlength{\elementheight}{\contentheight}%
+    \setlength{\espbeamer@columnlayout@leftwidth}{#1\contentwidth}%
+    \setlength{\espbeamer@columnlayout@middlewidth}{#2\contentwidth}%
+    \setlength{\espbeamer@columnlayout@rightwidth}{\contentwidth - \espbeamer@columnlayout@leftwidth - \espbeamer@columnlayout@middlewidth}%
+    \nointerlineskip%
+    \begin{columns}[t,totalwidth=\contentwidth]%
+        \begin{column}{\espbeamer@columnlayout@leftwidth}%
+            \setlength{\elementwidth}{\espbeamer@columnlayout@leftwidth}%
+            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+                \vspace{0pt}%
+                #3%
+            \end{minipage}
+        \end{column}%
+        \begin{column}{\espbeamer@columnlayout@middlewidth}%
+            \setlength{\elementwidth}{\espbeamer@columnlayout@middlewidth}%
+            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+                \vspace{0pt}%
+                #4%
+            \end{minipage}%
+        \end{column}%
+        \begin{column}{\espbeamer@columnlayout@rightwidth}%
+            \setlength{\elementwidth}{\espbeamer@columnlayout@rightwidth}%
+            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+                \vspace{0pt}%
+                #5%
+            \end{minipage}%
+        \end{column}%
+    \end{columns}%
+}%
+%%%%%%%%%%%%% END LOW-LEVEL FRAME LAYOUT %%%%%%%%%%%%

@@ -1,0 +1,184 @@
+% Note
+% "parent=" inherits from other definition
+% "use=" requires that the used definition is defined first. Useful for relative definitions (i.e., 50% darker)
+%
+%\tiny
+%\scriptsize
+%\footnotesize
+%\small
+%\normalsize
+%\large
+%\Large
+%\LARGE
+%\huge
+%\Huge
+
+\mode<presentation>
+%%% CUSTOM TO ESP %%%
+\setbeamerfont{titlelogo}{parent=titlelike}% Titlepage logos
+\setbeamerfont{bio}{parent=logo}% Biography photos
+
+%%% Presentation %%%
+\setbeamerfont{background canvas}{}% Behind everything (i.e., a fill colour)
+\setbeamerfont{background}{}% Behind everying, except for the background canvas (e.g., a picture)
+\setbeamerfont{structure}{size=\normalsize}% High level "structural" text (as opposed to "content")
+\setbeamerfont{local structure}{}% Local "structural" text that may change based on context
+\setbeamerfont{tiny structure}{size=\scriptsize}% Small "structural" text
+\setbeamerfont{titlelike}{}% High level subset of "structural" for titles.
+\setbeamerfont{frametitle}{parent=structure,size=\Large}% Each frame's title.
+\setbeamerfont{framesubtitle}{parent=frametitle,size=\footnotesize}% Each frame's subtitle
+\setbeamerfont{frametitle continuation}{}% Text to denote title continuation when allowframebreaks option is set
+\setbeamerfont{normal text}{size=\normalsize}% High level "content" text (as opposed to "structural")
+%Irrelevant
+\setbeamerfont{frametitle right}{parent=frametitle}% Used with frametitle=[shadow theme] to create a gradiant
+
+
+%%% Title page %%%
+\setbeamerfont{title page}{}% Contents of the \maketitle command
+%Individual entries:
+\setbeamerfont{title}{parent=structure,size=\Large}
+\setbeamerfont{subtitle}{size=\normalsize,parent=title}% No doc, found in example themes.
+\setbeamerfont{titlegraphic}{}% No doc, found in example themes
+\setbeamerfont{author}{shape=\itshape}
+\setbeamerfont{institute}{family=\rmfamily, series=\bfseries, size=\normalsize}
+\setbeamerfont{date}{}
+
+
+%%% Lists %%%
+\setbeamerfont{itemize/enumerate body}{size=\normalsize}% Beginning of a first-level itemize/enumerate environment (i.e., content)
+\setbeamerfont{itemize/enumerate subbody}{size=\small}% Second-level
+\setbeamerfont{itemize/enumerate subsubbody}{size=\footnotesize}% Third-level
+\setbeamerfont{item}{parent=structure, size=\normalsize, series=\sffamily\bfseries}% Parent for first-level itemize/enumerate item markers
+\setbeamerfont{subitem}{parent=item, size=\small, series=\mdseries}% Second-level
+\setbeamerfont{subsubitem}{parent=subitem, size=\footnotesize, series=\slshape}% Third-level
+\setbeamerfont{item projected}{size=\tiny,parent={item,projected text}}% Parent for first-level itemize/enumerate items with text projected onto shapes
+\setbeamerfont{subitem projected}{parent=item projected}% Second-level
+\setbeamerfont{subsubitem projected}{parent=subitem projected}% Third-level
+%Itemize:
+\setbeamerfont{itemize item}{parent=item}% First-level itemize marker
+\setbeamerfont{itemize subitem}{parent=subitem}% Second-level
+\setbeamerfont{itemize subsubitem}{parent=subsubitem}% Third-level
+%Enumerate:
+\setbeamerfont{enumerate item}{parent=item}% First-level enumerate marker
+\setbeamerfont{enumerate subitem}{parent=subitem}% Second-level
+\setbeamerfont{enumerate subsubitem}{parent=subsubitem}% Third-level
+\setbeamerfont{enumerate mini template}{}% "The number that arises from a mini template"
+%Description:
+\setbeamerfont{description body}{}% Beginning of a description environment
+\setbeamerfont{description item}{parent=item, series=\bfseries}% Description "marker" (i.e., text)
+
+
+%%% Figures %%%
+\setbeamerfont{caption name}{parent=caption}% e.g., "Figure"
+\setbeamerfont{caption}{parent=normal text}
+
+
+%%% Math %%%
+%\setbeamerfont{qed symbol}{}
+
+
+%%% Bibliography %%%
+\setbeamerfont{bibliography item}{parent=structure}% Mark (e.g., bullet) for bibliography list
+\setbeamerfont{bibliography entry author}{parent=normal text, size=\footnotesize}
+\setbeamerfont{bibliography entry title}{parent=bibliography entry author}
+\setbeamerfont{bibliography entry location}{parent=bibliography entry author}% This is where published, i.e., the journal
+\setbeamerfont{bibliography entry note}{parent=bibliography entry author}
+
+
+%%% Misc. Elements %%%
+\setbeamerfont{alerted text}{series=\bfseries}% \alert
+\setbeamerfont{example text}{parent=normal text}% Text in example blocks
+\setbeamerfont{button}{size=\tiny}% Content of \beamerbutton
+\setbeamerfont{footnote}{}
+\setbeamerfont{footnote mark}{}
+\setbeamerfont{logo}{}
+
+
+%%% Misc. Environments %%%
+\setbeamerfont{abstract}{size=\small}
+\setbeamerfont{abstract title}{parent={abstract,structure},size=\normalsize}
+\setbeamerfont{quotation}{shape=\itshape}
+\setbeamerfont{quote}{parent=quotation}
+\setbeamerfont{verse}{family=\rmfamily,shape=\itshape}
+
+
+%%% Blocks %%%
+\setbeamerfont{block title}{size=\large,parent={structure,block body}}% \begin{block}{title}{...}\end{block}
+\setbeamerfont{block body}{parent=normal text}
+\setbeamerfont{block title alerted}{parent={block title,alerted text}}% "alertblock" Title is alerted, body is normal
+\setbeamerfont{block body alerted}{parent=alerted text}
+\setbeamerfont{block title example}{parent={block title,example text}}% "exampleblock". Title is italicized, body is "example text"
+\setbeamerfont{block body example}{parent=example text}
+
+
+%%% TOC %%%
+\setbeamerfont{section in toc}{parent=itemize/enumerate body}
+\setbeamerfont{subsection in toc}{parent=itemize/enumerate subbody}
+\setbeamerfont{subsubsection in toc}{parent=itemize/enumerate subsubbody}
+\setbeamerfont{section in toc shaded}{parent=section in toc}% Shaded when not current
+\setbeamerfont{subsection in toc shaded}{parent=subsection in toc}% Shaded when not current
+\setbeamerfont{subsubsection in toc shaded}{parent=subsubsection in toc}% Shaded when not current
+\setbeamerfont{section number projected}{size=\small,parent={section in toc,projected text}}% Used when "section/subsection in toc" is set to [circle]
+\setbeamerfont{subsection number projected}{}% Used when "section/subsection in toc" is set to [circle]
+\setbeamerfont{subsubsection number projected}{}% Used when "section/subsection in toc" is set to [circle]
+
+
+%%% Part/Section/Subsection Pages (i.e., internal titlepages) %%%
+\setbeamerfont{part name}{size=\LARGE}
+\setbeamerfont{part title}{size=\LARGE,parent=title}
+\setbeamerfont{section name}{size=\Large}% For contents of \sectionpage
+\setbeamerfont{section title}{size=\Large,parent=title}% For contents of \sectionpage
+\setbeamerfont{subsection name}{size=\large}% For contents of \subsectionpage
+\setbeamerfont{subsection title}{size=\large,parent=title}% For contents of \subsectionpage
+
+
+%%% Head and Foot %%%
+\setbeamerfont{headline}{parent={tiny structure}}
+\setbeamerfont{footline}{parent={tiny structure}}
+%Individual entries:
+\setbeamerfont{title in head/foot}{}% No doc, found in example themes
+\setbeamerfont{author in head/foot}{}% No doc, found in example themes
+\setbeamerfont{institute in head/foot}{}% No doc, found in example themes
+\setbeamerfont{date in head/foot}{}% No doc, found in example themes
+\setbeamerfont{page number in head/foot}{parent=tiny structure, series=\bfseries}
+\setbeamerfont{section in head/foot}{}
+\setbeamerfont{subsection in head/foot}{}
+\setbeamerfont{subsubsection in head/foot}{}
+
+
+%%% Sidebars %%%
+\setbeamerfont{sidebar}{size=\Tiny,parent={tiny structure}}
+\setbeamerfont{sidebar canvas left}{parent=sidebar}
+\setbeamerfont{sidebar left}{parent=sidebar canvas left}
+\setbeamerfont{sidebar canvas right}{parent=sidebar}
+\setbeamerfont{sidebar right}{parent=sidebar canvas right}
+%Individual entries:
+\setbeamerfont{title in sidebar}{size=\tiny}% No doc, found in example themes
+\setbeamerfont{author in sidebar}{size=\tiny}% No doc, found in example themes
+\setbeamerfont{institute in sidebar}{}% No doc, found in example themes
+\setbeamerfont{date in sidebar}{}% No doc, found in example themes
+\setbeamerfont{section in sidebar}{}
+\setbeamerfont{subsection in sidebar}{}
+\setbeamerfont{subsubsection in sidebar}{}
+\setbeamerfont{section in sidebar shaded}{}% No doc, found in example themes
+\setbeamerfont{subsection in sidebar shaded}{}% No doc, found in example themes
+\setbeamerfont{subsubsection in sidebar shaded}{}% No doc, found in example themes
+
+
+%%% Navigation %%%
+\setbeamerfont{navigation symbols}{}
+\setbeamerfont{navigation symbols dimmed}{}% No doc, found in example themes
+\setbeamerfont{mini frame}{}% A miniature rendering of the current frame
+
+
+%%% Presentation Notes %%%
+\setbeamerfont{note page}{size=\small}% \note
+\setbeamerfont{note title}{parent=note page}% No doc, found in example themes.
+\setbeamerfont{note date}{size=\footnotesize}% No doc, found in example themes.
+
+
+%%% Unknown %%%
+\setbeamerfont{projected text}{parent={tiny structure}}% No doc, found in example themes
+
+\mode
+<all>

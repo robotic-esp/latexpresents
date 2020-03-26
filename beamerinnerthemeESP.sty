@@ -1,0 +1,307 @@
+%%%%%%%%%%% NOTES %%%%%%%%%%%
+%
+% When you define an "X begin" template you often have to define "X end" as well as so they match (defaults often contain \begin{...} and \end{...})
+%
+% "parent=" inherits from other definition
+% "use=" requires that the used definition is defined first. Useful for relative definitions (i.e., 50% darker)
+% "fg=structure.fg!25!bg" is 25% structure.fg and 75% structure.bg
+
+\mode<presentation>
+%%% Special pages %%%
+
+\newlength{\espbeamer@titlepage@emptyrule}% The length to extend the title underline to the right margin
+\newlength{\espbeamer@titlepage@toprowheight}% The height of the top row
+\newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
+%\newsavebox{\espbeamer@titlepage@subtitlebox}%
+%\newlength{\espbeamer@titlepage@subtitleheight}
+\setbeamertemplate{title page}% The title page
+{%
+    \nointerlineskip%
+    \setlength{\contentwidth}{\paperwidth - \espbeamer@border@left - \espbeamer@border@right}%
+    \setlength{\contentheight}{\paperheight - \espbeamer@border@top - \espbeamer@border@bottom}%
+    \setlength{\elementwidth}{\contentwidth}%
+    \setlength{\espbeamer@titlepage@toprowheight}{0.6\contentheight}
+    \setlength{\espbeamer@titlepage@bottomrowheight}{\contentheight - \espbeamer@titlepage@toprowheight}
+    \begin{textblock*}{\elementwidth}(\espbeamer@border@left,\espbeamer@border@top)
+        \setlength{\elementheight}{\espbeamer@titlepage@toprowheight}%
+        \vbox to \elementheight%
+        {%
+            \ifbeamertemplateempty{titlelogo}{}%
+            {%
+                \vfil%
+                \usebeamertemplate*{titlelogo}%
+                \vfil%
+            }%
+        }%
+    \end{textblock*}
+    \begin{textblock*}{\elementwidth}(\espbeamer@border@left,\espbeamer@border@top + \espbeamer@titlepage@toprowheight)
+        \setlength{\elementheight}{\espbeamer@titlepage@bottomrowheight}%
+        \vbox to \elementheight%
+        {%
+            \usebeamerfont*{title}%
+            \usebeamercolor*{title}%
+            \setlength{\espbeamer@titlepage@emptyrule}{\elementwidth - \widthof{\inserttitle{}}}%
+            \underline{\inserttitle{}\hspace*{\espbeamer@titlepage@emptyrule}}\\%
+            \usebeamerfont*{subtitle}%
+            \usebeamercolor*{subtitle}%
+            \vskip0.25\baselineskip%
+            \insertauthor{}\\%
+            \insertinstitute{}\\%
+            \insertdate{}%
+        }%
+    \end{textblock*}
+}%
+
+\setbeamertemplate{part page}% The titlepage of a presentation part
+{%
+    \onecolumnfull%
+    {%
+        \centering%
+        \vbox to \elementheight%
+        {%
+            \vfil%
+            \usebeamerfont*{part title}
+            \usebeamercolor*{part title}
+            \insertpart{}%
+            \vfil%
+        }%
+    }%
+}%
+\setbeamertemplate{section page}% The titlepage of a presentation section
+{%
+    \onecolumnfull%
+    {%
+        \centering%
+        \vbox to \elementheight%
+        {%
+            \vfil%
+            \usebeamerfont*{section title}
+            \usebeamercolor*{section title}
+            \insertsection{}%
+            \vfil%
+        }%
+    }%
+}%
+\setbeamertemplate{subsection page}% The titlepage of a presentation subsection
+{%
+    \onecolumnfull%
+    {%
+        \centering%
+        \vbox to \elementheight%
+        {%
+            \vfil%
+            \usebeamerfont*{subsection title}
+            \usebeamercolor*{subsection title}
+            \insertsubsection{}%
+            \vfil%
+        }%
+    }%
+}%
+
+
+%%% Presentation %%%
+\setbeamertemplate{structure begin}{}% structureenv environment (the environment equivalent of \structure).
+    %[default]
+\setbeamertemplate{structure end}{}% structureenv end
+\setbeamertemplate{frametitle continuation}{}% Title appended text when allowframebreaks is true
+    %[default] Installs a Roman number as the template. The number indicates the current page of the frame.
+    %[roman] Alias for the default.
+    %[from second][⟨text⟩] Installs a template that inserts ⟨text⟩ from the second page of a frame on. By default, the text inserted is \insertcontinuationtext, which in turn is (cont.) by default.
+
+
+%%% Lists %%%
+%\setbeamertemplate{itemize/enumerate body begin}{}% begin of first-level itemize/enumerate environment
+%\setbeamertemplate{itemize/enumerate body end}{}% end of first-level 
+%\setbeamertemplate{itemize/enumerate subbody begin}{}% begin of second-level
+%\setbeamertemplate{itemize/enumerate subbody end}{}% enf of second-level
+%\setbeamertemplate{itemize/enumerate subsubbody begin}{}% begin of third-level
+%\setbeamertemplate{itemize/enumerate subsubbody end}{}% end of third-level
+\setbeamertemplate{items}[default]% Parent for both itemize and enumerate items
+    %[default] Use individual defaults
+    %[circle] Use little circles
+    %[square] Use little squares
+    %[ball] Use little balls
+
+%Itemize:
+%\setbeamertemplate{itemize items}{}% All itemize item markers
+    %[triangle] Uses small triangles as item markers (default).
+    %[circle] Uses little circles (or dots) as item markers.
+    %[square] Uses little squares as item markers.
+    %[ball] Uses little balls as item markers.
+    
+\setbeamertemplate{itemize item}[circle]% First-level markers
+\setbeamertemplate{itemize subitem}{$\circ$}% Second-level
+\setbeamertemplate{itemize subsubitem}{--}% Third-level
+
+%%Enumerate:
+%\setbeamertemplate{enumerate items}{}% All enumerate item markers
+    %[default] Roman numbers, 1, 1.1, & 1.1.1.
+    %[circle] Uses little circles (or dots) as item markers.
+    %[square] Uses little squares as item markers.
+    %[ball] Uses little balls as item markers.
+    
+\setbeamertemplate{enumerate item}{\insertenumlabel.}% First-level markers
+\setbeamertemplate{enumerate subitem}{\insertsubenumlabel.}% Second-level
+\setbeamertemplate{enumerate subsubitem}{\insertsubsubenumlabel.}% Third-level
+%\setbeamertemplate{enumerate mini template}{}% Formating of the optional minitemplate argument
+
+%Description:
+%\setbeamertemplate{description body begin}{}% begin of description environment
+%\setbeamertemplate{description body end}{}% end of description
+\setbeamertemplate{description item}{\insertdescriptionitem}% Description item
+    %[default]%
+
+
+%%% Figures %%%
+\setbeamertemplate{caption}{\usebeamerfont*{caption}\usebeamercolor*{caption}\insertcaption{}}% Figure/table/etc. captions
+    %[default] typesets the caption name then the caption text. No number is printed.
+    %[numbered] adds the figure or table number to the caption.
+    %[caption name own line] Puts the caption name on its own line.
+    %\insertcaption Inserts the text of the current caption.
+    %\insertcaptionname Inserts the name of the current caption (e.g., Figured).
+    %\insertcaptionnumber Inserts the number of the current figure or table.
+    
+%\setbeamertemplate{caption label separator}{}% The seperator between the caption name (e.g., Figure) & caption
+    %[none] Typesets no separator.
+    %[colon] Typesets the colon followed by the space (default).
+    %[period] Typesets the period followed by the space.
+    %[space] Typesets the space.
+    %[quad] Typesets the \quad followed by the space.
+    %[endash] Typesets the en-dash surrounded by spaces ( -- ).
+
+
+%%% Math %%%
+%\setbeamertemplate{qed symbol}{}% The symbol is shown at the end of every proof. Default: Empty square
+    %Filled square: \vrule width1.5ex height1.5ex depth0pt
+    
+%\setbeamertemplate{theorems}{}%
+    %[default] The font specification for the body is honored, the font specification for the head is ignored. No theorem number is printed.
+    %[normal font] Like the default, except all font specifications for the body are ignored. Thus, the fonts are used that are normally used for blocks.
+    %[numbered] This option is like the default, except that the theorem number is printed for environments that are numbered.
+    %[ams style] This causes theorems to be put in a block or exampleblock, but to be otherwise typeset as is normally done in amsthm. Thus the head font and body font depend on the setting for the theorem to be typeset and theorems are numbered.
+    
+\setbeamertemplate{theorem begin}% Begin of environment defined by \newtheorem
+{%
+    \begin{\inserttheoremblockenv}%
+    {%
+        \inserttheoremheadfont%
+        \inserttheoremname%
+        \usebeamerfont*{block body}%
+        \ifx\inserttheoremaddition\@empty%
+            \strut%
+        \else%
+            \ (\inserttheoremaddition)%
+        \fi%
+        \inserttheoremheadfont%
+        \inserttheorempunctuation%
+    }%
+}%
+    %\inserttheoremname The name of the environment to be typeset (like “Theorem” or “Corollary”).
+    %\inserttheoremnumber The number of the current theorem preceded by a space or to nothing, if the current theorem does not have a number.
+    %\inserttheoremaddition The optional argument given to the environment or will be empty, if there was no optional argument.
+    %\inserttheorempunctuation The punctuation character for the current environment. This is usually a period.
+    %\inserttheoremheadfont A font changing command that switches to the font to be used in the head of the theorem. By not inserting it, you can ignore the head font.
+    %\inserttheoremblockenv Expands to "block" unless theorem style example is typeset, then "exampleblock". Thus you can use this insert to decide which environment should be used when typesetting the theorem.
+    
+\setbeamertemplate{theorem end}% End of \newtheorem defined environment
+{%
+    \end{\inserttheoremblockenv}%
+}%
+\setbeamertemplate{proof begin}% Begin of proof environment, defaults to block begin template
+{%
+    \begin{block}%
+    {%
+        \inserttheoremheadfont%
+        \insertproofname%
+    }%
+}%
+    %\insertproofname The proof name, followed by a period most of the time.
+\setbeamertemplate{proof end}% End of proof environment, default to block end template
+{%
+    \end{block}%
+}%
+
+
+%%% Bibliography %%%
+\setbeamertemplate{bibliography item}{\usebeamerfont*{bibliography item}\usebeamercolor*{bibliography item}\textbullet}% Mark (e.g., bullet) for bibliography list
+    %[article] A little article icon (default).
+    %[book] A little book icon as the reference.
+    %[online] A little globe icon as the reference.
+    %[triangle] A triangle as the reference as per itemize default.
+    %[text] Uses the reference text (like “[Dijkstra, 1982]”) as the reference text.
+    %\insertbiblabel inserts the current citation label.
+    
+\setbeamertemplate{bibliography entry author}{\usebeamerfont*{bibliography entry author}\usebeamercolor*{bibliography entry author}}% Inserted before author
+\setbeamertemplate{bibliography entry title}{\usebeamerfont*{bibliography entry title}\usebeamercolor*{bibliography entry title}}% Inserted before title
+\setbeamertemplate{bibliography entry location}{\usebeamerfont*{bibliography entry location}\usebeamercolor*{bibliography entry location}}% Inserted before where published
+\setbeamertemplate{bibliography entry note}{\usebeamerfont*{bibliography entry note}\usebeamercolor*{bibliography entry note}}% Inserted before note
+
+
+%%% Misc. Elements %%%
+\setbeamertemplate{alerted text begin}{\setbeamercolor{math text}{parent=alerted text}}% Start of \alert
+\setbeamertemplate{alerted text end}{}%
+\setbeamertemplate{button}[default]%
+    %[default] Typesets the button with rounded corners. The fore- and background of the beamer-color button are used and also the beamer-font button. The border of the button gets the foreground of the beamer-color button border.
+    %\insertbuttontext inserts the text of the current button, prefixed by a symbol if appropriate.
+    %\insertgotosymbol This text is inserted at the beginning of goto buttons, \renewcommand to change the symbol.
+    %\insertskipsymbol This text is inserted at the beginning of skip buttons, \renewcommand to change the symbol.
+    %\insertreturnsymbol This text is inserted at the beginning of return buttons, \renewcommand to change the symbol.
+%\setbeamertemplate{footnote}{}
+    %\insertfootnotetext Inserts the current footnote text.
+    %\insertfootnotemark Inserts the current footnote mark (like a raised number). This mark is computed automatically.
+
+
+%%% Misc. Environments %%%
+%\setbeamertemplate{abstract title}{}%
+%\setbeamertemplate{abstract begin}{}%
+%\setbeamertemplate{abstract end}{}%
+%\setbeamertemplate{quotation begin}{}%
+%\setbeamertemplate{quotation end}{}%
+%\setbeamertemplate{quote begin}{}%
+%\setbeamertemplate{quote end}{}%
+%\setbeamertemplate{verse begin}{}%
+%\setbeamertemplate{verse end}{}%
+
+
+%%% Blocks %%%
+%\setbeamertemplate{blocks}{}% Parent for all blocks
+%\setbeamertemplate{block begin}{}% \begin{block}
+    %\insertblocktitle Inserts the ⟨block title⟩ into the template.
+%\setbeamertemplate{block end}{}%
+%\setbeamertemplate{block alerted begin}{}% \begin{alertblock}
+%\setbeamertemplate{block alerted end}{}%
+%\setbeamertemplate{block example begin}{}% \begin{exampleblock}
+%\setbeamertemplate{block example end}{}%
+
+
+%%% TOC %%%
+%\setbeamertemplate{section/subsection in toc}[default]% Parent template for section and subsection
+    %[default] Sections and subsections are typeset using the fonts and colors "section in toc" and "subsection in toc", though the background colors are ignored. The subsections are indented.
+    %[sections numbered] Similar to the default setting, but the section numbers are also shown. The subsections are not numbered.
+    %[subsections numbered] Subsections are numbered, but not the sections.
+    %[circle] Little circles before the sections with section numbers. Uses beamer-font and color "section number projected" for typesetting the circles.
+    %[square] Small squares before the sections with section numbers. Small, unnumbered squares in front of the subsections.
+    %[ball] Like square, but with balls
+    %[ball unnumbered] Balls without numbers
+%\setbeamertemplate{section in toc}{}%
+%    %\inserttocsection inserts the table of contents version of the current section name.
+%    %\inserttocsectionnumber inserts the number of the current section (in the table of contents).
+%\setbeamertemplate{subsection in toc}{}%
+%    %\inserttocsubsection inserts the table of contents version of the current subsection name.
+%    %\inserttocsubsectionnumber inserts the number of the current subsection (in the table of contents).
+%\setbeamertemplate{subsubsection in toc}{}%
+%    %\inserttocsubsubsection inserts the table of contents version of the current subsubsection name.
+%    %\inserttocsubsubsectionnumber inserts the number of the current subsubsection (in the table of contents).
+%\setbeamertemplate{section/subsection in toc shaded}{}% Shaded parent template
+%\setbeamertemplate{section in toc shaded}{}%
+%\setbeamertemplate{subsection in toc shaded}{}%
+%\setbeamertemplate{subsubsection in toc shaded}{}%
+
+
+%%% Article mode only %%%
+%\setbeamertemplate{frame begin}{}%Article mode only
+%\setbeamertemplate{frame end}{}%Article mode only
+
+
+\mode
+<all>
