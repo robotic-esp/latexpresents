@@ -41,9 +41,13 @@
 %    \fbox{\Gm@lmargin{}}%\Gm@lmargin{} is a macro, not a LaTeX length
     \vfill%
     \hskip\espbeamer@border@left%
-    \mbox%
+    \ifbeamertemplateempty{logo}%
+    {}%
     {%
-        \usebeamertemplate*{logo}%
+        \mbox%
+        {%
+            \usebeamertemplate*{logo}%
+        }%
     }%
     \vskip\espbeamer@border@bottom%
 }%

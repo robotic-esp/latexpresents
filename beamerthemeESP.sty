@@ -25,7 +25,6 @@
 \RequirePackage{xparse}% For NewDocumentCommand which allows multiple optional arguments with defaults
 \RequirePackage{xkeyval}% For defining macro options as key-value pairs. Extends the base keyval package.
 \RequirePackage{xcolor}% You know, for colours.
-\RequirePackage{fp}% For fixed point math
 \RequirePackage[absolute,overlay]{textpos}% For absolutely positioned text boxes (titlepage)
 \usepackage{microtype}% Make pdflatex look more good.
 \usepackage{datetime2}% Better date formatting, ISO by default.
@@ -61,7 +60,7 @@
 \newlength{\elementheight}% The height of a frame element (e.g., column).
 
 %%% Internal Parameters %%%
-% Slide sapcing
+% Slide spacing
 \newlength{\espbeamer@border@left}%
 \setlength{\espbeamer@border@left}{8pt}%
 \newlength{\espbeamer@border@right}%
@@ -187,6 +186,41 @@
     \end{frame}%
 }%
 %%%%%%%%%%%% END FRAME ENVIRONMENTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% CONTENT FRAMES %%%%%%%%%%%%
+\NewDocumentCommand{\thankspage}{+O{Thank you}}%
+{%
+    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {0.5}{0.5}%
+    {%
+        \usebeamerfont*{thanks}%
+        \usebeamercolor*{thanks}%
+        \vbox to \elementheight%
+        {%
+            \centering%
+            \vfil%
+            #1%
+        }%
+    }%
+    {%
+        \ifbeamertemplateempty{logo}%
+        {}%
+        {%
+            \centering%
+            \vfil%
+            \ifdim\espbeamer@titlelogo@maxwidth>0.5\elementwidth%
+                \resizebox{0.5\elementwidth}{!}{\usebeamertemplate*{logo}}%
+            \else%
+                \usebeamertemplate*{logo}
+            \fi%
+            \vfil%
+        }%
+    }%
+    {}%
+}%
+%%%%%%%%%%%% END CONTENT FRAMES %%%%%%%%%%%%
 
 
 
@@ -876,7 +910,7 @@
 %%%%%%%%%%%% END DEBUG FUNCTIONS %%%%%%%%%%%%
 
 
-%
+%\RequirePackage{fp}% For fixed point math
 %\newcommand{\adjustfrac}[1]%
 %{%
 %%    \FPeval{\result}{(#1*\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)/(\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)}

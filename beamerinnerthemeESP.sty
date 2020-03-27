@@ -16,7 +16,8 @@
     \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
     {0.6}{0.4}%
     {%
-        \ifbeamertemplateempty{titlelogo}{\strut}%
+        \ifbeamertemplateempty{titlelogo}%
+        {}%
         {%
             \vfil%
             \ifdim\espbeamer@titlelogo@maxwidth>\elementwidth%
