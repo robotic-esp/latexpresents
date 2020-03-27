@@ -8,15 +8,13 @@
 
 \mode<presentation>
 %%% Special pages %%%
-
+\newlength{\espbeamer@titlepage@emptyrule}% The length to extend the title underline to the right margin
+\newlength{\espbeamer@titlepage@toprowheight}% The height of the top row
+\newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
 \newcommand{\calctitlelogoscale}%
 {%
     \FPeval{\espbeamer@titlelogo@scale}{min(1.0,\strip@pt\elementwidth/\strip@pt\espbeamer@titlelogo@maxwidth)}
 }%
-
-\newlength{\espbeamer@titlepage@emptyrule}% The length to extend the title underline to the right margin
-\newlength{\espbeamer@titlepage@toprowheight}% The height of the top row
-\newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
 \setbeamertemplate{title page}% The title page
 {%
     \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
@@ -44,7 +42,6 @@
     }%
     {}%
 }%
-
 \setbeamertemplate{part page}% The titlepage of a presentation part
 {%
     \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
