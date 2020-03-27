@@ -25,6 +25,7 @@
 \RequirePackage{xparse}% For NewDocumentCommand which allows multiple optional arguments with defaults
 \RequirePackage{xkeyval}% For defining macro options as key-value pairs. Extends the base keyval package.
 \RequirePackage{xcolor}% You know, for colours.
+\RequirePackage{fp}% For fixed point math
 \RequirePackage[absolute,overlay]{textpos}% For absolutely positioned text boxes (titlepage)
 \usepackage{microtype}% Make pdflatex look more good.
 \usepackage{datetime2}% Better date formatting, ISO by default.
@@ -76,10 +77,10 @@
 \newlength{\espbeamer@frametitle@sep}% The space below the frame title and the content. Untested as to whether the class works when different than the Beamer default.
 \setlength{\espbeamer@frametitle@sep}{8.5pt}% Beamer default found experimentally to 8.5pt.
 % Title logos
-\newlength{\espbeamer@titlelogo@height}%
-\setlength{\espbeamer@titlelogo@height}{56pt}%
+\newlength{\espbeamer@titlelogo@maxheight}%
+\setlength{\espbeamer@titlelogo@maxheight}{56pt}%
 \newlength{\espbeamer@titlelogo@sep}%
-\setlength{\espbeamer@titlelogo@sep}{8pt}%
+\setlength{\espbeamer@titlelogo@sep}{8pt}% This may not be the exact logo separation used as title logos are scaled as a group if they are wider than the title page
 % Footer logos
 \newlength{\espbeamer@footlogo@height}%
 \setlength{\espbeamer@footlogo@height}{28pt}%
@@ -95,6 +96,7 @@
 %\setlength{\belowcaptionskip}{0pt}%
 
 %%% Internally calculated lengths from Beamer %%%
+\newlength{\espbeamer@titlelogo@maxwidth}% Height of the frame title block
 \newlength{\espbeamer@frametitle@height}% Height of the frame title block
 \newlength{\espbeamer@topmatter@height}% Height of everything above content
 \newlength{\espbeamer@bottommatter@height}% Height of everything below content
@@ -603,8 +605,9 @@
 \def\espbeamer@defaulttitlelogos{}%
 \newcommand*{\addtitlelogo}[1]%
 {%
-    \edef\espbeamer@titlelogos{\espbeamer@titlelogos \includegraphics[height=\espbeamer@titlelogo@height]{#1} \hskip\espbeamer@titlelogo@sep}%
+    \edef\espbeamer@titlelogos{\espbeamer@titlelogos \includegraphics[height=\espbeamer@titlelogo@maxheight]{#1} \hskip\espbeamer@titlelogo@sep}%
     \setbeamertemplate{titlelogo}{\espbeamer@titlelogos}%
+    \settowidth{\espbeamer@titlelogo@maxwidth}{\espbeamer@titlelogos}%
 }%
 % Usage: \resettitlelogo{}
 \newcommand*{\savetitlelogos}%
@@ -616,12 +619,14 @@
 {%
     \edef\espbeamer@titlelogos{\espbeamer@defaulttitlelogos}%
     \setbeamertemplate{titlelogo}{\usebeamercolor*{titlelogo}\usebeamerfont*{titlelogo}\espbeamer@titlelogos}%
+    \settowidth{\espbeamer@titlelogo@maxwidth}{\espbeamer@titlelogos}%
 }%
 % Usage: \cleartitlelogo{}
 \newcommand*{\cleartitlelogos}%
 {%
     \def\espbeamer@titlelogos{}%
     \setbeamertemplate{titlelogo}{}%
+    \setlength{\espbeamer@titlelogo@maxwidth}{0pt}%
 }%
 
 %%% FOOT LOGOS %%%
@@ -871,7 +876,7 @@
 %%%%%%%%%%%% END DEBUG FUNCTIONS %%%%%%%%%%%%
 
 
-%\RequirePackage{fp}% For fixed point math
+%
 %\newcommand{\adjustfrac}[1]%
 %{%
 %%    \FPeval{\result}{(#1*\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)/(\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)}

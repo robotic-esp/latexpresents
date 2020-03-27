@@ -9,11 +9,14 @@
 \mode<presentation>
 %%% Special pages %%%
 
+\newcommand{\calctitlelogoscale}%
+{%
+    \FPeval{\espbeamer@titlelogo@scale}{min(1.0,\strip@pt\elementwidth/\strip@pt\espbeamer@titlelogo@maxwidth)}
+}%
+
 \newlength{\espbeamer@titlepage@emptyrule}% The length to extend the title underline to the right margin
 \newlength{\espbeamer@titlepage@toprowheight}% The height of the top row
 \newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
-%\newsavebox{\espbeamer@titlepage@subtitlebox}%
-%\newlength{\espbeamer@titlepage@subtitleheight}
 \setbeamertemplate{title page}% The title page
 {%
     \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
@@ -22,7 +25,8 @@
         \ifbeamertemplateempty{titlelogo}{\strut}%
         {%
             \vfil%
-            \usebeamertemplate*{titlelogo}%
+            \calctitlelogoscale{}%
+            \scalebox{\espbeamer@titlelogo@scale}{\usebeamertemplate*{titlelogo}}%
             \vfil%
         }%
     }%
