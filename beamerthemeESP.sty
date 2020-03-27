@@ -1,7 +1,3 @@
-%Sources
-%https://tex.stackexchange.com/questions/146529/design-a-custom-beamer-theme-from-scratch
-%https://bitbucket.org/marczellm/beamerports/src/master/
-
 %%%%%%%%%%%% CLASS OPTIONS %%%%%%%%%%%%
 % Setup
 \RequirePackage{kvoptions}% For defining package options as key-value pairs
@@ -12,6 +8,7 @@
 }%
 
 % Colour theme
+\DeclareBoolOption[false]{debug}% espbeamer@debug
 \DeclareBoolOption[false]{dark}% espbeamer@dark
 \DeclareComplementaryOption{light}{dark}%
 %%Which multimedia package to use
@@ -32,71 +29,74 @@
 \usepackage{microtype}% Make pdflatex look more good.
 \RequirePackage{contour}% For a custom definition of \underline that looks better.
 \RequirePackage[normalem]{ulem}% For a custom definition of \underline that looks better, with option to not redefine \emph.
+\RequirePackage{printlen}% \printlength
+\uselengthunit{pt}
 %For media (depending on optional flag)
 \ifespbeamer@adobe%
     \RequirePackage{media9}%
 \else%
     \RequirePackage{multimedia}%
 \fi%
+
+\textblockrulecolour{TEXT}%
 %%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%
 
 
 
 %%%%%%%%%%%% DIMENSIONS %%%%%%%%%%%%
-%%% Publically available lengths (Set by ESP) %%%
+%%% Publically available positions and lengths (Set by ESP) %%%
+\newlength{\contentposx}% The starting x-position of all content in a frame.
+\newlength{\contentposy}% The starting y-position of all content in a frame.
 \newlength{\contentwidth}% The total width for all content in a frame.
 \newlength{\contentheight}% The total height for all content in a frame.
+\newlength{\elementposx}% The starting x-position of a frame element (e.g., column).
+\newlength{\elementposy}% The starting y-position of a frame element (e.g., column).
 \newlength{\elementwidth}% The width of a frame element (e.g., column).
 \newlength{\elementheight}% The height of a frame element (e.g., column).
 
 %%% Internal Parameters %%%
-% Slide borders
+% Slide sapcing
 \newlength{\espbeamer@border@left}%
-\setlength{\espbeamer@border@left}{0.25cm}%
+\setlength{\espbeamer@border@left}{8pt}%
 \newlength{\espbeamer@border@right}%
-\setlength{\espbeamer@border@right}{0.25cm}%
+\setlength{\espbeamer@border@right}{8pt}%
 \newlength{\espbeamer@border@top}%
-\setlength{\espbeamer@border@top}{0.25cm}%
+\setlength{\espbeamer@border@top}{8pt}%
 \newlength{\espbeamer@border@bottom}%
-\setlength{\espbeamer@border@bottom}{0.25cm}%
+\setlength{\espbeamer@border@bottom}{8pt}%
+\newlength{\espbeamer@gutter@column}%
+\setlength{\espbeamer@gutter@column}{6pt}%
+\newlength{\espbeamer@gutter@row}%
+\setlength{\espbeamer@gutter@row}{\espbeamer@gutter@column}%
+\newlength{\espbeamer@frametitle@sep}% The space below the frame title and the content. Untested as to whether the class works when different than the Beamer default.
+\setlength{\espbeamer@frametitle@sep}{8.5pt}% Beamer default found experimentally to 8.5pt.
 % Title logos
 \newlength{\espbeamer@titlelogo@height}%
-\setlength{\espbeamer@titlelogo@height}{2cm}%
+\setlength{\espbeamer@titlelogo@height}{56pt}%
 \newlength{\espbeamer@titlelogo@sep}%
-\setlength{\espbeamer@titlelogo@sep}{0.3cm}%
+\setlength{\espbeamer@titlelogo@sep}{8pt}%
 % Footer logos
 \newlength{\espbeamer@footlogo@height}%
-\setlength{\espbeamer@footlogo@height}{1cm}%
+\setlength{\espbeamer@footlogo@height}{28pt}%
 \newlength{\espbeamer@footlogo@sep}%
-\setlength{\espbeamer@footlogo@sep}{0.15cm}%
+\setlength{\espbeamer@footlogo@sep}{4pt}%
 % Biographical photos
-\newlength{\espbeamer@bio@height}%
-\setlength{\espbeamer@bio@height}{1.4cm}%
+\newlength{\espbeamer@bio@height}% Set from \espbeamer@topmatter@height
 \newlength{\espbeamer@bio@sep}%
-\setlength{\espbeamer@bio@sep}{0.05cm}%
+\setlength{\espbeamer@bio@sep}{1.5pt}%
 
-%%% Fixes %%%
-\setlength{\abovecaptionskip}{0pt}%
-\setlength{\belowcaptionskip}{0pt}%
+%%%% Fixes %%%
+%\setlength{\abovecaptionskip}{0pt}%
+%\setlength{\belowcaptionskip}{0pt}%
 
 %%% Internally calculated lengths from Beamer %%%
-\newlength{\espbeamer@content@width}% Width for content on a regular slide.
-\newlength{\espbeamer@content@height}% Height for content on a regular slide.
+\newlength{\espbeamer@frametitle@height}% Height of the frame title block
 \newlength{\espbeamer@topmatter@height}% Height of everything above content
 \newlength{\espbeamer@bottommatter@height}% Height of everything below content
-\newlength{\espbeamer@frametitle@height}% Height of the frame title block
-
 
 %%% Manually specified lengths %%%
 \newlength{\espbeamer@beamer@heightdiff}% This is the difference between \pageheight and \textheight regardless of aspect ratio.
 \setlength{\espbeamer@beamer@heightdiff}{4pt}% Found experimentally. Documented without expected use.
-\newlength{\espbeamer@frametitle@sep}% This is the space after a frame title before Beamer starts setting text.
-\setlength{\espbeamer@frametitle@sep}{8.5pt}% Found experimentally.
-\newlength{\espbeamer@figure@aboveskip}{}% This is the space inserted before a figure environment.
-\setlength{\espbeamer@figure@aboveskip}{6pt}% Found experimentally.
-\newlength{\espbeamer@caption@height}% Height of a caption when typeset.
-\setlength{\espbeamer@caption@height}{22.5pt}% Found experimentally for a vertically-limited image with a caption in normalsize font with the 12pt option.
-\addtolength{\espbeamer@caption@height}{\abovecaptionskip + \belowcaptionskip}% Adjust by above/below skips
 %%%%%%%%%%%% END DIMENSIONS %%%%%%%%%%%%%%%%%% 
 
 
@@ -115,15 +115,7 @@
 \patchcmd{\endbeamer@frameslide}{\ifx\beamer@frametitle\@empty}{\iffalse}{}{\errmessage{failed to patch}}%
 
 % Calculate lengths from Beamer theme settings
-\settototalheight{\espbeamer@frametitle@height}% This needs to reflect the way the frametitle is built.
-{%
-    \parbox{100pt}%
-    {%
-        \usebeamerfont*{frametitle}\strut%
-        \vskip-2pt%
-        \usebeamerfont*{framesubtitle}\strut%
-    }%
-}%
+\settototalheight{\espbeamer@frametitle@height}{\setframetitle}%
 \setlength{\espbeamer@topmatter@height}%
 {%
     \espbeamer@border@top + \espbeamer@frametitle@height + \espbeamer@frametitle@sep
@@ -132,19 +124,12 @@
 {%
     \espbeamer@footlogo@sep + \espbeamer@footlogo@height + \espbeamer@border@bottom
 }%
-\setlength{\espbeamer@content@height}%
+\setlength{\espbeamer@bio@height}%
 {%
-    \paperheight%
-    -\espbeamer@topmatter@height% top space
-    %content here%
-    -\espbeamer@bottommatter@height% bottom space
-}%
-\setlength{\espbeamer@content@width}%
-{%
-    \paperwidth%
-    - \espbeamer@border@left% left space
-    %content here%
-    - \espbeamer@border@right% right space
+    \espbeamer@topmatter@height
+    - \espbeamer@border@top
+    %bio photo
+    - \espbeamer@bio@sep%
 }%
 %%%%%%%%%%%% END BEAMER %%%%%%%%%%%%%%%%%% 
 
@@ -181,8 +166,12 @@
     \setbeamertemplate{sidebar left}{}%
     \setbeamertemplate{sidebar right}{}%
     \setbeamertemplate{frametitle}{}%
+    \setlength{\contentposx}{0pt}%
+    \setlength{\contentposy}{0pt}%
     \setlength{\contentwidth}{\paperwidth}%
     \setlength{\contentheight}{\paperheight}%
+    \setlength{\elementposx}{\contentposx}%
+    \setlength{\elementposy}{\contentposy}%
     \setlength{\elementwidth}{\contentwidth}%
     \setlength{\elementheight}{\contentheight}%
     \begin{frame}%
@@ -196,25 +185,26 @@
 
 %%%%%%%%%%%% HIGH-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
 %%% ONE-COLUMN LAYOUTS %%%
-\newcommand{\onecolumnfull}[1]{\threecolumnframe{1.0}{0}{#1}{}{}}%
+\newcommand{\onecolumnfull}[1]{\threecolumnlayout{1.0}{0}{#1}{}{}}%
+%\NewDocumentCommand{\onecolumnfull}{O{} m}{\threecolumnlayout[#1]{1.0}{0}{#2}{}{}}%
 \NewDocumentCommand{\imagecenter}{O{} O{} m}{\onecolumnfull{\image[#1][#2]{#3}}}% Usage: see \image
 \NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m}{\onecolumnfull{\video[#1][#2]{#3}{#4}}}% Usage: see \video
-\NewDocumentCommand{\listleft}{O{itemize} m}{\onecolumnfull{\begin{#1}#2\end{#1}}}% Usage: [itemize/enumerate/description]{\item content}
+\NewDocumentCommand{\envleft}{O{itemize} m}{\onecolumnfull{\begin{#1}#2\end{#1}}}% Usage: [environment]{\item content}
 
 %%% TWO-COLUMN LAYOUTS %%%
-\newcommand{\twocolumneven}[2]{\threecolumnframe{0.5}{0.5}{#1}{#2}{}}%
-\newcommand{\twocolumnbigleft}[2]{\threecolumnframe{0.6666}{0.3333}{#1}{#2}{}}%
-\newcommand{\twocolumnbigright}[2]{\threecolumnframe{0.3333}{0.6666}{#1}{#2}{}}%
-\NewDocumentCommand{\listleftmediaright}{O{itemize} m m}{\twocolumneven{\begin{#1}#2\end{#1}}{#3}}% Usage: [itemize/enumerate/description]{\item content}{media content}
-\NewDocumentCommand{\medialeftlistright}{m O{itemize} m}{\twocolumneven{#1}{\begin{#2}#3\end{#2}}}% Usage: {media content}[itemize/enumerate/description]{\item content}
-\NewDocumentCommand{\listleftright}{O{itemize} m O{itemize} m}{\twocolumneven{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}}% Usage: [itemize/enumerate/description]{\item content}[itemize/enumerate/description]{\item content}
+\newcommand{\twocolumneven}[2]{\threecolumnlayout{0.5}{0.5}{#1}{#2}{}}%
+\newcommand{\twocolumnbigleft}[2]{\threecolumnlayout{0.6666}{0.3333}{#1}{#2}{}}%
+\newcommand{\twocolumnbigright}[2]{\threecolumnlayout{0.3333}{0.6666}{#1}{#2}{}}%
+\NewDocumentCommand{\envleftboxright}{O{itemize} m m}{\twocolumneven{\begin{#1}#2\end{#1}}{#3}}% Usage: [environment]{environment content}{media content}
+\NewDocumentCommand{\boxleftenvright}{m O{itemize} m}{\twocolumneven{#1}{\begin{#2}#3\end{#2}}}% Usage: {media content}[environment]{environment content}
+\NewDocumentCommand{\envleftright}{O{itemize} m O{itemize} m}{\twocolumneven{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}}% Usage: [environment]{environment content}[environment]{environment content}
 %%% END TWO-COLUMN LAYOUTS %%%
 
 %%% THREE-COLUMN LAYOUTS %%%
-\newcommand{\threecolumneven}[3]{\threecolumnframe{0.3333}{0.3333}{#1}{#2}{#3}}%
-\newcommand{\threecolumnbigleft}[3]{\threecolumnframe{0.5}{0.25}{#1}{#2}{#3}}%
-\newcommand{\threecolumnbigmiddle}[3]{\threecolumnframe{0.25}{0.5}{#1}{#2}{#3}}%
-\newcommand{\threecolumnbigright}[3]{\threecolumnframe{0.25}{0.25}{#1}{#2}{#3}}%
+\newcommand{\threecolumneven}[3]{\threecolumnlayout{0.3333}{0.3333}{#1}{#2}{#3}}%
+\newcommand{\threecolumnbigleft}[3]{\threecolumnlayout{0.5}{0.25}{#1}{#2}{#3}}%
+\newcommand{\threecolumnbigmiddle}[3]{\threecolumnlayout{0.25}{0.5}{#1}{#2}{#3}}%
+\newcommand{\threecolumnbigright}[3]{\threecolumnlayout{0.25}{0.25}{#1}{#2}{#3}}%
 %%% END THREE-COLUMN LAYOUTS %%%
 %%%%%%%%%%%% END HIGH-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
 
@@ -222,35 +212,35 @@
 %%%%%%%%%%%% LATEX FUNCTIONS %%%%%%%%%%%%
 %%% A helper function to define complimentary keys (i.e., key1 != key2)
 %
-% Usage: \definecomplimentarykeys{keyfamily}{macro}{key1}{key2}
+% Usage: \definecomplimentarykeys{prefix}{keyfamily}{key1}{key2}
 %
-% Generates keys of the form: macrokey1 and macrokey2 as would be created by:
-%   \define@boolkey{keyfamily}[macro]{key1}[true]{}
-%   \define@boolkey{keyfamily}[macro]{key2}[true]{}
+% Generates keys of the form: pre@fam@key1 and pre@fam@key2 as would be created by:
+%   \define@boolkey{prefix}{keyfamily}{key1}[true]{}
+%   \define@boolkey{prefix}{keyfamily}{key2}[true]{}
 % but tied such that they are mutually exclusive
 % https://tex.stackexchange.com/a/53601
-\NewDocumentCommand{\definecomplimentarykeys}{m m m m}%{fam}{mp}{key1}{key2}
+\NewDocumentCommand{\definecomplimentarykeys}{m m m m}%{pre}{fam}{key1}{key2}
 {%
-    \define@boolkey{#1}[#2]{#3}[true]%
+    \define@boolkey[#1]{#2}{#3}[true]%
     {%
         \in@{true}{##1}% ##1 is the true/false arugment to the key
         \ifin@%
-            \csname #2#4false\endcsname%
+            \csname #1@#2@#4false\endcsname%
         \else%
-            \csname #2#4true\endcsname%
+            \csname #1@#2@#4true\endcsname%
         \fi%
     }%
-    \define@boolkey{#1}[#2]{#4}[true]%
+    \define@boolkey[#1]{#2}{#4}[true]%
     {%
         \in@{true}{##1}% ##1 is the true/false arugment to the key
         \ifin@%
-            \csname #2#3false\endcsname%
+            \csname #1@#2@#3false\endcsname%
         \else%
-            \csname #2#3true\endcsname%
+            \csname #1@#2@#3true\endcsname%
         \fi%
     }%
     %Make sure the keys are consistent by explicitly setting the first key.
-    \setkeys{#1}{#3}
+    \setkeys[#1]{#2}{#3}
 }%
 %%%%%%%%%%%% END LATEX FUNCTIONS %%%%%%%%%%%%
 
@@ -260,28 +250,34 @@
 %
 % Usage: \image[optional caption][optional extra include options]{path/to/image}
 \newlength{\espbeamer@image@captionheight}%
+\newsavebox{\espbeamer@image@captionbox}%
 \NewDocumentCommand{\image}{O{} O{} m}%
 {%
-    % Calculate the height of the caption
+    % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
     \ifx\relax#1\relax%
         \setlength{\espbeamer@image@captionheight}{0pt}%
     \else%
-        \setlength{\espbeamer@image@captionheight}{\espbeamer@caption@height}%
+        \savebox{\espbeamer@image@captionbox}%
+        {%
+            \begin{minipage}{\elementwidth}%
+                \usebeamerfont*{caption}%
+                \usebeamercolor*{caption}%
+                \centering%
+                \strut#1%
+            \end{minipage}%
+        }%
+        \settototalheight{\espbeamer@image@captionheight}{\usebox{\espbeamer@image@captionbox}}%
     \fi%
-    \vbox to \elementheight%
-    {%
-        \centering%
-        \vfil%
-        \begin{figure}%
-            \vskip-\espbeamer@figure@aboveskip%
-            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio,#2]{#3}%
-            \ifx\relax#1\relax%
-            \else%
-                \caption{#1}%
-            \fi%
-        \end{figure}%
-        \vfil%
-    }%
+
+    \centering%
+    \vfil%
+    \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio,#2]{#3}%
+    \ifx\relax#1\relax%
+    \else%
+        \usebeamerfont*{caption}\\%
+        \usebox{\espbeamer@image@captionbox}%
+    \fi%
+    \vfil%
 }%
 
 %%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
@@ -339,6 +335,7 @@
 
 % A whole bunch of boxes and lengths for the \href hack
 \newsavebox{\espbeamer@video@posterbox}%
+\newsavebox{\espbeamer@video@captionbox}%
 \newlength{\espbeamer@video@fudgealignx}%
 \setlength{\espbeamer@video@fudgealignx}{-1pt}%
 \newlength{\espbeamer@video@fudgealigny}%
@@ -351,8 +348,6 @@
 \newlength{\espbeamer@video@width}%
 \newlength{\espbeamer@video@height}%
 \newlength{\espbeamer@video@depth}%
-\newlength{\espbeamer@video@fudgeposy}%
-\setlength{\espbeamer@video@fudgeposy}{-12.35pt}% This appears to vary a little with aspect ratio, but -12.35pt is exact for 16:9
 
 % A string of parsed options to the underlying command. All videos receive autostarts as we achieve "onclick" by duplicating a static slide infront of an autostart slide.
 %%% BEAMER MULTIMEDIA %%%
@@ -363,18 +358,19 @@
 %%% HREF HACK %%%
 
 % Define keys
-\definecomplimentarykeys{espbeamer}{video@}{autostart}{onclick}%
-\definecomplimentarykeys{espbeamer}{video@}{loop}{once}%
-\definecomplimentarykeys{espbeamer}{video@}{noprogress}{progress}%
+\definecomplimentarykeys{espbeamer}{videokeys}{autostart}{onclick}%
+\definecomplimentarykeys{espbeamer}{videokeys}{loop}{once}%
+\definecomplimentarykeys{espbeamer}{videokeys}{noprogress}{progress}%
 
 \newlength{\espbeamer@video@captionheight}%
 \NewDocumentCommand{\video}{O{} O{} m m}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \setkeys{espbeamer}{#2}%
+        \presetkeys[espbeamer]{videokeys}{autostart=true, loop=true, noprogress=true}{}
+        \setkeys[espbeamer]{videokeys}{#2}%
         
         %Parse the keys into the option string for the lower-level command. Autostart is already included
-        \ifvideo@noprogress%
+        \ifespbeamer@videokeys@noprogress%
            %%% HREF HACK %%%
            \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&noprogress}%
            %%% HREF HACK %%%
@@ -384,7 +380,7 @@
            %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols==true}
             %%% BEAMER MULTIMEDIA %%%
         \fi%
-        \ifvideo@loop%
+        \ifespbeamer@videokeys@loop%
             %%% HREF HACK %%%
             \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&loop}%
             %%% HREF HACK %%%
@@ -395,12 +391,21 @@
             %%% BEAMER MULTIMEDIA %%%
         \fi%
         
-        % TODO: Calculate the height of the caption and actually set it
-        %\ifx\relax#1\relax%
+        % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+        \ifx\relax#1\relax%
             \setlength{\espbeamer@video@captionheight}{0pt}%
-        %\else%
-        %    \setlength{\espbeamer@video@captionheight}{\espbeamer@caption@height}%
-        %\fi%
+        \else%
+            \savebox{\espbeamer@video@captionbox}%
+            {%
+                \begin{minipage}{\elementwidth}%
+                    \usebeamerfont*{caption}%
+                    \usebeamercolor*{caption}%
+                    \centering%
+                    \strut#1%
+                \end{minipage}%
+            }%
+            \settototalheight{\espbeamer@video@captionheight}{\usebox{\espbeamer@video@captionbox}}%
+        \fi%
         
         %%% HREF HACK: Poster/video size fixes %%%
         % Fix the size of the \href video relative to the poster
@@ -426,82 +431,93 @@
         %%% HREF HACK: Poster/video size fixes %%%
     
         % Actually typeset the poster & video
-        \vbox to \elementheight%
+        \centering%
+        \vfil%
+        
+        %If we are starting onclick, create a copy of the video slide showing only the poster.
+        %We use an empty href inorder to keep spacing exactly the same.
+        \ifespbeamer@videokeys@onclick%
+            \only<1>%
+            {%
+                %%% BEAMER MULTIMEDIA %%%
+                %\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}
+                %%% BEAMER MULTIMEDIA %%%
+                %%% HREF HACK %%%
+                \href%
+                {%
+                    %Do nothing
+                }%
+                {%
+                    % Poster
+                    % Shift the poster to line up with the video
+                    \hskip\espbeamer@video@fudgealignx%
+                    % Insert the video box containing the poster
+                    \box\espbeamer@video@videobox%
+                }%
+                %%% HREF HACK %%%
+                %
+                \ifx\relax#1\relax%
+                \else%
+                    \usebeamerfont*{caption}\\%
+                    %%% HREF HACK %%%
+                    \vspace{-\espbeamer@video@fudgealignheight}%
+                    %%% HREF HACK %%%
+                    \usebox{\espbeamer@video@captionbox}%
+                \fi%
+            }%
+            
+            % Start a second slide that will contain the autostart video
+            \only<2>%
+            {%
+        \fi%
+
+        % This is the video slide, regardless of autostart/onclick
+        %%% BEAMER MULTIMEDIA %%%
+        %\movie[#2]{\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}}{#4}
+        %%% BEAMER MULTIMEDIA %%%
+        %%% HREF HACK %%%
+        \href%
         {%
-            \centering%
-            \vfil%
-            
-            %%% HREF HACK: Position fix %%%
-            % The href inserts some vertical white space, try to undo that.
-            \vskip\espbeamer@video@fudgeposy%
-            %%% HREF HACK: Position fix %%%
-            
-            %If we are starting onclick, create a copy of the video slide showing only the poster.
-            %We use an empty href inorder to keep spacing exactly the same.
-            \ifvideo@onclick%
-                \only<1>%
-                {%
-                    %%% BEAMER MULTIMEDIA %%%
-                    %\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio]{#3}
-                    %%% BEAMER MULTIMEDIA %%%
-                    %%% HREF HACK %%%
-                    \href%
-                    {%
-                        %Do nothing
-                    }%
-                    {%
-                        % Poster
-                        % Shift the poster to line up with the video
-                        \hskip\espbeamer@video@fudgealignx%
-                        % Insert the video box containing the poster
-                        \box\espbeamer@video@videobox%
-                    }%
-                    %%% HREF HACK %%%
-                }%
-                
-                % Start a second slide that will contain the autostart video
-                \only<2>%
-                {%
-            \fi%
-    
-            % This is the video slide, regardless of autostart/onclick
-            %%% BEAMER MULTIMEDIA %%%
-            %\movie[#2]{\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio]{#3}}{#4}
-            %%% BEAMER MULTIMEDIA %%%
-            %%% HREF HACK %%%
-            \href%
-            {%
-                % Video
-                run:#4\espbeamer@video@optionstring%
-            }%
-            {%
-                % Poster
-                % Shift the poster to line up with the video
-                \hskip\espbeamer@video@fudgealignx%
-                % Insert the video box containing the poster
-                \box\espbeamer@video@videobox%
-            }%
-            %%% HREF HACK %%%
-            
-            % Close the second slide created to support onclick
-            \ifvideo@onclick%
-                }%
-            \fi%
-            \vfil%
+            % Video
+            run:#4\espbeamer@video@optionstring%
         }%
+        {%
+            % Poster
+            % Shift the poster to line up with the video
+            \hskip\espbeamer@video@fudgealignx%
+            % Insert the video box containing the poster
+            \box\espbeamer@video@videobox%
+        }%
+        %%% HREF HACK %%%
+        %
+        \ifx\relax#1\relax%
+        \else%
+            \usebeamerfont*{caption}\\%
+            %%% HREF HACK %%%
+            \vspace{-\espbeamer@video@fudgealignheight}%
+            %%% HREF HACK %%%
+            \usebox{\espbeamer@video@captionbox}%
+        \fi%
+        
+        % Close the second slide created to support onclick
+        \ifespbeamer@videokeys@onclick%
+            }%
+        \fi%
+        \vfil%
     \endgroup%
 }%
 
 %%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
 %
 % Usage: See \video for options
-\newlength{\espbeamer@fullvideo@fudgeposy}%
-\setlength{\espbeamer@fullvideo@fudgeposy}{7.2pt}% Found experimentally.
 \NewDocumentCommand{\fullvideo}{O{noprogress,autostart,loop} m m}% 
 {%
-    \begin{textblock*}{\elementwidth}(0pt,\espbeamer@fullvideo@fudgeposy)
-        \video[][#1]{#2}{#3}%
-    \end{textblock*}
+    \threerowlayout[leftmargin=0pt, rightmargin=0pt, topmargin=0pt, bottommargin=0pt, gutter=0pt]%
+    {1.0}{0.0}%
+    {%
+        \video[][#1]{#2}{#3}
+    }%
+    {}{}%
 }
 %%%%%%%%%%%% END VIDEO COMMANDS %%%%%%%%%%%%
 
@@ -512,8 +528,7 @@
 %From: https://alexwlchan.net/2017/10/latex-underlines/
 \renewcommand{\ULdepth}{1.45pt}
 \contourlength{0.7pt}
-\newcommand{\ul}[1]{\underline{#1}}
-\renewcommand{\underline}[1]%
+\newcommand{\ul}[1]%
 {%
     \uline{\phantom{#1}}%
     \llap%
@@ -642,43 +657,212 @@
 
 
 
-%%%%%%%%%%%% LOW-LEVEL FRAME LAYOUT %%%%%%%%%%%%
+%%%%%%%%%%%% LOW-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
 %
-% Usage: \threecolumnframe{left fractional size}{middle fractional size}{left content}{middle content}{right content}
-\newlength{\espbeamer@columnlayout@leftwidth}%
-\newlength{\espbeamer@columnlayout@middlewidth}%
-\newlength{\espbeamer@columnlayout@rightwidth}%
-\newcommand{\threecolumnframe}[5]%
+%%% COLUMNS %%%
+%
+% Usage: \threecolumnlayout[debug,leftmargin,rightmargin,topmargin,bottommargin]{left fractional size}{middle fractional size}{left content}{middle content}{right content}
+%
+\newlength{\espbeamer@columnlayout@leftlimit}%
+\newlength{\espbeamer@columnlayout@rightlimit}%
+\newlength{\espbeamer@columnlayout@toplimit}%
+\newlength{\espbeamer@columnlayout@bottomlimit}%
+\newlength{\espbeamer@columnlayout@gutter}%
+\define@key[espbeamer]{columnlayoutkeys}{leftmargin}[]{\setlength{\espbeamer@columnlayout@leftlimit}{#1}}%
+\define@key[espbeamer]{columnlayoutkeys}{rightmargin}[]{\setlength{\espbeamer@columnlayout@rightlimit}{#1}}%
+\define@key[espbeamer]{columnlayoutkeys}{topmargin}[]{\setlength{\espbeamer@columnlayout@toplimit}{#1}}%
+\define@key[espbeamer]{columnlayoutkeys}{bottommargin}[]{\setlength{\espbeamer@columnlayout@bottomlimit}{#1}}%
+\define@key[espbeamer]{columnlayoutkeys}{gutter}[]{\setlength{\espbeamer@columnlayout@gutter}{#1}}%
+\define@boolkey[espbeamer]{columnlayoutkeys}{debug}[true]{}%
+%
+\newlength{\espbeamer@columnlayout@dividewidth}%
+\newlength{\espbeamer@columnlayout@leftcolumnwidth}%
+\newlength{\espbeamer@columnlayout@middlecolumnwidth}%
+\newlength{\espbeamer@columnlayout@rightcolumnwidth}%
+%
+\NewDocumentCommand{\threecolumnlayout}{O{} m m m m m}
 {%
-    \setlength{\contentwidth}{\espbeamer@content@width}%
-    \setlength{\contentheight}{\espbeamer@content@height}%
-    \setlength{\elementheight}{\contentheight}%
-    \setlength{\espbeamer@columnlayout@leftwidth}{#1\contentwidth}%
-    \setlength{\espbeamer@columnlayout@middlewidth}{#2\contentwidth}%
-    \setlength{\espbeamer@columnlayout@rightwidth}{\contentwidth - \espbeamer@columnlayout@leftwidth - \espbeamer@columnlayout@middlewidth}%
-    \nointerlineskip%
-    \begin{columns}[t,totalwidth=\contentwidth]%
-        \begin{column}{\espbeamer@columnlayout@leftwidth}%
-            \setlength{\elementwidth}{\espbeamer@columnlayout@leftwidth}%
-            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
-                \vspace{0pt}%
-                #3%
-            \end{minipage}
-        \end{column}%
-        \begin{column}{\espbeamer@columnlayout@middlewidth}%
-            \setlength{\elementwidth}{\espbeamer@columnlayout@middlewidth}%
-            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
-                \vspace{0pt}%
-                #4%
-            \end{minipage}%
-        \end{column}%
-        \begin{column}{\espbeamer@columnlayout@rightwidth}%
-            \setlength{\elementwidth}{\espbeamer@columnlayout@rightwidth}%
-            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
-                \vspace{0pt}%
-                #5%
-            \end{minipage}%
-        \end{column}%
-    \end{columns}%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \ifespbeamer@debug%
+            \presetkeys[espbeamer]{columnlayoutkeys}{debug=true}{}%
+        \else%
+            \presetkeys[espbeamer]{columnlayoutkeys}{debug=false}{}%
+        \fi%
+        \presetkeys[espbeamer]{columnlayoutkeys}{leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@topmatter@height, bottommargin=\espbeamer@bottommatter@height, gutter=\espbeamer@gutter@column}{}
+        \setkeys[espbeamer]{columnlayoutkeys}{#1}%
+
+        \ifespbeamer@columnlayoutkeys@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+        
+        % Calculate the content width/height given the provided margins
+        \setlength{\contentposx}{\espbeamer@columnlayout@leftlimit}%
+        \setlength{\contentposy}{\espbeamer@columnlayout@toplimit}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@columnlayout@rightlimit}%
+        \setlength{\contentheight}{\paperheight -  \contentposy - \espbeamer@columnlayout@bottomlimit}%
+    
+        % Divide up the content width into 3x (column+gutter) segements
+        \setlength{\espbeamer@columnlayout@dividewidth}{\contentwidth + \espbeamer@columnlayout@gutter}%
+        \setlength{\espbeamer@columnlayout@leftcolumnwidth}{#2\espbeamer@columnlayout@dividewidth}%
+        \setlength{\espbeamer@columnlayout@middlecolumnwidth}{#3\espbeamer@columnlayout@dividewidth}%
+        \setlength{\espbeamer@columnlayout@rightcolumnwidth}{\espbeamer@columnlayout@dividewidth - \espbeamer@columnlayout@leftcolumnwidth - \espbeamer@columnlayout@middlecolumnwidth}%
+        
+        % Calculte the first element
+        \setlength{\elementposy}{\contentposy}%
+        \setlength{\elementheight}{\contentheight}%
+        \setlength{\elementposx}{\espbeamer@columnlayout@leftlimit}% Record the top-left of the first column+gutter
+        \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \layoutelement{#4}%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
+        \end{textblock*}%
+        %
+        \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of the next column+gutter
+        \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \layoutelement{#5}%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
+        \end{textblock*}%
+        %
+        \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of the next column+gutter
+        \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \layoutelement{#6}%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
+        \end{textblock*}%
+    \endgroup%
 }%
-%%%%%%%%%%%%% END LOW-LEVEL FRAME LAYOUT %%%%%%%%%%%%
+
+%%% ROWS %%%
+%
+% Usage: \threerowlayout[debug,leftmargin,rightmargin,topmargin,bottommargin]{left fractional size}{middle fractional size}{left content}{middle content}{right content}
+%
+\define@key[espbeamer]{rowlayoutkeys}{leftmargin}[]{\setlength{\espbeamer@rowlayout@leftlimit}{#1}}%
+\define@key[espbeamer]{rowlayoutkeys}{rightmargin}[]{\setlength{\espbeamer@rowlayout@rightlimit}{#1}}%
+\define@key[espbeamer]{rowlayoutkeys}{topmargin}[]{\setlength{\espbeamer@rowlayout@toplimit}{#1}}%
+\define@key[espbeamer]{rowlayoutkeys}{bottommargin}[]{\setlength{\espbeamer@rowlayout@bottomlimit}{#1}}%
+\define@key[espbeamer]{rowlayoutkeys}{gutter}[]{\setlength{\espbeamer@rowlayout@gutter}{#1}}%
+\define@boolkey[espbeamer]{rowlayoutkeys}{debug}[true]{}%
+%
+\newlength{\espbeamer@rowlayout@leftlimit}%
+\newlength{\espbeamer@rowlayout@rightlimit}%
+\newlength{\espbeamer@rowlayout@toplimit}%
+\newlength{\espbeamer@rowlayout@bottomlimit}%
+\newlength{\espbeamer@rowlayout@gutter}%
+\newlength{\espbeamer@rowlayout@divideheight}%
+\newlength{\espbeamer@rowlayout@toprowheight}%
+\newlength{\espbeamer@rowlayout@middlerowheight}%
+\newlength{\espbeamer@rowlayout@bottomrowheight}%
+%
+\NewDocumentCommand{\threerowlayout}{O{} m m m m m}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \ifespbeamer@debug%
+            \presetkeys[espbeamer]{rowlayoutkeys}{debug=true}{}%
+        \else%
+            \presetkeys[espbeamer]{rowlayoutkeys}{debug=false}{}%
+        \fi%
+        \presetkeys[espbeamer]{rowlayoutkeys}{leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@topmatter@height, bottommargin=\espbeamer@bottommatter@height, gutter=\espbeamer@gutter@row}{}
+        \setkeys[espbeamer]{rowlayoutkeys}{#1}%
+
+        \ifespbeamer@rowlayoutkeys@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+        
+        % Calculate the content width/height given the provided margins
+        \setlength{\contentposx}{\espbeamer@rowlayout@leftlimit}%
+        \setlength{\contentposy}{\espbeamer@rowlayout@toplimit}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@rowlayout@rightlimit}%
+        \setlength{\contentheight}{\paperheight -  \contentposy - \espbeamer@rowlayout@bottomlimit}%
+    
+        % Divide up the content width into 3x (row+gutter) segements
+        \setlength{\espbeamer@rowlayout@divideheight}{\contentheight + \espbeamer@rowlayout@gutter}%
+        \setlength{\espbeamer@rowlayout@toprowheight}{#2\espbeamer@rowlayout@divideheight}%
+        \setlength{\espbeamer@rowlayout@middlerowheight}{#3\espbeamer@rowlayout@divideheight}%
+        \setlength{\espbeamer@rowlayout@bottomrowheight}{\espbeamer@rowlayout@divideheight - \espbeamer@rowlayout@toprowheight - \espbeamer@rowlayout@middlerowheight}%
+
+        % Calculte the first element
+        \setlength{\elementposx}{\contentposx}%
+        \setlength{\elementwidth}{\contentwidth}%
+        \setlength{\elementposy}{\espbeamer@rowlayout@toplimit}%  Record the top-left of the first column+gutter
+        \setlength{\elementheight}{\espbeamer@rowlayout@toprowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \layoutelement{#4}%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
+        \end{textblock*}%
+        %
+        \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of the next row+gutter
+        \setlength{\elementheight}{\espbeamer@rowlayout@middlerowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \layoutelement{#5}%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
+        \end{textblock*}%
+        %
+        \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of the next row+gutter
+        \setlength{\elementheight}{\espbeamer@rowlayout@bottomrowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \layoutelement{#6}%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
+        \end{textblock*}%
+    \endgroup%
+}%
+
+%%% Inidivual element of a multielement layout %%%
+%
+% Usage: \layoutelement{content}
+%
+\newcommand{\layoutelement}[1]%
+{%
+    \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+        #1%
+    \end{minipage}
+}%
+%%%%%%%%%%%% END LOW-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% DEBUG FUNCTIONS %%%%%%%%%%%%
+% Convenience function for showing the predefined layouts
+\newcommand*{\debugelement}
+{%
+    \begingroup%
+        \TPoptions{showboxes = true}%
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \vbox to \elementheight%
+            {
+                \color{GRAY}%
+                \centering%
+                \vfill%
+                x-origin: \printlength{\elementposx}\\
+                y-origin: \printlength{\elementposy}\\
+                width: \printlength{\elementwidth}\\
+                height: \printlength{\elementheight}%
+                \vfill%
+            }%
+        \end{textblock*}%
+    \endgroup
+}
+%%%%%%%%%%%% END DEBUG FUNCTIONS %%%%%%%%%%%%
+
+
+%\RequirePackage{fp}% For fixed point math
+%\newcommand{\adjustfrac}[1]%
+%{%
+%%    \FPeval{\result}{(#1*\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)/(\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)}
+%%    \FPeval{\result}{(#1*\strip@pt\contentwidth)/(\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)}
+%%    \FPeval{\result}{#1}
+%    \FPeval{\result}{(#1*\strip@pt\contentwidth + \strip@pt\espbeamer@gutter@column)/(\strip@pt\contentwidth + 2*\strip@pt\espbeamer@gutter@column)}
+%    $#1 \to \result$
+%}%

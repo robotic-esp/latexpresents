@@ -16,45 +16,35 @@
 %\newlength{\espbeamer@titlepage@subtitleheight}
 \setbeamertemplate{title page}% The title page
 {%
-    \nointerlineskip%
-    \setlength{\contentwidth}{\paperwidth - \espbeamer@border@left - \espbeamer@border@right}%
-    \setlength{\contentheight}{\paperheight - \espbeamer@border@top - \espbeamer@border@bottom}%
-    \setlength{\elementwidth}{\contentwidth}%
-    \setlength{\espbeamer@titlepage@toprowheight}{0.6\contentheight}
-    \setlength{\espbeamer@titlepage@bottomrowheight}{\contentheight - \espbeamer@titlepage@toprowheight}
-    \begin{textblock*}{\elementwidth}(\espbeamer@border@left,\espbeamer@border@top)
-        \setlength{\elementheight}{\espbeamer@titlepage@toprowheight}%
-        \vbox to \elementheight%
+    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {0.6}{0.4}%
+    {%
+        \ifbeamertemplateempty{titlelogo}{}%
         {%
-            \ifbeamertemplateempty{titlelogo}{}%
-            {%
-                \vfil%
-                \usebeamertemplate*{titlelogo}%
-                \vfil%
-            }%
+            \vfil%
+            \usebeamertemplate*{titlelogo}%
+            \vfil%
         }%
-    \end{textblock*}
-    \begin{textblock*}{\elementwidth}(\espbeamer@border@left,\espbeamer@border@top + \espbeamer@titlepage@toprowheight)
-        \setlength{\elementheight}{\espbeamer@titlepage@bottomrowheight}%
-        \vbox to \elementheight%
-        {%
-            \usebeamerfont*{title}%
-            \usebeamercolor*{title}%
-            \setlength{\espbeamer@titlepage@emptyrule}{\elementwidth - \widthof{\inserttitle{}}}%
-            \underline{\inserttitle{}\hspace*{\espbeamer@titlepage@emptyrule}}\\%
-            \usebeamerfont*{subtitle}%
-            \usebeamercolor*{subtitle}%
-            \vskip0.25\baselineskip%
-            \insertauthor{}\\%
-            \insertinstitute{}\\%
-            \insertdate{}%
-        }%
-    \end{textblock*}
+    }%
+    {%
+        \usebeamerfont*{title}%
+        \usebeamercolor*{title}%
+        \setlength{\espbeamer@titlepage@emptyrule}{\elementwidth - \widthof{\inserttitle{}}}%
+        \ul{\inserttitle{}\hspace*{\espbeamer@titlepage@emptyrule}}%
+        \usebeamerfont*{subtitle}%
+        \usebeamercolor*{subtitle}%
+        \vskip0.25\baselineskip%
+        \insertauthor{}\\%
+        \insertinstitute{}\\%
+        \insertdate{}%
+    }%
+    {}%
 }%
 
 \setbeamertemplate{part page}% The titlepage of a presentation part
 {%
-    \onecolumnfull%
+    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {1.0}{0.0}%
     {%
         \centering%
         \vbox to \elementheight%
@@ -66,10 +56,12 @@
             \vfil%
         }%
     }%
+    {}{}%
 }%
 \setbeamertemplate{section page}% The titlepage of a presentation section
 {%
-    \onecolumnfull%
+    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {1.0}{0.0}%
     {%
         \centering%
         \vbox to \elementheight%
@@ -81,10 +73,12 @@
             \vfil%
         }%
     }%
+    {}{}%
 }%
 \setbeamertemplate{subsection page}% The titlepage of a presentation subsection
 {%
-    \onecolumnfull%
+    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {1.0}{0.0}%
     {%
         \centering%
         \vbox to \elementheight%
@@ -96,6 +90,7 @@
             \vfil%
         }%
     }%
+    {}{}%
 }%
 
 
@@ -153,7 +148,7 @@
 
 
 %%% Figures %%%
-\setbeamertemplate{caption}{\usebeamerfont*{caption}\usebeamercolor*{caption}\insertcaption{}}% Figure/table/etc. captions
+%\setbeamertemplate{caption}{\usebeamerfont*{caption}\usebeamercolor*{caption}\insertcaption{}}% Figure/table/etc. captions
     %[default] typesets the caption name then the caption text. No number is printed.
     %[numbered] adds the figure or table number to the caption.
     %[caption name own line] Puts the caption name on its own line.

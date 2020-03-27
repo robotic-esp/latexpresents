@@ -79,30 +79,32 @@
 
 
 %%% Frame elements %%%
-\setbeamertemplate{frametitle}%
+\NewDocumentCommand{\setframetitle}{O{} O{}}%
 {%
-    \nointerlineskip%
-    \vskip\espbeamer@border@top%
     \begin{beamercolorbox}[sep=0pt]{frametitle}%
         \usebeamerfont*{frametitle}%
         \usebeamercolor*[fg]{frametitle}%
-        \strut\insertframetitle{}%
-        %
+        \strut#1%
 %        % Insert the subtitle on the same line
 %        \ifx\insertframesubtitle\@empty%
 %        \else%
 %            \hskip1ex%
 %            \usebeamerfont*{framesubtitle}%
 %            \usebeamercolor*[fg]{framesubtitle}%
-%            \insertframesubtitle
+%            #2%
 %        \fi
-        %
         % Insert the subtitle on a newline
         \vskip-2pt%
         \usebeamerfont*{framesubtitle}%
         \usebeamercolor*[fg]{framesubtitle}%
-        \strut\insertframesubtitle{}%
+        \strut#2%
     \end{beamercolorbox}%
+}%
+\setbeamertemplate{frametitle}%
+{%
+    \nointerlineskip%
+    \vskip\espbeamer@border@top%
+    \setframetitle[\insertframetitle{}][\insertframesubtitle{}]
 }%
 \setbeamertemplate{logo}{}% - Set by the addLogo commands
 \setbeamertemplate{navigation symbols}{}% - Not used
