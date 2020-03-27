@@ -196,15 +196,15 @@
 \NewDocumentCommand{\imagecenter}{O{} O{} m}{\threecolumnlayout{1.0}{0}{\image[#1][#2]{#3}}{}{}}% Usage: see \image
 \NewDocumentCommand{\pdfpagecenter}{O{} O{} m m}{\threecolumnlayout{1.0}{0}{\pdfpage[#1][#2]{#3}{#4}}{}{}}% Usage: see \image
 \NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m}{\threecolumnlayout{1.0}{0}{\video[#1][#2]{#3}{#4}}{}{}}% Usage: see \video
-\NewDocumentCommand{\envleft}{O{itemize} m}{\threecolumnlayout{1.0}{0}{\begin{#1}#2\end{#1}}{}{}}% Usage: [environment]{\item content}
+\NewDocumentCommand{\envleft}{O{itemize} +m}{\threecolumnlayout{1.0}{0}{\begin{#1}#2\end{#1}}{}{}}% Usage: [environment]{environment content}
 
 %%% TWO-COLUMN LAYOUTS %%%
 \newcommand{\twocolumneven}[2]{\threecolumnlayout{0.5}{0.5}{#1}{#2}{}}%
 \newcommand{\twocolumnbigleft}[2]{\threecolumnlayout{0.6666}{0.3333}{#1}{#2}{}}%
 \newcommand{\twocolumnbigright}[2]{\threecolumnlayout{0.3333}{0.6666}{#1}{#2}{}}%
-\NewDocumentCommand{\envleftboxright}{O{itemize} m m}{\threecolumnlayout{0.5}{0.5}{\begin{#1}#2\end{#1}}{#3}{}{}}% Usage: [environment]{environment content}{media content}
-\NewDocumentCommand{\boxleftenvright}{m O{itemize} m}{\threecolumnlayout{0.5}{0.5}{#1}{\begin{#2}#3\end{#2}}{}{}}% Usage: {media content}[environment]{environment content}
-\NewDocumentCommand{\envleftright}{O{itemize} m O{itemize} m}{\threecolumnlayout{0.5}{0.5}{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}{}{}}% Usage: [environment]{environment content}[environment]{environment content}
+\NewDocumentCommand{\envleftboxright}{O{itemize} +m m}{\threecolumnlayout{0.5}{0.5}{\begin{#1}#2\end{#1}}{#3}{}{}}% Usage: [environment]{environment content}{media content}
+\NewDocumentCommand{\boxleftenvright}{m O{itemize} +m}{\threecolumnlayout{0.5}{0.5}{#1}{\begin{#2}#3\end{#2}}{}{}}% Usage: {media content}[environment]{environment content}
+\NewDocumentCommand{\envleftright}{O{itemize} +m O{itemize} +m}{\threecolumnlayout{0.5}{0.5}{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}{}{}}% Usage: [environment]{environment content}[environment]{environment content}
 %%% END TWO-COLUMN LAYOUTS %%%
 
 %%% THREE-COLUMN LAYOUTS %%%
@@ -699,7 +699,7 @@
 \newlength{\espbeamer@columnlayout@middlecolumnwidth}%
 \newlength{\espbeamer@columnlayout@rightcolumnwidth}%
 %
-\NewDocumentCommand{\threecolumnlayout}{O{} m m m m m}
+\NewDocumentCommand{\threecolumnlayout}{O{} m m +m +m +m}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
@@ -779,7 +779,7 @@
 \newlength{\espbeamer@rowlayout@middlerowheight}%
 \newlength{\espbeamer@rowlayout@bottomrowheight}%
 %
-\NewDocumentCommand{\threerowlayout}{O{} m m m m m}
+\NewDocumentCommand{\threerowlayout}{O{} m m +m +m +m}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
