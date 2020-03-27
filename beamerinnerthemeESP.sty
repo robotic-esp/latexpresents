@@ -19,7 +19,7 @@
     \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
     {0.6}{0.4}%
     {%
-        \ifbeamertemplateempty{titlelogo}{}%
+        \ifbeamertemplateempty{titlelogo}{\strut}%
         {%
             \vfil%
             \usebeamertemplate*{titlelogo}%
@@ -34,9 +34,9 @@
         \usebeamerfont*{subtitle}%
         \usebeamercolor*{subtitle}%
         \vskip0.25\baselineskip%
-        \insertauthor{}\\%
-        \insertinstitute{}\\%
-        \insertdate{}%
+        \strut\insertauthor{}\\%
+        \strut\insertinstitute{}\\%
+        \strut\insertdate{}%
     }%
     {}%
 }%
