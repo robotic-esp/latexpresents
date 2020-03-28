@@ -760,35 +760,31 @@
         \setlength{\espbeamer@columnlayout@middlecolumnwidth}{#3\espbeamer@columnlayout@dividewidth}%
         \setlength{\espbeamer@columnlayout@rightcolumnwidth}{\espbeamer@columnlayout@dividewidth - \espbeamer@columnlayout@leftcolumnwidth - \espbeamer@columnlayout@middlecolumnwidth}%
         
-        % Calculte the first element
+        % First element
         \setlength{\elementposy}{\contentposy}%
         \setlength{\elementheight}{\contentheight}%
         \setlength{\elementposx}{\espbeamer@columnlayout@leftlimit}% Record the top-left of the first column+gutter
         \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
-        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
-            \layoutelement{#4}%
-            \ifespbeamer@columnlayoutkeys@debug%
-                \debugelement{}%
-            \fi%
-        \end{textblock*}%
-        %
+        \layoutelement{#4}%
+        \ifespbeamer@columnlayoutkeys@debug%
+            \debugelement{}%
+        \fi%
+        
+        % Second element
         \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of the next column+gutter
         \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
-        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
-            \layoutelement{#5}%
-            \ifespbeamer@columnlayoutkeys@debug%
-                \debugelement{}%
-            \fi%
-        \end{textblock*}%
-        %
+        \layoutelement{#5}%
+        \ifespbeamer@columnlayoutkeys@debug%
+            \debugelement{}%
+        \fi%
+        
+        % Third element
         \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of the next column+gutter
         \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
-        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
-            \layoutelement{#6}%
-            \ifespbeamer@columnlayoutkeys@debug%
-                \debugelement{}%
-            \fi%
-        \end{textblock*}%
+        \layoutelement{#6}%
+        \ifespbeamer@columnlayoutkeys@debug%
+            \debugelement{}%
+        \fi%
     \endgroup%
 }%
 
@@ -840,35 +836,31 @@
         \setlength{\espbeamer@rowlayout@middlerowheight}{#3\espbeamer@rowlayout@divideheight}%
         \setlength{\espbeamer@rowlayout@bottomrowheight}{\espbeamer@rowlayout@divideheight - \espbeamer@rowlayout@toprowheight - \espbeamer@rowlayout@middlerowheight}%
 
-        % Calculte the first element
+        % First element
         \setlength{\elementposx}{\contentposx}%
         \setlength{\elementwidth}{\contentwidth}%
         \setlength{\elementposy}{\espbeamer@rowlayout@toplimit}%  Record the top-left of the first column+gutter
         \setlength{\elementheight}{\espbeamer@rowlayout@toprowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
-        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
-            \layoutelement{#4}%
-            \ifespbeamer@rowlayoutkeys@debug%
-                \debugelement{}%
-            \fi%
-        \end{textblock*}%
-        %
+        \layoutelement{#4}%
+        \ifespbeamer@rowlayoutkeys@debug%
+            \debugelement{}%
+        \fi%
+        
+        % Second element
         \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of the next row+gutter
         \setlength{\elementheight}{\espbeamer@rowlayout@middlerowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
-        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
-            \layoutelement{#5}%
-            \ifespbeamer@rowlayoutkeys@debug%
-                \debugelement{}%
-            \fi%
-        \end{textblock*}%
-        %
+        \layoutelement{#5}%
+        \ifespbeamer@rowlayoutkeys@debug%
+            \debugelement{}%
+        \fi%
+        
+        % Third element
         \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of the next row+gutter
         \setlength{\elementheight}{\espbeamer@rowlayout@bottomrowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
-        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
-            \layoutelement{#6}%
-            \ifespbeamer@rowlayoutkeys@debug%
-                \debugelement{}%
-            \fi%
-        \end{textblock*}%
+        \layoutelement{#6}%
+        \ifespbeamer@rowlayoutkeys@debug%
+            \debugelement{}%
+        \fi%
     \endgroup%
 }%
 
@@ -878,9 +870,11 @@
 %
 \newcommand{\layoutelement}[1]%
 {%
-    \begin{minipage}[t][\elementheight][t]{\elementwidth}%
-        #1%
-    \end{minipage}
+    \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+        \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+            #1%
+        \end{minipage}
+    \end{textblock*}%
 }%
 %%%%%%%%%%%% END LOW-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
 
