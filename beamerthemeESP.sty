@@ -192,8 +192,8 @@
 %%%%%%%%%%%% CONTENT FRAMES %%%%%%%%%%%%
 \NewDocumentCommand{\thankspage}{+O{Thank you}}%
 {%
-    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
-    {0.5}{0.5}%
+    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {0.5}%
     {%
         \usebeamerfont*{thanks}%
         \usebeamercolor*{thanks}%
@@ -204,7 +204,8 @@
             #1%
         }%
     }%
-    {%
+    [0.5]%
+    [%
         \ifbeamertemplateempty{logo}%
         {}%
         {%
@@ -217,8 +218,7 @@
             \fi%
             \vfil%
         }%
-    }%
-    {}%
+    ]%
 }%
 %%%%%%%%%%%% END CONTENT FRAMES %%%%%%%%%%%%
 
@@ -226,26 +226,26 @@
 
 %%%%%%%%%%%% HIGH-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
 %%% ONE-COLUMN LAYOUTS %%%
-\newcommand{\onecolumnfull}[1]{\threecolumnlayout{1.0}{0}{#1}{}{}}%
-\NewDocumentCommand{\imagecenter}{O{} O{} m}{\threecolumnlayout{1.0}{0}{\image[#1][#2]{#3}}{}{}}% Usage: see \image
-\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m}{\threecolumnlayout{1.0}{0}{\pdfpage[#1][#2]{#3}{#4}}{}{}}% Usage: see \image
-\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m}{\threecolumnlayout{1.0}{0}{\video[#1][#2]{#3}{#4}}{}{}}% Usage: see \video
-\NewDocumentCommand{\envleft}{O{itemize} +m}{\threecolumnlayout{1.0}{0}{\begin{#1}#2\end{#1}}{}{}}% Usage: [environment]{environment content}
+\newcommand{\onecolumnfull}[1]{\multicolumnlayout{1.0}{#1}}%
+\NewDocumentCommand{\imagecenter}{O{} O{} m}{\multicolumnlayout{1.0}{\image[#1][#2]{#3}}}% Usage: see \image
+\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m}{\multicolumnlayout{1.0}{\pdfpage[#1][#2]{#3}{#4}}}% Usage: see \image
+\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m}{\multicolumnlayout{1.0}{\video[#1][#2]{#3}{#4}}}% Usage: see \video
+\NewDocumentCommand{\envleft}{O{itemize} +m}{\multicolumnlayout{1.0}{\begin{#1}#2\end{#1}}}% Usage: [environment]{environment content}
 
 %%% TWO-COLUMN LAYOUTS %%%
-\newcommand{\twocolumneven}[2]{\threecolumnlayout{0.5}{0.5}{#1}{#2}{}}%
-\newcommand{\twocolumnbigleft}[2]{\threecolumnlayout{0.6666}{0.3333}{#1}{#2}{}}%
-\newcommand{\twocolumnbigright}[2]{\threecolumnlayout{0.3333}{0.6666}{#1}{#2}{}}%
-\NewDocumentCommand{\envleftboxright}{O{itemize} +m m}{\threecolumnlayout{0.5}{0.5}{\begin{#1}#2\end{#1}}{#3}{}{}}% Usage: [environment]{environment content}{media content}
-\NewDocumentCommand{\boxleftenvright}{m O{itemize} +m}{\threecolumnlayout{0.5}{0.5}{#1}{\begin{#2}#3\end{#2}}{}{}}% Usage: {media content}[environment]{environment content}
-\NewDocumentCommand{\envleftright}{O{itemize} +m O{itemize} +m}{\threecolumnlayout{0.5}{0.5}{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}{}{}}% Usage: [environment]{environment content}[environment]{environment content}
+\newcommand{\twocolumneven}[2]{\multicolumnlayout{0.5}{#1}[0.5][#2]}%
+\newcommand{\twocolumnbigleft}[2]{\multicolumnlayout{0.6666}{#1}[0.3333][#2]}%
+\newcommand{\twocolumnbigright}[2]{\multicolumnlayout{0.3333}{#1}[0.6666][#2]}%
+\NewDocumentCommand{\envleftboxright}{O{itemize} +m m}{\multicolumnlayout{0.5}{\begin{#1}#2\end{#1}}[0.5][#3]}% Usage: [environment]{environment content}{media content}
+\NewDocumentCommand{\boxleftenvright}{m O{itemize} +m}{\multicolumnlayout{0.5}{#1}[0.5][\begin{#2}#3\end{#2}]}% Usage: {media content}[environment]{environment content}
+\NewDocumentCommand{\envleftright}{O{itemize} +m O{itemize} +m}{\multicolumnlayout{0.5}{\begin{#1}#2\end{#1}}[0.5][\begin{#3}#4\end{#3}]}% Usage: [environment]{environment content}[environment]{environment content}
 %%% END TWO-COLUMN LAYOUTS %%%
 
 %%% THREE-COLUMN LAYOUTS %%%
-\newcommand{\threecolumneven}[3]{\threecolumnlayout{0.3333}{0.3333}{#1}{#2}{#3}}%
-\newcommand{\threecolumnbigleft}[3]{\threecolumnlayout{0.5}{0.25}{#1}{#2}{#3}}%
-\newcommand{\threecolumnbigmiddle}[3]{\threecolumnlayout{0.25}{0.5}{#1}{#2}{#3}}%
-\newcommand{\threecolumnbigright}[3]{\threecolumnlayout{0.25}{0.25}{#1}{#2}{#3}}%
+\newcommand{\threecolumneven}[3]{\multicolumnlayout{0.3333}{#1}[0.3333][#2][0.3333][#3]}%
+\newcommand{\threecolumnbigleft}[3]{\multicolumnlayout{0.5}{#1}[0.25][#2][0.25][#3]}%
+\newcommand{\threecolumnbigmiddle}[3]{\multicolumnlayout{0.25}{#1}[0.5][#2][0.25][#3]}%
+\newcommand{\threecolumnbigright}[3]{\multicolumnlayout{0.25}{#1}[0.25][#2][0.5][#3]}%
 %%% END THREE-COLUMN LAYOUTS %%%
 %%%%%%%%%%%% END HIGH-LEVEL FRAME LAYOUTS %%%%%%%%%%%%
 
@@ -562,12 +562,11 @@
 % Usage: See \video for options
 \NewDocumentCommand{\fullvideo}{O{noprogress,autostart,loop} m m}% 
 {%
-    \threerowlayout[leftmargin=0pt, rightmargin=0pt, topmargin=0pt, bottommargin=0pt, gutter=0pt]%
-    {1.0}{0.0}%
+    \multirowlayout[leftmargin=0pt, rightmargin=0pt, topmargin=0pt, bottommargin=0pt, gutter=0pt]%
+    {1.0}%
     {%
         \video[][#1]{#2}{#3}
     }%
-    {}{}%
 }
 %%%%%%%%%%%% END VIDEO COMMANDS %%%%%%%%%%%%
 
@@ -714,13 +713,8 @@
 %
 %%% COLUMNS %%%
 %
-% Usage: \threecolumnlayout[debug,leftmargin,rightmargin,topmargin,bottommargin]{left fractional size}{middle fractional size}{left content}{middle content}{right content}
+% Usage: \multicolumnlayout[debug,leftmargin,rightmargin,topmargin,bottommargin]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]
 %
-\newlength{\espbeamer@columnlayout@leftlimit}%
-\newlength{\espbeamer@columnlayout@rightlimit}%
-\newlength{\espbeamer@columnlayout@toplimit}%
-\newlength{\espbeamer@columnlayout@bottomlimit}%
-\newlength{\espbeamer@columnlayout@gutter}%
 \define@key[espbeamer]{columnlayoutkeys}{leftmargin}[]{\setlength{\espbeamer@columnlayout@leftlimit}{#1}}%
 \define@key[espbeamer]{columnlayoutkeys}{rightmargin}[]{\setlength{\espbeamer@columnlayout@rightlimit}{#1}}%
 \define@key[espbeamer]{columnlayoutkeys}{topmargin}[]{\setlength{\espbeamer@columnlayout@toplimit}{#1}}%
@@ -728,12 +722,19 @@
 \define@key[espbeamer]{columnlayoutkeys}{gutter}[]{\setlength{\espbeamer@columnlayout@gutter}{#1}}%
 \define@boolkey[espbeamer]{columnlayoutkeys}{debug}[true]{}%
 %
+\newlength{\espbeamer@columnlayout@leftlimit}%
+\newlength{\espbeamer@columnlayout@rightlimit}%
+\newlength{\espbeamer@columnlayout@toplimit}%
+\newlength{\espbeamer@columnlayout@bottomlimit}%
+\newlength{\espbeamer@columnlayout@gutter}%
+\newcounter{espbeamer@columnlayout@numgutters}%
 \newlength{\espbeamer@columnlayout@dividewidth}%
+\newlength{\espbeamer@columnlayout@checkwidth}%
 \newlength{\espbeamer@columnlayout@leftcolumnwidth}%
 \newlength{\espbeamer@columnlayout@middlecolumnwidth}%
 \newlength{\espbeamer@columnlayout@rightcolumnwidth}%
 %
-\NewDocumentCommand{\threecolumnlayout}{O{} m m +m +m +m}
+\NewDocumentCommand{\multicolumnlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
@@ -747,50 +748,90 @@
         \ifespbeamer@columnlayoutkeys@debug%
             \TPoptions{showboxes = true}%
         \fi%
-        
+
         % Calculate the content width/height given the provided margins
         \setlength{\contentposx}{\espbeamer@columnlayout@leftlimit}%
         \setlength{\contentposy}{\espbeamer@columnlayout@toplimit}%
         \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@columnlayout@rightlimit}%
         \setlength{\contentheight}{\paperheight -  \contentposy - \espbeamer@columnlayout@bottomlimit}%
-    
-        % Divide up the content width into 3x (column+gutter) segements
-        \setlength{\espbeamer@columnlayout@dividewidth}{\contentwidth + \espbeamer@columnlayout@gutter}%
+
+        % Calculate the number of gutters
+        \setcounter{espbeamer@columnlayout@numgutters}{0}
+        \ifx\relax#4\relax%
+        \else%
+            \stepcounter{espbeamer@columnlayout@numgutters}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+        \else%
+            \stepcounter{espbeamer@columnlayout@numgutters}%
+        \fi%
+
+        % Calculate lengths of each given element
+        \setlength{\espbeamer@columnlayout@dividewidth}{\contentwidth - \value{espbeamer@columnlayout@numgutters}\espbeamer@columnlayout@gutter}
         \setlength{\espbeamer@columnlayout@leftcolumnwidth}{#2\espbeamer@columnlayout@dividewidth}%
-        \setlength{\espbeamer@columnlayout@middlecolumnwidth}{#3\espbeamer@columnlayout@dividewidth}%
-        \setlength{\espbeamer@columnlayout@rightcolumnwidth}{\espbeamer@columnlayout@dividewidth - \espbeamer@columnlayout@leftcolumnwidth - \espbeamer@columnlayout@middlecolumnwidth}%
-        
-        % First element
+        % Second
+        \ifx\relax#4\relax%
+            \setlength{\espbeamer@columnlayout@middlecolumnwidth}{0pt}%
+        \else%
+            \setlength{\espbeamer@columnlayout@middlecolumnwidth}{#4\espbeamer@columnlayout@dividewidth}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+            \setlength{\espbeamer@columnlayout@rightcolumnwidth}{0pt}%
+        \else%
+            \setlength{\espbeamer@columnlayout@rightcolumnwidth}{#6\espbeamer@columnlayout@dividewidth}%
+        \fi%
+
+        % Sanity check
+        \setlength{\espbeamer@columnlayout@checkwidth}{\espbeamer@columnlayout@leftcolumnwidth + \espbeamer@columnlayout@middlecolumnwidth + \espbeamer@columnlayout@rightcolumnwidth}
+        \ifdim\espbeamer@columnlayout@checkwidth>\espbeamer@columnlayout@dividewidth%
+            \PackageError{ESPBeamer}%
+            {
+                The provided relative element sizes appear to sum to more than 1.0
+            }%
+            {}%
+        \fi%
+
+        % Common elements
         \setlength{\elementposy}{\contentposy}%
         \setlength{\elementheight}{\contentheight}%
-        \setlength{\elementposx}{\espbeamer@columnlayout@leftlimit}% Record the top-left of the first column+gutter
-        \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
-        \layoutelement{#4}%
+
+        % First element
+        \setlength{\elementposx}{\espbeamer@columnlayout@leftlimit}% Record the top-left of the first column
+        \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth}%
+        \layoutelement{#3}%
         \ifespbeamer@columnlayoutkeys@debug%
             \debugelement{}%
         \fi%
-        
+
         % Second element
-        \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of the next column+gutter
-        \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
-        \layoutelement{#5}%
-        \ifespbeamer@columnlayoutkeys@debug%
-            \debugelement{}%
+        \ifx\relax#4\relax%
+        \else%
+            \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth}%
+            \layoutelement{#5}%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
         \fi%
-        
+
         % Third element
-        \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of the next column+gutter
-        \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth - \espbeamer@columnlayout@gutter}% Set the column width to (column+gutter)-gutter
-        \layoutelement{#6}%
-        \ifespbeamer@columnlayoutkeys@debug%
-            \debugelement{}%
+        \ifx\relax#6\relax%
+        \else%
+            \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth}%
+            \layoutelement{#7}%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
         \fi%
     \endgroup%
 }%
 
 %%% ROWS %%%
 %
-% Usage: \threerowlayout[debug,leftmargin,rightmargin,topmargin,bottommargin]{left fractional size}{middle fractional size}{left content}{middle content}{right content}
+% Usage: \multirowlayout[debug,leftmargin,rightmargin,topmargin,bottommargin]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]
 %
 \define@key[espbeamer]{rowlayoutkeys}{leftmargin}[]{\setlength{\espbeamer@rowlayout@leftlimit}{#1}}%
 \define@key[espbeamer]{rowlayoutkeys}{rightmargin}[]{\setlength{\espbeamer@rowlayout@rightlimit}{#1}}%
@@ -804,12 +845,14 @@
 \newlength{\espbeamer@rowlayout@toplimit}%
 \newlength{\espbeamer@rowlayout@bottomlimit}%
 \newlength{\espbeamer@rowlayout@gutter}%
+\newcounter{espbeamer@rowlayout@numgutters}%
 \newlength{\espbeamer@rowlayout@divideheight}%
+\newlength{\espbeamer@rowlayout@checkheight}%
 \newlength{\espbeamer@rowlayout@toprowheight}%
 \newlength{\espbeamer@rowlayout@middlerowheight}%
 \newlength{\espbeamer@rowlayout@bottomrowheight}%
 %
-\NewDocumentCommand{\threerowlayout}{O{} m m +m +m +m}
+\NewDocumentCommand{\multirowlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
@@ -823,43 +866,83 @@
         \ifespbeamer@rowlayoutkeys@debug%
             \TPoptions{showboxes = true}%
         \fi%
-        
+
         % Calculate the content width/height given the provided margins
         \setlength{\contentposx}{\espbeamer@rowlayout@leftlimit}%
         \setlength{\contentposy}{\espbeamer@rowlayout@toplimit}%
         \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@rowlayout@rightlimit}%
         \setlength{\contentheight}{\paperheight -  \contentposy - \espbeamer@rowlayout@bottomlimit}%
-    
-        % Divide up the content width into 3x (row+gutter) segements
-        \setlength{\espbeamer@rowlayout@divideheight}{\contentheight + \espbeamer@rowlayout@gutter}%
-        \setlength{\espbeamer@rowlayout@toprowheight}{#2\espbeamer@rowlayout@divideheight}%
-        \setlength{\espbeamer@rowlayout@middlerowheight}{#3\espbeamer@rowlayout@divideheight}%
-        \setlength{\espbeamer@rowlayout@bottomrowheight}{\espbeamer@rowlayout@divideheight - \espbeamer@rowlayout@toprowheight - \espbeamer@rowlayout@middlerowheight}%
 
-        % First element
+        % Calculate the number of gutters
+        \setcounter{espbeamer@rowlayout@numgutters}{0}
+        \ifx\relax#4\relax%
+        \else%
+            \stepcounter{espbeamer@rowlayout@numgutters}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+        \else%
+            \stepcounter{espbeamer@rowlayout@numgutters}%
+        \fi%
+
+        % Calculate lengths of each given element
+        \setlength{\espbeamer@rowlayout@divideheight}{\contentheight - \value{espbeamer@rowlayout@numgutters}\espbeamer@rowlayout@gutter}
+        \setlength{\espbeamer@rowlayout@toprowheight}{#2\espbeamer@rowlayout@divideheight}%
+        % Second
+        \ifx\relax#4\relax%
+            \setlength{\espbeamer@rowlayout@middlerowheight}{0pt}%
+        \else%
+            \setlength{\espbeamer@rowlayout@middlerowheight}{#4\espbeamer@rowlayout@divideheight}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+            \setlength{\espbeamer@rowlayout@bottomrowheight}{0pt}%
+        \else%
+            \setlength{\espbeamer@rowlayout@bottomrowheight}{#6\espbeamer@rowlayout@divideheight}%
+        \fi%
+
+        % Sanity check
+        \setlength{\espbeamer@rowlayout@checkheight}{\espbeamer@rowlayout@toprowheight + \espbeamer@rowlayout@middlerowheight + \espbeamer@rowlayout@bottomrowheight}
+        \ifdim\espbeamer@rowlayout@checkheight>\espbeamer@rowlayout@divideheight%
+            \PackageError{ESPBeamer}%
+            {
+                The provided relative element sizes appear to sum to more than 1.0
+            }%
+            {}%
+        \fi%
+
+        % Common elements
         \setlength{\elementposx}{\contentposx}%
         \setlength{\elementwidth}{\contentwidth}%
-        \setlength{\elementposy}{\espbeamer@rowlayout@toplimit}%  Record the top-left of the first column+gutter
-        \setlength{\elementheight}{\espbeamer@rowlayout@toprowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
-        \layoutelement{#4}%
+        
+        % First element
+        \setlength{\elementposy}{\espbeamer@rowlayout@toplimit}%  Record the top-left of the first row
+        \setlength{\elementheight}{\espbeamer@rowlayout@toprowheight}%
+        \layoutelement{#3}%
         \ifespbeamer@rowlayoutkeys@debug%
             \debugelement{}%
         \fi%
-        
+
         % Second element
-        \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of the next row+gutter
-        \setlength{\elementheight}{\espbeamer@rowlayout@middlerowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
-        \layoutelement{#5}%
-        \ifespbeamer@rowlayoutkeys@debug%
-            \debugelement{}%
+        \ifx\relax#4\relax%
+        \else%
+            \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\espbeamer@rowlayout@middlerowheight}%
+            \layoutelement{#5}%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
         \fi%
-        
+
         % Third element
-        \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of the next row+gutter
-        \setlength{\elementheight}{\espbeamer@rowlayout@bottomrowheight - \espbeamer@rowlayout@gutter}% Set the row height to (row+gutter)-gutter
-        \layoutelement{#6}%
-        \ifespbeamer@rowlayoutkeys@debug%
-            \debugelement{}%
+        \ifx\relax#6\relax%
+        \else%
+            \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\espbeamer@rowlayout@bottomrowheight}%
+            \layoutelement{#7}%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \debugelement{}%
+            \fi%
         \fi%
     \endgroup%
 }%

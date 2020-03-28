@@ -13,8 +13,8 @@
 \newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
 \setbeamertemplate{title page}% The title page
 {%
-    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
-    {0.6}{0.4}%
+    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {0.6}%
     {%
         \ifbeamertemplateempty{titlelogo}%
         {}%
@@ -28,7 +28,8 @@
             \vfil%
         }%
     }%
-    {%
+    [0.4]%
+    [%
         \usebeamerfont*{title}%
         \usebeamercolor*{title}%
         \setlength{\espbeamer@titlepage@emptyrule}{\elementwidth - \widthof{\inserttitle{}}}%
@@ -39,13 +40,12 @@
         \strut\insertauthor{}\\%
         \strut\insertinstitute{}\\%
         \strut\insertdate{}%
-    }%
-    {}%
+    ]%
 }%
 \setbeamertemplate{part page}% The titlepage of a presentation part
 {%
-    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
-    {1.0}{0.0}%
+    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {1.0}%
     {%
         \centering%
         \vbox to \elementheight%
@@ -57,12 +57,11 @@
             \vfil%
         }%
     }%
-    {}{}%
 }%
 \setbeamertemplate{section page}% The titlepage of a presentation section
 {%
-    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
-    {1.0}{0.0}%
+    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {1.0}%
     {%
         \centering%
         \vbox to \elementheight%
@@ -74,12 +73,11 @@
             \vfil%
         }%
     }%
-    {}{}%
 }%
 \setbeamertemplate{subsection page}% The titlepage of a presentation subsection
 {%
-    \threerowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
-    {1.0}{0.0}%
+    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    {1.0}%
     {%
         \centering%
         \vbox to \elementheight%
@@ -91,7 +89,6 @@
             \vfil%
         }%
     }%
-    {}{}%
 }%
 
 
