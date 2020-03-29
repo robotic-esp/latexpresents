@@ -18,20 +18,18 @@
 %%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
 
 %%%%%%%%%%%% PACKAGES %%%%%%%%%%%%
-\RequirePackage{amssymb,amsmath,amscd,amsthm}% Math is good
 \RequirePackage{tikz}% Part of Beamer, but seems like a good idea when specifying libraries
 \usetikzlibrary{positioning}%
-\RequirePackage{calc}% For adding lengths
 \RequirePackage{xparse}% For NewDocumentCommand which allows multiple optional arguments with defaults
 \RequirePackage{xkeyval}% For defining macro options as key-value pairs. Extends the base keyval package.
 \RequirePackage{xcolor}% You know, for colours.
+\RequirePackage{calc}% For adding lengths
+\RequirePackage{printlen}% \printlength
 \RequirePackage[absolute,overlay]{textpos}% For absolutely positioned text boxes (titlepage)
-\usepackage{microtype}% Make pdflatex look more good.
-\usepackage{datetime2}% Better date formatting, ISO by default.
 \RequirePackage{contour}% For a custom definition of \underline that looks better.
 \RequirePackage[normalem]{ulem}% For a custom definition of \underline that looks better, with option to not redefine \emph.
-\RequirePackage{printlen}% \printlength
-\uselengthunit{pt}
+\RequirePackage{datetime2}% Better date formatting, ISO by default.
+\uselengthunit{pt}% Unit for \printlength
 %For media (depending on optional flag)
 \ifespbeamer@adobe%
     \RequirePackage{media9}%
