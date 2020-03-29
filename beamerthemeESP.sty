@@ -33,6 +33,11 @@
 %For media (depending on optional flag)
 \ifespbeamer@adobe%
     \RequirePackage{media9}%
+    \PackageError{ESPBeamer}%
+    {
+        Adobe support is not yet implemented
+    }%
+    {}%
 \else%
     \RequirePackage{multimedia}%
 \fi%
