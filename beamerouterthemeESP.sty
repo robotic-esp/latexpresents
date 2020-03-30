@@ -86,21 +86,21 @@
 \NewDocumentCommand{\setframetitle}{O{} O{}}%
 {%
     \begin{beamercolorbox}[sep=0pt]{frametitle}%
-        \usebeamerfont*{frametitle}%
-        \usebeamercolor*[fg]{frametitle}%
+        \usebeamerfont{frametitle}%
+        \usebeamercolor[fg]{frametitle}%
         \strut#1%
 %        % Insert the subtitle on the same line
 %        \ifx\insertframesubtitle\@empty%
 %        \else%
 %            \hskip1ex%
-%            \usebeamerfont*{framesubtitle}%
-%            \usebeamercolor*[fg]{framesubtitle}%
+%            \usebeamerfont{framesubtitle}%
+%            \usebeamercolor[fg]{framesubtitle}%
 %            #2%
 %        \fi
         % Insert the subtitle on a newline
         \vskip-2pt%
-        \usebeamerfont*{framesubtitle}%
-        \usebeamercolor*[fg]{framesubtitle}%
+        \usebeamerfont{framesubtitle}%
+        \usebeamercolor[fg]{framesubtitle}%
         \strut#2%
     \end{beamercolorbox}%
 }%

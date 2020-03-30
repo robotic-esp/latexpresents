@@ -30,12 +30,12 @@
     }%
     [0.4]%
     [%
-        \usebeamerfont*{title}%
-        \usebeamercolor*{title}%
+        \usebeamerfont{title}%
+        \usebeamercolor{title}%
         \setlength{\espbeamer@titlepage@emptyrule}{\elementwidth - \widthof{\inserttitle{}}}%
         \ul{\inserttitle{}\hspace*{\espbeamer@titlepage@emptyrule}}%
-        \usebeamerfont*{subtitle}%
-        \usebeamercolor*{subtitle}%
+        \usebeamerfont{subtitle}%
+        \usebeamercolor{subtitle}%
         \vskip0.25\baselineskip%
         \strut\insertauthor{}\\%
         \strut\insertinstitute{}\\%
@@ -51,8 +51,8 @@
         \vbox to \elementheight%
         {%
             \vfil%
-            \usebeamerfont*{part title}
-            \usebeamercolor*{part title}
+            \usebeamerfont{part title}
+            \usebeamercolor{part title}
             \insertpart{}%
             \vfil%
         }%
@@ -67,8 +67,8 @@
         \vbox to \elementheight%
         {%
             \vfil%
-            \usebeamerfont*{section title}
-            \usebeamercolor*{section title}
+            \usebeamerfont{section title}
+            \usebeamercolor{section title}
             \insertsection{}%
             \vfil%
         }%
@@ -83,8 +83,8 @@
         \vbox to \elementheight%
         {%
             \vfil%
-            \usebeamerfont*{subsection title}
-            \usebeamercolor*{subsection title}
+            \usebeamerfont{subsection title}
+            \usebeamercolor{subsection title}
             \insertsubsection{}%
             \vfil%
         }%
@@ -146,7 +146,7 @@
 
 
 %%% Figures %%%
-%\setbeamertemplate{caption}{\usebeamerfont*{caption}\usebeamercolor*{caption}\insertcaption{}}% Figure/table/etc. captions
+%\setbeamertemplate{caption}{\usebeamerfont{caption}\usebeamercolor{caption}\insertcaption{}}% Figure/table/etc. captions
     %[default] typesets the caption name then the caption text. No number is printed.
     %[numbered] adds the figure or table number to the caption.
     %[caption name own line] Puts the caption name on its own line.
@@ -179,7 +179,7 @@
     {%
         \inserttheoremheadfont%
         \inserttheoremname%
-        \usebeamerfont*{block body}%
+        \usebeamerfont{block body}%
         \ifx\inserttheoremaddition\@empty%
             \strut%
         \else%
@@ -216,7 +216,7 @@
 
 
 %%% Bibliography %%%
-\setbeamertemplate{bibliography item}{\usebeamerfont*{bibliography item}\usebeamercolor*{bibliography item}\textbullet}% Mark (e.g., bullet) for bibliography list
+\setbeamertemplate{bibliography item}{\usebeamerfont{bibliography item}\usebeamercolor{bibliography item}\textbullet}% Mark (e.g., bullet) for bibliography list
     %[article] A little article icon (default).
     %[book] A little book icon as the reference.
     %[online] A little globe icon as the reference.
@@ -224,10 +224,10 @@
     %[text] Uses the reference text (like “[Dijkstra, 1982]”) as the reference text.
     %\insertbiblabel inserts the current citation label.
     
-\setbeamertemplate{bibliography entry author}{\usebeamerfont*{bibliography entry author}\usebeamercolor*{bibliography entry author}}% Inserted before author
-\setbeamertemplate{bibliography entry title}{\usebeamerfont*{bibliography entry title}\usebeamercolor*{bibliography entry title}}% Inserted before title
-\setbeamertemplate{bibliography entry location}{\usebeamerfont*{bibliography entry location}\usebeamercolor*{bibliography entry location}}% Inserted before where published
-\setbeamertemplate{bibliography entry note}{\usebeamerfont*{bibliography entry note}\usebeamercolor*{bibliography entry note}}% Inserted before note
+\setbeamertemplate{bibliography entry author}{\usebeamerfont{bibliography entry author}\usebeamercolor{bibliography entry author}}% Inserted before author
+\setbeamertemplate{bibliography entry title}{\usebeamerfont{bibliography entry title}\usebeamercolor{bibliography entry title}}% Inserted before title
+\setbeamertemplate{bibliography entry location}{\usebeamerfont{bibliography entry location}\usebeamercolor{bibliography entry location}}% Inserted before where published
+\setbeamertemplate{bibliography entry note}{\usebeamerfont{bibliography entry note}\usebeamercolor{bibliography entry note}}% Inserted before note
 
 
 %%% Misc. Elements %%%

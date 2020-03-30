@@ -93,10 +93,6 @@
 \newlength{\espbeamer@bio@sep}%
 \setlength{\espbeamer@bio@sep}{1.5pt}%
 
-%%%% Fixes %%%
-%\setlength{\abovecaptionskip}{0pt}%
-%\setlength{\belowcaptionskip}{0pt}%
-
 %%% Internally calculated lengths from Beamer %%%
 \newlength{\espbeamer@titlelogo@maxwidth}% Height of the frame title block
 \newlength{\espbeamer@frametitle@height}% Height of the frame title block
@@ -198,8 +194,8 @@
     \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
     {0.5}%
     {%
-        \usebeamerfont*{thanks}%
-        \usebeamercolor*{thanks}%
+        \usebeamerfont{thanks}%
+        \usebeamercolor{thanks}%
         \vbox to \elementheight%
         {%
             \centering%
@@ -304,8 +300,8 @@
         \savebox{\espbeamer@image@captionbox}%
         {%
             \begin{minipage}{\elementwidth}%
-                \usebeamerfont*{caption}%
-                \usebeamercolor*{caption}%
+                \usebeamerfont{caption}%
+                \usebeamercolor{caption}%
                 \centering%
                 \strut#1%
             \end{minipage}%
@@ -318,7 +314,7 @@
     \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio,#2]{#3}%
     \ifx\relax#1\relax%
     \else%
-        \usebeamerfont*{caption}\\%
+        \usebeamerfont{caption}\\%
         \usebox{\espbeamer@image@captionbox}%
     \fi%
     \vfil%
@@ -451,8 +447,8 @@
             \savebox{\espbeamer@video@captionbox}%
             {%
                 \begin{minipage}{\elementwidth}%
-                    \usebeamerfont*{caption}%
-                    \usebeamercolor*{caption}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
                     \centering%
                     \strut#1%
                 \end{minipage}%
@@ -511,7 +507,7 @@
                 %
                 \ifx\relax#1\relax%
                 \else%
-                    \usebeamerfont*{caption}\\%
+                    \usebeamerfont{caption}\\%
                     %%% HREF HACK %%%
                     \vspace{-\espbeamer@video@fudgealignheight}%
                     %%% HREF HACK %%%
@@ -545,7 +541,7 @@
         %
         \ifx\relax#1\relax%
         \else%
-            \usebeamerfont*{caption}\\%
+            \usebeamerfont{caption}\\%
             %%% HREF HACK %%%
             \vspace{-\espbeamer@video@fudgealignheight}%
             %%% HREF HACK %%%
@@ -589,7 +585,7 @@
         \contour{background canvas.bg}{#1}%
     }%
 }
-\newcommand*{\copyrighttext}[1]{\usebeamerfont*{copyright}\usebeamercolor*{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK}
+\newcommand*{\copyrighttext}[1]{\usebeamerfont{copyright}\usebeamercolor{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK?}
 
 \newcommand*{\alertBlue}[1]{{\setBlueAlert{}\alert{#1}}}%
 \newcommand*{\alertGreen}[1]{{\setGreenAlert{}\alert{#1}}}%
