@@ -8,7 +8,6 @@
 
 \mode<presentation>
 %%% Special pages %%%
-\newlength{\espbeamer@titlepage@emptyrule}% The length to extend the title underline to the right margin
 \newlength{\espbeamer@titlepage@toprowheight}% The height of the top row
 \newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
 \setbeamertemplate{title page}% The title page
@@ -19,24 +18,27 @@
         \ifbeamertemplateempty{titlelogo}%
         {}%
         {%
-            \vfil%
+            \vfill%
             \ifdim\espbeamer@titlelogo@maxwidth>\elementwidth%
                 \resizebox{\elementwidth}{!}{\usebeamertemplate*{titlelogo}}%
             \else%
                 \usebeamertemplate*{titlelogo}%
             \fi%
-            \vfil%
         }%
+        \vfill%
+        \begin{minipage}[b]{\elementwidth}%
+            \usebeamerfont{title}%
+            \usebeamercolor{title}%
+            \inserttitle%
+        \end{minipage}%
     }%
     [0.4]%
     [%
-        \usebeamerfont{title}%
-        \usebeamercolor{title}%
-        \setlength{\espbeamer@titlepage@emptyrule}{\elementwidth - \widthof{\inserttitle{}}}%
-        \ul{\inserttitle{}\hspace*{\espbeamer@titlepage@emptyrule}}%
         \usebeamerfont{subtitle}%
         \usebeamercolor{subtitle}%
-        \vskip0.25\baselineskip%
+        \vskip0.15\baselineskip%
+        \rule{\elementwidth}{3pt}%
+        \vskip0.15\baselineskip%
         \strut\insertauthor{}\\%
         \strut\insertinstitute{}\\%
         \strut\insertdate{}%
