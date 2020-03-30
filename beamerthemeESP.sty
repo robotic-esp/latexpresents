@@ -377,69 +377,51 @@
 %%% In column video %%%
 %
 % Usage: \video[optional caption][noprogress,autostart,loop]{path/to/thumbnail}{path/to/video}
-%
-% This is a hack because pdfpc (and most linux viewers) do not currently support \movie's autostart command
-% (see: https://github.com/pdfpc/pdfpc/issues/495).
-% This will be cleaned-up/simplified once that change makes it back.
 
-% A whole bunch of boxes and lengths for the \href hack
-\newsavebox{\espbeamer@video@posterbox}%
-\newsavebox{\espbeamer@video@captionbox}%
-\newlength{\espbeamer@video@fudgealignx}%
-\setlength{\espbeamer@video@fudgealignx}{-1pt}%
-\newlength{\espbeamer@video@fudgealigny}%
-\setlength{\espbeamer@video@fudgealigny}{-0.9pt}%
-\newlength{\espbeamer@video@fudgealignwidth}%
-\setlength{\espbeamer@video@fudgealignwidth}{-1pt}%-1pt
-\newlength{\espbeamer@video@fudgealignheight}%
-\setlength{\espbeamer@video@fudgealignheight}{-1.9pt}%-1.9pt
-\newbox\espbeamer@video@videobox%
-\newlength{\espbeamer@video@width}%
-\newlength{\espbeamer@video@height}%
-\newlength{\espbeamer@video@depth}%
+\ifespbeamer@adobe%
+\else
+    % This is a hack because pdfpc (and most linux viewers) do not currently support \movie's autostart command
+    % (see: https://github.com/pdfpc/pdfpc/issues/495).
+    % This will be cleaned-up/simplified once that change makes it back.
+    
+    % A whole bunch of boxes and lengths for the \href hack
+    %%% HREF HACK %%%
+    \newsavebox{\espbeamer@video@posterbox}%
+    \newlength{\espbeamer@video@fudgealignx}%
+    \setlength{\espbeamer@video@fudgealignx}{-1pt}%
+    \newlength{\espbeamer@video@fudgealigny}%
+    \setlength{\espbeamer@video@fudgealigny}{-0.9pt}%
+    \newlength{\espbeamer@video@fudgealignwidth}%
+    \setlength{\espbeamer@video@fudgealignwidth}{-1pt}%-1pt
+    \newlength{\espbeamer@video@fudgealignheight}%
+    \setlength{\espbeamer@video@fudgealignheight}{-1.9pt}%-1.9pt
+    \newbox\espbeamer@video@videobox%
+    \newlength{\espbeamer@video@width}%
+    \newlength{\espbeamer@video@height}%
+    \newlength{\espbeamer@video@depth}%
+    %%% HREF HACK %%%
 
-% A string of parsed options to the underlying command. All videos receive autostarts as we achieve "onclick" by duplicating a static slide infront of an autostart slide.
-%%% BEAMER MULTIMEDIA %%%
-%\def\espbeamer@video@optionstring{autostart}% The video options.
-%%% BEAMER MULTIMEDIA %%%
-%%% HREF HACK %%%
-\def\espbeamer@video@optionstring{?autostart}% The video options.
-%%% HREF HACK %%%
+    % A string of parsed options to the underlying command. All videos receive autostarts as we achieve "onclick" by duplicating a static slide infront of an autostart slide.
+    %%% BEAMER MULTIMEDIA %%%
+    %\def\espbeamer@video@optionstring{autostart}% The video options.
+    %%% BEAMER MULTIMEDIA %%%
+    %%% HREF HACK %%%
+    \def\espbeamer@video@optionstring{?autostart}% The video options.
+    %%% HREF HACK %%%
+\fi%
 
 % Define keys
 \definecomplimentarykeys{espbeamer}{videokeys}{autostart}{onclick}%
 \definecomplimentarykeys{espbeamer}{videokeys}{loop}{once}%
 \definecomplimentarykeys{espbeamer}{videokeys}{noprogress}{progress}%
-
 \newlength{\espbeamer@video@captionheight}%
+\newsavebox{\espbeamer@video@captionbox}%
 \NewDocumentCommand{\video}{O{} O{} m m}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \presetkeys[espbeamer]{videokeys}{autostart=true, loop=true, noprogress=true}{}
         \setkeys[espbeamer]{videokeys}{#2}%
-        
-        %Parse the keys into the option string for the lower-level command. Autostart is already included
-        \ifespbeamer@videokeys@noprogress%
-           %%% HREF HACK %%%
-           \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&noprogress}%
-           %%% HREF HACK %%%
-            %%% BEAMER MULTIMEDIA %%%
-            %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols==false}
-       %\else
-           %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols==true}
-            %%% BEAMER MULTIMEDIA %%%
-        \fi%
-        \ifespbeamer@videokeys@loop%
-            %%% HREF HACK %%%
-            \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&loop}%
-            %%% HREF HACK %%%
-            %%% BEAMER MULTIMEDIA %%%
-            %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,loop}
-        %\else
-            %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,once}
-            %%% BEAMER MULTIMEDIA %%%
-        \fi%
-        
+
         % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
         \ifx\relax#1\relax%
             \setlength{\espbeamer@video@captionheight}{0pt}%
@@ -455,30 +437,56 @@
             }%
             \settototalheight{\espbeamer@video@captionheight}{\usebox{\espbeamer@video@captionbox}}%
         \fi%
-        
-        %%% HREF HACK: Poster/video size fixes %%%
-        % Fix the size of the \href video relative to the poster
-        % Save the poster so we know its size (and ratio).
-        \savebox{\espbeamer@video@posterbox}%
-        {%
-            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
-        }%
 
-        % Calculate the size of the video from the poster
-        \settowidth{\espbeamer@video@width}{\usebox{\espbeamer@video@posterbox}}%
-        \settoheight{\espbeamer@video@height}{\usebox{\espbeamer@video@posterbox}}%
-        \settodepth{\espbeamer@video@depth}{\usebox{\espbeamer@video@posterbox}}%
-        %Then adjust to fix the difference in size
-        \addtolength{\espbeamer@video@width}{\espbeamer@video@fudgealignwidth}%
-        \addtolength{\espbeamer@video@height}{\espbeamer@video@fudgealignheight}%
-    
-        % Define a box to define the video size, and put the poster inside it.
-        \setbox\espbeamer@video@videobox=\vbox{\vspace{\espbeamer@video@fudgealigny}\usebox{\espbeamer@video@posterbox}}%
-        \wd\espbeamer@video@videobox=\espbeamer@video@width%
-        \ht\espbeamer@video@videobox=\espbeamer@video@height%
-        \dp\espbeamer@video@videobox=\espbeamer@video@depth%
-        %%% HREF HACK: Poster/video size fixes %%%
-    
+        % Parse the options and configure the poster
+        \ifespbeamer@adobe%
+        \else%
+            %Parse the keys into the option string for the lower-level command. Autostart is already included
+            \ifespbeamer@videokeys@noprogress%
+               %%% HREF HACK %%%
+               \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&noprogress}%
+               %%% HREF HACK %%%
+                %%% BEAMER MULTIMEDIA %%%
+                %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols==false}
+           %\else
+               %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols==true}
+                %%% BEAMER MULTIMEDIA %%%
+            \fi%
+            \ifespbeamer@videokeys@loop%
+                %%% HREF HACK %%%
+                \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&loop}%
+                %%% HREF HACK %%%
+                %%% BEAMER MULTIMEDIA %%%
+                %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,loop}
+            %\else
+                %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,once}
+                %%% BEAMER MULTIMEDIA %%%
+            \fi%
+
+            %%% HREF HACK: Poster/video size fixes %%%
+            % Fix the size of the \href video relative to the poster
+            % Save the poster so we know its size (and ratio).
+            \savebox{\espbeamer@video@posterbox}%
+            {%
+                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+            }%
+
+            % Calculate the size of the video from the poster
+            \settowidth{\espbeamer@video@width}{\usebox{\espbeamer@video@posterbox}}%
+            \settoheight{\espbeamer@video@height}{\usebox{\espbeamer@video@posterbox}}%
+            \settodepth{\espbeamer@video@depth}{\usebox{\espbeamer@video@posterbox}}%
+            %Then adjust to fix the difference in size
+            \addtolength{\espbeamer@video@width}{\espbeamer@video@fudgealignwidth}%
+            \addtolength{\espbeamer@video@height}{\espbeamer@video@fudgealignheight}%
+        
+            % Define a box to define the video size, and put the poster inside it.
+            \setbox\espbeamer@video@videobox=\vbox{\vspace{\espbeamer@video@fudgealigny}\usebox{\espbeamer@video@posterbox}}%
+            \wd\espbeamer@video@videobox=\espbeamer@video@width%
+            \ht\espbeamer@video@videobox=\espbeamer@video@height%
+            \dp\espbeamer@video@videobox=\espbeamer@video@depth%
+            %%% HREF HACK: Poster/video size fixes %%%
+        \fi%
+        
         % Actually typeset the poster & video
         \centering%
         \vfil%
@@ -488,70 +496,107 @@
         \ifespbeamer@videokeys@onclick%
             \only<1>%
             {%
-                %%% BEAMER MULTIMEDIA %%%
-                %\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}
-                %%% BEAMER MULTIMEDIA %%%
-                %%% HREF HACK %%%
-                \href%
-                {%
-                    %Do nothing
-                }%
-                {%
-                    % Poster
-                    % Shift the poster to line up with the video
-                    \hskip\espbeamer@video@fudgealignx%
-                    % Insert the video box containing the poster
-                    \box\espbeamer@video@videobox%
-                }%
-                %%% HREF HACK %%%
-                %
+                \ifespbeamer@adobe%
+                    \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                \else%
+                    %%% BEAMER MULTIMEDIA %%%
+                    %\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}
+                    %%% BEAMER MULTIMEDIA %%%
+                    %%% HREF HACK %%%
+                    \href%
+                    {%
+                        %Do nothing
+                    }%
+                    {%
+                        % Poster
+                        % Shift the poster to line up with the video
+                        \hskip\espbeamer@video@fudgealignx%
+                        % Insert the video box containing the poster
+                        \box\espbeamer@video@videobox%
+                    }%
+                    %%% HREF HACK %%%
+                \fi%
+                % \href can't be followed by a newline
+                % Set the caption
                 \ifx\relax#1\relax%
                 \else%
                     \usebeamerfont{caption}\\%
                     %%% HREF HACK %%%
-                    \vspace{-\espbeamer@video@fudgealignheight}%
+                    \ifespbeamer@adobe%
+                    \else%
+                        \vspace{-\espbeamer@video@fudgealignheight}%
+                    \fi%
                     %%% HREF HACK %%%
                     \usebox{\espbeamer@video@captionbox}%
                 \fi%
             }%
-            
+
             % Start a second slide that will contain the autostart video
             \only<2>%
             {%
         \fi%
 
         % This is the video slide, regardless of autostart/onclick
-        %%% BEAMER MULTIMEDIA %%%
-        %\movie[#2]{\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}}{#4}
-        %%% BEAMER MULTIMEDIA %%%
-        %%% HREF HACK %%%
-        \href%
-        {%
-            % Video
-            run:#4\espbeamer@video@optionstring%
-        }%
-        {%
-            % Poster
-            % Shift the poster to line up with the video
-            \hskip\espbeamer@video@fudgealignx%
-            % Insert the video box containing the poster
-            \box\espbeamer@video@videobox%
-        }%
-        %%% HREF HACK %%%
-        %
+        \ifespbeamer@adobe%
+            \includemedia%
+            [
+                keepaspectratio,%
+                activate=pageopen,%
+                deactivate=pageclose,%
+                playbutton=none,%
+                passcontext,% passthrough right-clisks to VPlayer instead of Adobe Reader
+                transparent,% transparent player background
+                addresource=#4,
+                flashvars={
+                    source=#4
+                    \ifespbeamer@videokeys@loop%
+                        &loop=true% loop video
+                    \fi%
+                }
+            ]%
+            {%
+                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+            }%
+            {VPlayer.swf}%
+        \else%
+            %%% BEAMER MULTIMEDIA %%%
+            %\movie[\espbeamer@video@optionstring]{\includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}}{#4}
+            %%% BEAMER MULTIMEDIA %%%
+            %%% HREF HACK %%%
+            \href%
+            {%
+                % Video
+                run:#4\espbeamer@video@optionstring%
+            }%
+            {%
+                % Poster
+                % Shift the poster to line up with the video
+                \hskip\espbeamer@video@fudgealignx%
+                % Insert the video box containing the poster
+                \box\espbeamer@video@videobox%
+            }%
+            %%% HREF HACK %%%
+        \fi%
+        % \href can't be followed by a newline
+        % Set the caption
         \ifx\relax#1\relax%
         \else%
             \usebeamerfont{caption}\\%
             %%% HREF HACK %%%
-            \vspace{-\espbeamer@video@fudgealignheight}%
+            \ifespbeamer@adobe%
+            \else%
+                \vspace{-\espbeamer@video@fudgealignheight}%
+            \fi%
             %%% HREF HACK %%%
             \usebox{\espbeamer@video@captionbox}%
         \fi%
-        
+
         % Close the second slide created to support onclick
         \ifespbeamer@videokeys@onclick%
             }%
         \fi%
+
+        % Center vertically
         \vfil%
     \endgroup%
 }%
