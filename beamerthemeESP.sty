@@ -33,11 +33,6 @@
 %For media (depending on optional flag)
 \ifespbeamer@adobe%
     \RequirePackage{media9}%
-    \PackageError{ESPBeamer}%
-    {
-        Adobe support is not yet implemented
-    }%
-    {}%
 \else%
     \RequirePackage{multimedia}%
 \fi%
@@ -544,14 +539,16 @@
                 activate=pageopen,%
                 deactivate=pageclose,%
                 playbutton=none,%
-                passcontext,% passthrough right-clisks to VPlayer instead of Adobe Reader
+                passcontext,% passthrough right-clicks to VPlayer instead of Adobe Reader
                 transparent,% transparent player background
                 addresource=#4,
                 flashvars={
                     source=#4
                     \ifespbeamer@videokeys@loop%
-                        &loop=true% loop video
+                        &autoRewind=true% Automatically rewind to the first frame after playback has finished
+                        &loop=true% Media is played in a loop
                     \fi%
+                    &autoPlay=true% Automatically starts playback after activation
                 }
             ]%
             {%
