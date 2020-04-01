@@ -13,7 +13,7 @@ for vid in "${INPUT}"/*; do
             # Get the frame rate and evaluate to a real number.
             fps=$(ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=avg_frame_rate "${vid}")
             # Encode with keyframes at a multiple of it
-            ffmpeg -n -i "${vid}" -c:a copy -c:v libx264 -g "${fps}" "${filename}_enc.mp4" 
+            ffmpeg -n -i "${vid}" -c:a copy -c:v libx264 -preset veryslow -g "${fps}" "${filename}_enc.mp4" 
         fi
     fi
 done
