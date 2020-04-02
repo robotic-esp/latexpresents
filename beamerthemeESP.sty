@@ -566,18 +566,21 @@
                 \expandafter%
                 [%
                     keepaspectratio,%
-                    activate=pagevisible,%
-                    deactivate=pageinvisible,%
                     \ifespbeamer@handout%
                         playbutton=fancy,% This would apparently need to be "plain" for XeLaTeX according to media9 doc.
+                        activate=onclick,%
+                        deactivate=pageinvisible,%
                     \else%
                         playbutton=none,%
+                        activate=pagevisible,%
+                        deactivate=pageinvisible,%
                     \fi%
                     passcontext,% passthrough right-clicks to VPlayer instead of Adobe Reader
                     transparent,% transparent player background
-                    addresource=#4,
-                    flashvars={
-                        source=#4
+                    addresource=#4,%
+                    flashvars={%
+                        source=#4%
+                        &autoPlay=true% Automatically starts playback after activation
                         \ifespbeamer@handout%
                             &autoRewind=true% Automatically rewind to the first frame after playback has finished
                         \else%
@@ -585,9 +588,8 @@
                                 &autoRewind=true% Automatically rewind to the first frame after playback has finished
                                 &loop=true% Media is played in a loop
                             \fi%
-                            &autoPlay=true% Automatically starts playback after activation
                         \fi%
-                    }
+                    }%
                 ]%
                 {%
                     \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
