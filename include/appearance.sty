@@ -1,0 +1,49 @@
+%%%%%%%%%%%% APPERANCE COMMANDS %%%%%%%%%%%%
+%%% UNDERLINE %%%
+%From: https://alexwlchan.net/2017/10/latex-underlines/
+\renewcommand{\ULdepth}{1.45pt}
+\contourlength{0.7pt}
+\newcommand{\ul}[1]%
+{%
+    \uline{\phantom{#1}}%
+    \llap%
+    {%
+        \usebeamercolor{background canvas}
+        \contour{background canvas.bg}{#1}%
+    }%
+}
+\newcommand*{\copyrighttext}[1]{\usebeamerfont{copyright}\usebeamercolor*{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK?}
+
+%%% MATH-COMPATIBLE COLOURED ALERTS %%%
+\newcommand*{\alertBlue}[1]{{\setBlueAlert{}\alert{#1}}}%
+\newcommand*{\alertGreen}[1]{{\setGreenAlert{}\alert{#1}}}%
+\newcommand*{\alertYellow}[1]{{\setYellowAlert{}\alert{#1}}}%
+\newcommand*{\alertOrange}[1]{{\setOrangeAlert{}\alert{#1}}}%
+\newcommand*{\alertRed}[1]{{\setRedAlert{}\alert{#1}}}%
+\newcommand*{\alertGray}[1]{{\setGrayAlert{}\alert{#1}}}%
+
+\newcommand*{\setBlueAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=BLUE, bg=}%
+}%
+\newcommand*{\setGreenAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=GREEN, bg=}%
+}%
+\newcommand*{\setYellowAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=YELLOW, bg=}%
+}%
+\newcommand*{\setOrangeAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=ORANGE, bg=}%
+}%
+\newcommand*{\setRedAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=RED, bg=}%
+}%
+\newcommand*{\setGrayAlert}%
+{%
+    \setbeamercolor{alerted text}{fg=GRAY, bg=}%
+}%
+%%%%%%%%%%%% END APPERANCE COMMANDS %%%%%%%%%%%%

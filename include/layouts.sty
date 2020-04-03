@@ -1,0 +1,621 @@
+%%%%%%%%%%%% FRAME ENVIRONMENTS %%%%%%%%%%%%
+%A frame for full screen media.
+\newenvironment{fullframe}%
+{%
+    \setbeamertemplate{background canvas}{\color{black}\vrule width\paperwidth height\paperheight}%
+    \setbeamertemplate{headline}{}%
+    \setbeamertemplate{footline}{}%
+    \setbeamertemplate{sidebar left}{}%
+    \setbeamertemplate{sidebar right}{}%
+    \setbeamertemplate{frametitle}{}%
+    \setlength{\contentposx}{0pt}%
+    \setlength{\contentposy}{0pt}%
+    \setlength{\contentwidth}{\paperwidth}%
+    \setlength{\contentheight}{\paperheight}%
+    \setlength{\elementposx}{\contentposx}%
+    \setlength{\elementposy}{\contentposy}%
+    \setlength{\elementwidth}{\contentwidth}%
+    \setlength{\elementheight}{\contentheight}%
+    \begin{frame}%
+}%
+{%
+    \end{frame}%
+}%
+%%%%%%%%%%%% END FRAME ENVIRONMENTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% CONTENT-DRIVEN LAYOUTS %%%%%%%%%%%%
+%%% ONE-COLUMN %%%
+\NewDocumentCommand{\imagecenter}{O{} O{} m O{}}{\onecolumnfull[#4]{\image[#1][#2]{#3}}}% Usage: see \image
+\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m O{}}{\onecolumnfull[#5]{\pdfpage[#1][#2]{#3}{#4}}}% Usage: see \image
+\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m O{}}{\onecolumnfull[#5]{\video[#1][#2]{#3}{#4}}}% Usage: see \video
+\NewDocumentCommand{\envleft}{O{itemize} +m O{}}{\onecolumnfull[#3]{\begin{#1}#2\end{#1}}}% Usage: [environment]{environment content}
+
+%%% TWO-COLUMNS %%%
+\NewDocumentCommand{\envleftboxright}{O{itemize} +m +m O{}}{\twocolumneven{\begin{#1}#2\end{#1}}{#3}}% Usage: [environment]{environment content}{media content}
+\NewDocumentCommand{\boxleftenvright}{+m O{itemize} +m O{}}{\twocolumneven{#1}{\begin{#2}#3\end{#2}}}% Usage: {media content}[environment]{environment content}
+\NewDocumentCommand{\envleftright}{O{itemize} +m O{itemize} +m O{}}{\twocolumneven{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}}% Usage: [environment]{environment content}[environment]{environment content}
+%%%%%%%%%%%% END CONTENT-DRIVEN LAYOUTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% SIMPLIFIED LAYOUTS %%%%%%%%%%%%
+%%% ONE-COLUMN LAYOUTS %%%
+\NewDocumentCommand{\onecolumnfull}{O{} +m}{\multicolumnlayout[#1]{1.0}{#2}}%
+
+%%% TWO-COLUMN LAYOUTS %%%
+\NewDocumentCommand{\twocolumneven}{O{} +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.5][#3]}%
+\NewDocumentCommand{\twocolumnbigleft}{O{} +m +m}{\multicolumnlayout[#1]{0.6666}{#2}[0.3333][#3]}%
+\NewDocumentCommand{\twocolumnbigright}{O{} +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.6666][#3]}%
+%%% END TWO-COLUMN LAYOUTS %%%
+
+%%% THREE-COLUMN LAYOUTS %%%
+\NewDocumentCommand{\threecolumneven}{O{} +m +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.3333][#3][0.3333][#4]}%
+\NewDocumentCommand{\threecolumnbigleft}{O{} +m +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.25][#3][0.25][#4]}%
+\NewDocumentCommand{\threecolumnbigmiddle}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.5][#3][0.25][#4]}%
+\NewDocumentCommand{\threecolumnbigright}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.25][#3][0.5][#4]}%
+%%% END THREE-COLUMN LAYOUTS %%%
+%%%%%%%%%%%% END SIMPLIFIED LAYOUTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LOW-LEVEL LAYOUTS %%%%%%%%%%%%
+%
+%%% COLUMNS %%%
+%
+% Usage: \multicolumnlayout[debug,decorations,raggedtop,raggedbottom,fullscreen,gutter=]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]
+%
+\define@key[espbeamer]{columnlayoutkeys}{gutter}[]{\setlength{\espbeamer@columnlayout@gutter}{#1}}%
+\define@boolkey[espbeamer]{columnlayoutkeys}{decorations}[true]{}%
+\define@boolkey[espbeamer]{columnlayoutkeys}{raggedtop}[true]{}%
+\define@boolkey[espbeamer]{columnlayoutkeys}{raggedbottom}[true]{}%
+\define@boolkey[espbeamer]{columnlayoutkeys}{fullscreen}[true]{}%
+\define@boolkey[espbeamer]{columnlayoutkeys}{debug}[true]{}%
+%
+\newlength{\espbeamer@columnlayout@gutter}%
+\newcounter{espbeamer@columnlayout@numgutters}%
+\newlength{\espbeamer@columnlayout@dividewidth}%
+\newlength{\espbeamer@columnlayout@checkwidth}%
+\newlength{\espbeamer@columnlayout@leftcolumnwidth}%
+\newlength{\espbeamer@columnlayout@middlecolumnwidth}%
+\newlength{\espbeamer@columnlayout@rightcolumnwidth}%
+%
+\NewDocumentCommand{\multicolumnlayout}{O{} m +m O{} +O{} O{} +O{}}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \ifespbeamer@debug%
+            \presetkeys[espbeamer]{columnlayoutkeys}{debug=true}{}%
+        \else%
+            \presetkeys[espbeamer]{columnlayoutkeys}{debug=false}{}%
+        \fi%
+        \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, raggedtop=false, raggedbottom=false, fullscreen=false, gutter=\espbeamer@gutter@column}{}
+        \setkeys[espbeamer]{columnlayoutkeys}{#1}%
+
+        % These only apply to this call because of the begingroup
+        \ifespbeamer@rowlayoutkeys@fullscreen%
+            \setlength{\espbeamer@border@left}{0pt}%
+            \setlength{\espbeamer@border@right}{0pt}%
+            \setlength{\espbeamer@border@top}{0pt}%
+            \setlength{\espbeamer@border@bottom}{0pt}%
+        \fi%
+
+        % Calculate the slide's dimensions
+        \ifespbeamer@columnlayoutkeys@decorations%
+            \calcdims{}%
+        \else%
+            \calcdims[decorations=false]{}%
+        \fi%
+
+        % Calculate the content width/height given the provided margins.
+        \setlength{\contentposx}{\espbeamer@border@left}%
+        \setlength{\contentposy}{\espbeamer@slide@topmatter@height}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height}%
+
+        \ifespbeamer@columnlayoutkeys@debug%
+            \debugmargins{}%
+        \fi%
+
+        % Set the background frame decorations
+        \ifespbeamer@columnlayoutkeys@decorations%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \setbackdecorations[debug]{}%
+            \else%
+                \setbackdecorations{}%
+            \fi%
+        \fi%
+
+        % Calculate the number of gutters
+        \setcounter{espbeamer@columnlayout@numgutters}{0}
+        \ifx\relax#4\relax%
+        \else%
+            \stepcounter{espbeamer@columnlayout@numgutters}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+        \else%
+            \stepcounter{espbeamer@columnlayout@numgutters}%
+        \fi%
+
+        % Calculate lengths of each given element
+        \setlength{\espbeamer@columnlayout@dividewidth}{\contentwidth - \value{espbeamer@columnlayout@numgutters}\espbeamer@columnlayout@gutter}
+        \setlength{\espbeamer@columnlayout@leftcolumnwidth}{#2\espbeamer@columnlayout@dividewidth}%
+        % Second
+        \ifx\relax#4\relax%
+            \setlength{\espbeamer@columnlayout@middlecolumnwidth}{0pt}%
+        \else%
+            \setlength{\espbeamer@columnlayout@middlecolumnwidth}{#4\espbeamer@columnlayout@dividewidth}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+            \setlength{\espbeamer@columnlayout@rightcolumnwidth}{0pt}%
+        \else%
+            \setlength{\espbeamer@columnlayout@rightcolumnwidth}{#6\espbeamer@columnlayout@dividewidth}%
+        \fi%
+
+        % Sanity check
+        \setlength{\espbeamer@columnlayout@checkwidth}{\espbeamer@columnlayout@leftcolumnwidth + \espbeamer@columnlayout@middlecolumnwidth + \espbeamer@columnlayout@rightcolumnwidth}
+        \ifdim\espbeamer@columnlayout@checkwidth>\espbeamer@columnlayout@dividewidth%
+            \PackageError{ESPBeamer}%
+            {
+                The provided relative element sizes appear to sum to more than 1.0
+            }%
+            {}%
+        \fi%
+
+        % Common elements
+        \setlength{\elementposy}{\contentposy}%
+        \setlength{\elementheight}{\contentheight}%
+
+        % First element
+        \setlength{\elementposx}{\contentposx}% Record the top-left of the first column
+        \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth}%
+        \ifespbeamer@columnlayoutkeys@debug%
+            \layoutelement[debug]{#3}%
+        \else%
+            \layoutelement{#3}%
+        \fi%
+
+        % Second element
+        \ifx\relax#4\relax%
+        \else%
+            \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth}%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \layoutelement[debug]{#5}%
+            \else%
+                \layoutelement{#5}%
+            \fi%
+        \fi%
+
+        % Third element
+        \ifx\relax#6\relax%
+        \else%
+            \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth}%
+            \ifespbeamer@columnlayoutkeys@debug%
+                \layoutelement[debug]{#7}%
+            \else%
+                \layoutelement{#7}%
+            \fi%
+        \fi%
+
+
+        \ifespbeamer@columnlayoutkeys@decorations%
+            % Set the foreground frame decorations
+            \ifespbeamer@columnlayoutkeys@debug%
+                \setfrontdecorations[debug]{}%
+            \else%
+                \setfrontdecorations{}%
+            \fi%
+        \fi%
+    \endgroup%
+}%
+
+%%% ROWS %%%
+%
+% Usage: \multirowlayout[debug,decorations,fullscreen,gutter=]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]
+%
+\define@key[espbeamer]{rowlayoutkeys}{gutter}[]{\setlength{\espbeamer@rowlayout@gutter}{#1}}%
+\define@boolkey[espbeamer]{rowlayoutkeys}{decorations}[true]{}%
+\define@boolkey[espbeamer]{rowlayoutkeys}{fullscreen}[true]{}%
+\define@boolkey[espbeamer]{rowlayoutkeys}{debug}[true]{}%
+%
+\newlength{\espbeamer@rowlayout@gutter}%
+\newcounter{espbeamer@rowlayout@numgutters}%
+\newlength{\espbeamer@rowlayout@divideheight}%
+\newlength{\espbeamer@rowlayout@checkheight}%
+\newlength{\espbeamer@rowlayout@toprowheight}%
+\newlength{\espbeamer@rowlayout@middlerowheight}%
+\newlength{\espbeamer@rowlayout@bottomrowheight}%
+%
+\NewDocumentCommand{\multirowlayout}{O{} m +m O{} +O{} O{} +O{}}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \ifespbeamer@debug%
+            \presetkeys[espbeamer]{rowlayoutkeys}{debug=true}{}%
+        \else%
+            \presetkeys[espbeamer]{rowlayoutkeys}{debug=false}{}%
+        \fi%
+        \presetkeys[espbeamer]{rowlayoutkeys}{decorations=true, fullscreen=false, gutter=\espbeamer@gutter@row}{}
+        \setkeys[espbeamer]{rowlayoutkeys}{#1}%
+
+        % These only apply to this call because of the begingroup
+        \ifespbeamer@rowlayoutkeys@fullscreen%
+            \setlength{\espbeamer@border@left}{0pt}%
+            \setlength{\espbeamer@border@right}{0pt}%
+            \setlength{\espbeamer@border@top}{0pt}%
+            \setlength{\espbeamer@border@bottom}{0pt}%
+        \fi%
+
+        % Calculate the slide's dimensions
+        \ifespbeamer@rowlayoutkeys@decorations%
+            \calcdims{}%
+        \else%
+            \calcdims[decorations=false]{}%
+        \fi%
+
+        % Calculate the content width/height given the provided margins
+        \setlength{\contentposx}{\espbeamer@border@left}%
+        \setlength{\contentposy}{\espbeamer@slide@topmatter@height}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height}%
+
+        \ifespbeamer@rowlayoutkeys@debug%
+            \debugmargins{}%
+        \fi%
+
+        % Set the background frame decorations
+        \ifespbeamer@rowlayoutkeys@decorations%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \setbackdecorations[debug]{}%
+            \else%
+                \setbackdecorations{}%
+            \fi%
+        \fi%
+
+        % Calculate the number of gutters
+        \setcounter{espbeamer@rowlayout@numgutters}{0}
+        \ifx\relax#4\relax%
+        \else%
+            \stepcounter{espbeamer@rowlayout@numgutters}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+        \else%
+            \stepcounter{espbeamer@rowlayout@numgutters}%
+        \fi%
+
+        % Calculate lengths of each given element
+        \setlength{\espbeamer@rowlayout@divideheight}{\contentheight - \value{espbeamer@rowlayout@numgutters}\espbeamer@rowlayout@gutter}
+        \setlength{\espbeamer@rowlayout@toprowheight}{#2\espbeamer@rowlayout@divideheight}%
+        % Second
+        \ifx\relax#4\relax%
+            \setlength{\espbeamer@rowlayout@middlerowheight}{0pt}%
+        \else%
+            \setlength{\espbeamer@rowlayout@middlerowheight}{#4\espbeamer@rowlayout@divideheight}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+            \setlength{\espbeamer@rowlayout@bottomrowheight}{0pt}%
+        \else%
+            \setlength{\espbeamer@rowlayout@bottomrowheight}{#6\espbeamer@rowlayout@divideheight}%
+        \fi%
+
+        % Sanity check
+        \setlength{\espbeamer@rowlayout@checkheight}{\espbeamer@rowlayout@toprowheight + \espbeamer@rowlayout@middlerowheight + \espbeamer@rowlayout@bottomrowheight}
+        \ifdim\espbeamer@rowlayout@checkheight>\espbeamer@rowlayout@divideheight%
+            \PackageError{ESPBeamer}%
+            {
+                The provided relative element sizes appear to sum to more than 1.0
+            }%
+            {}%
+        \fi%
+
+        % Common elements
+        \setlength{\elementposx}{\contentposx}%
+        \setlength{\elementwidth}{\contentwidth}%
+
+        % First element
+        \setlength{\elementposy}{\contentposy}%  Record the top-left of the first row
+        \setlength{\elementheight}{\espbeamer@rowlayout@toprowheight}%
+        \ifespbeamer@rowlayoutkeys@debug%
+            \layoutelement[debug]{#3}%
+        \else%
+            \layoutelement{#3}%
+        \fi%
+
+        % Second element
+        \ifx\relax#4\relax%
+        \else%
+            \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\espbeamer@rowlayout@middlerowheight}%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \layoutelement[debug]{#5}%
+            \else%
+                \layoutelement{#5}%
+            \fi%
+        \fi%
+
+        % Third element
+        \ifx\relax#6\relax%
+        \else%
+            \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\espbeamer@rowlayout@bottomrowheight}%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \layoutelement[debug]{#7}%
+            \else%
+                \layoutelement{#7}%
+            \fi%
+        \fi%
+
+        % Set the foreground frame decorations
+        \ifespbeamer@rowlayoutkeys@decorations%
+            \ifespbeamer@rowlayoutkeys@debug%
+                \setfrontdecorations[debug]{}%
+            \else%
+                \setfrontdecorations{}%
+            \fi%
+        \fi%
+    \endgroup%
+}%
+
+%%% Frame title format %%%
+%
+% Usage: \setframetitle[title][subtitle]
+%
+\NewDocumentCommand{\setframetitle}{O{} O{}}%
+{%
+    \usebeamerfont{frametitle}%
+    \usebeamercolor[fg]{frametitle}%
+    \strut#1%
+%    % Insert the subtitle on the same line
+%    \ifx\insertframesubtitle\@empty%
+%    \else%
+%        \hskip1ex%
+%        \usebeamerfont{framesubtitle}%
+%        \usebeamercolor[fg]{framesubtitle}%
+%        #2%
+%    \fi
+    % Insert the subtitle on a newline
+    \usebeamerfont{framesubtitle}%
+    \usebeamercolor[fg]{framesubtitle}%
+    \vspace{-2pt}%
+    \newline%
+    \strut#2%
+}%
+
+%%% Individual element of a multielement layout %%%
+%
+% Usage: \layoutelement[debug]{content}
+%
+\define@boolkey[espbeamer]{layoutelement}{debug}[true]{}%
+\NewDocumentCommand{\layoutelement}{O{} +m}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[espbeamer]{layoutelement}{debug=false}{}
+        \setkeys[espbeamer]{layoutelement}{#1}%
+
+        \ifespbeamer@layoutelement@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \ifespbeamer@layoutelement@debug%
+                \textblockcolour{BLUE!25!BACKGROUND}%
+            \fi%
+            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+                #2%
+            \end{minipage}
+        \end{textblock*}%
+
+        \ifespbeamer@layoutelement@debug%
+            \TPoptions{showboxes = false}%
+            \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+                \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+                    \color{TEXT}%
+                    \centering%
+                    \vfil%
+                    \colorbox{BACKGROUND}{x-origin: \printlength{\elementposx}}\\
+                    \colorbox{BACKGROUND}{y-origin: \printlength{\elementposy}}\\
+                    \colorbox{BACKGROUND}{width: \printlength{\elementwidth}}\\
+                    \colorbox{BACKGROUND}{height: \printlength{\elementheight}}%
+                    \vfil%
+                \end{minipage}%
+            \end{textblock*}%
+        \fi%
+    \endgroup%
+}%
+%%%%%%%%%%%% END LOW-LEVEL LAYOUTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LAYOUT HELPERS %%%%%%%%%%%%
+
+%%% Initialize common slide dimensions %%%
+%
+% Usage: \initdims{}
+%
+\newcommand{\initdims}%
+{%
+    % The height of a frame title, when set.
+    \settototalheight{\espbeamer@frametitle@defaultheight}%
+    {%
+        \parbox{\paperwidth}{\setframetitle[\strut][\strut]}%
+    }%
+
+    % The height of a bio photo, when present
+    \setlength{\espbeamer@bio@height}%
+    {%
+        \espbeamer@frametitle@defaultheight - \espbeamer@gutter@bio%
+    }%
+}%
+
+%%% Calculate slide dimensions %%%
+%
+% Usage: \calcdims[decorations]{}
+%
+\define@boolkey[espbeamer]{calcdims}{decorations}[true]{}%
+%
+\newlength{\espbeamer@calcdims@titlewidth}
+\newlength{\espbeamer@calcdims@subtitlewidth}
+\NewDocumentCommand{\calcdims}{O{}}%
+{%
+%    % We can't use a begin group, because we want to set lengths globally.
+    \presetkeys[espbeamer]{calcdims}{decorations=true}{}
+    \setkeys[espbeamer]{calcdims}{#1}%
+
+    % Frametitle
+    \ifespbeamer@calcdims@decorations%
+        \ifx\insertframetitle\@empty%
+             % Height
+            \setlength{\espbeamer@slide@frametitle@height}{0pt}%
+             % Width
+            \setlength{\espbeamer@slide@frametitle@width}{0pt}%
+        \else%
+             % Height
+            \setlength{\espbeamer@slide@frametitle@height}{\espbeamer@frametitle@defaultheight}%
+             % Width
+            \ifx\insertframesubtitle\@empty%
+                \settowidth{\espbeamer@slide@frametitle@width}%
+                {%
+                    \usebeamerfont{frametitle}%
+                    \insertframetitle{}%
+                }%
+            \else%
+                \settowidth{\espbeamer@calcdims@titlewidth}%
+                {%
+                    \usebeamerfont{frametitle}%
+                    \insertframetitle{}%
+                }%
+                \settowidth{\espbeamer@calcdims@subtitlewidth}%
+                {%
+                    \usebeamerfont{framesubtitle}%
+                    \insertframesubtitle{}%
+                }%
+                \ifdim\espbeamer@calcdims@titlewidth>\espbeamer@calcdims@subtitlewidth%
+                    \setlength{\espbeamer@slide@frametitle@width}{\espbeamer@calcdims@titlewidth}%
+                \else%
+                    \setlength{\espbeamer@slide@frametitle@width}{\espbeamer@calcdims@subtitlewidth}%
+                \fi%
+            \fi%
+        \fi%
+    \else%
+        % Height
+        \setlength{\espbeamer@slide@frametitle@height}{0pt}%
+        % Width
+        \setlength{\espbeamer@slide@frametitle@width}{0pt}%
+    \fi%
+
+    % Page number
+    \ifespbeamer@calcdims@decorations%
+        \settototalheight{\espbeamer@slide@pgnum@height}{\usebeamertemplate*{page number in head/foot}}%
+        \settowidth{\espbeamer@slide@pgnum@width}{\usebeamertemplate*{page number in head/foot}}%
+    \else%
+        \setlength{\espbeamer@slide@pgnum@height}{0pt}%
+        \setlength{\espbeamer@slide@pgnum@width}{0pt}%
+    \fi%
+
+    % The size of footer logos and the bios are calculated by their macros on config and their use will be switched.
+
+    % Combined top matter
+    \ifespbeamer@calcdims@decorations%
+        % Height
+        \setlength{\espbeamer@slide@topmatter@height}%
+        {%
+            \espbeamer@border@top + \espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle%
+        }%
+        % Left-extent
+        \setlength{\espbeamer@slide@topmatter@extentleft}{\espbeamer@border@left}%
+        \ifdim\espbeamer@slide@frametitle@width>0pt%
+            \addtolength{\espbeamer@slide@topmatter@extentleft}{\espbeamer@slide@frametitle@width + \espbeamer@gutter@frametitle}%
+        \fi%
+        % Right-extent
+        \setlength{\espbeamer@slide@topmatter@extentright}{\espbeamer@border@right}%
+        \ifdim\espbeamer@bio@width>0pt%
+            \addtolength{\espbeamer@slide@topmatter@extentright}{\espbeamer@gutter@bio + \espbeamer@bio@width}%
+        \fi%
+    \else%
+        \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@border@top}%
+        \setlength{\espbeamer@slide@topmatter@extentleft}{\paperwidth}%
+        \setlength{\espbeamer@slide@topmatter@extentright}{0pt}%
+    \fi%
+
+    % Combined bottom matter
+    \ifespbeamer@calcdims@decorations%
+        % Height
+        \setlength{\espbeamer@slide@bottommatter@height}%
+        {%
+            \espbeamer@gutter@footlogo + \espbeamer@footlogo@height + \espbeamer@border@bottom%
+        }%
+        % Left extent
+        \setlength{\espbeamer@slide@bottommatter@extentleft}{\espbeamer@border@left}%
+        \ifdim\espbeamer@footlogo@width>0pt%
+            \addtolength{\espbeamer@slide@bottommatter@extentleft}{\espbeamer@footlogo@width + \espbeamer@gutter@footlogo}%
+        \fi%
+        % Right extent
+        \setlength{\espbeamer@slide@bottommatter@extentright}{\espbeamer@border@right + \espbeamer@slide@pgnum@width}%
+    \else%
+        \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@border@bottom}%
+        \setlength{\espbeamer@slide@bottommatter@extentleft}{\paperwidth}%
+        \setlength{\espbeamer@slide@bottommatter@extentright}{0pt}%
+    \fi%
+}%
+%%%%%%%%%%%% END LAYOUT HELPERS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% DEBUGS %%%%%%%%%%%%
+\newcommand*{\debugmargins}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \TPoptions{showboxes = false}%
+
+        %Margins
+        % Top
+        \begin{textblock*}{\paperwidth}(0pt, 0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \espbeamer@border@top{\hfill}%
+        \end{textblock*}%
+        % Bottom
+        \begin{textblock*}{\paperwidth}(0pt, \paperheight - \espbeamer@border@bottom)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \espbeamer@border@bottom{\hfill}%
+        \end{textblock*}%
+        % Left
+        \begin{textblock*}{\espbeamer@border@left}(0pt, 0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \paperheight{\hfill}%
+        \end{textblock*}%
+        % Right
+        \begin{textblock*}{\espbeamer@border@right}(\paperwidth - \espbeamer@border@right, 0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \paperheight{\hfill}%
+        \end{textblock*}%
+
+        %Decorations
+        % Top left
+        \begin{textblock*}{\espbeamer@slide@topmatter@extentleft}(0pt,0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \espbeamer@slide@topmatter@height{\hfill}%
+        \end{textblock*}%
+        % Top right
+        \begin{textblock*}{\espbeamer@slide@topmatter@extentright}(\paperwidth - \espbeamer@slide@topmatter@extentright,0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \espbeamer@slide@topmatter@height{\hfill}%
+        \end{textblock*}%
+
+        % Bottom left
+        \begin{textblock*}{\espbeamer@slide@bottommatter@extentleft}(0pt,\paperheight - \espbeamer@slide@bottommatter@height)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \espbeamer@slide@bottommatter@height{\hfill}%
+        \end{textblock*}%
+        % Bottom right
+        \begin{textblock*}{\espbeamer@slide@bottommatter@extentright}(\paperwidth - \espbeamer@slide@bottommatter@extentright,\paperheight - \espbeamer@slide@bottommatter@height)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \espbeamer@slide@bottommatter@height{\hfill}%
+        \end{textblock*}%
+    \endgroup%
+}
+%%%%%%%%%%%% END DEBUGS %%%%%%%%%%%%

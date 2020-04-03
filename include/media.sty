@@ -1,0 +1,399 @@
+%%%%%%%%%%%% IMAGE COMMANDS %%%%%%%%%%%%
+%%% In column image %%%
+%
+% Usage: \image[optional caption][optional extra include options]{path/to/image}
+\newlength{\espbeamer@image@captionheight}%
+\newsavebox{\espbeamer@image@captionbox}%
+\NewDocumentCommand{\image}{O{} O{} m}%
+{%
+    % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+    \ifx\relax#1\relax%
+        \setlength{\espbeamer@image@captionheight}{0pt}%
+    \else%
+        \savebox{\espbeamer@image@captionbox}%
+        {%
+            \begin{minipage}{\elementwidth}%
+                \usebeamerfont{caption}%
+                \usebeamercolor{caption}%
+                \centering%
+                \strut#1%
+            \end{minipage}%
+        }%
+        \settototalheight{\espbeamer@image@captionheight}{\usebox{\espbeamer@image@captionbox}}%
+    \fi%
+
+    \centering%
+    \vfil%
+    \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio,#2]{#3}%
+    \ifx\relax#1\relax%
+    \else%
+        \usebeamerfont{caption}\\%
+        \usebox{\espbeamer@image@captionbox}%
+    \fi%
+    \vfil%
+}%
+
+%%% In column page from a pdf %%%
+%
+% Usage: \pdfpage[optional caption][optional extra include options]{page num}{path/to/image}
+\NewDocumentCommand{\pdfpage}{O{} O{} m m}%
+{%
+    \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
+    \image[#1][#2,page=#3]{#4}%
+}%
+
+%%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
+%
+% Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}
+%
+% Adapted from: https://www.ojdo.de/wp/2018/06/finally-the-definitive-full-frame-graphic-commands-for-beamer-in-latex/
+\newcommand{\fullimagelight}[2][]{\fullimage[#1][OxfordBlue][white]{#2}}%
+\newcommand{\fullimagedark}[2][]{\fullimage[#1][white][OxfordBlue]{#2}}%
+\NewDocumentCommand{\fullimage}{O{} O{white} O{OxfordBlue} m}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \tikzset%
+        {%
+            ffgcaption/.style=%
+            {%
+                anchor=south east,%
+                font=\small,%
+                text=#2,%
+                text opacity=1,%
+                inner sep=0.25\baselineskip,%
+                fill=#3,%
+                fill opacity=.5,%
+                rounded corners=0.5ex%
+            }%
+        }%
+        \begin{tikzpicture}[remember picture, overlay]%
+        \node[at=(current page.center)]%
+        {%
+            \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio]{#4}%
+            \tikz[overlay, remember picture] \node (bottomright) {};%
+        };%
+        \ifx\relax#1\relax%
+        \else%
+            \node[above left = \espbeamer@border@bottom and \espbeamer@border@right of bottomright, ffgcaption]%
+            {%
+                #1%
+            };%
+        \fi%
+        \end{tikzpicture}%
+    \endgroup%
+}
+%%%%%%%%%%%% END IMAGE COMMANDS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% VIDEO COMMANDS %%%%%%%%%%%%
+%%% In column video %%%
+%
+% Usage: \video[optional caption][noprogress,autostart,loop]{path/to/thumbnail}{path/to/video}
+
+\ifespbeamer@adobe%
+\else
+    % This is a hack because pdfpc (and most linux viewers) do not currently support \movie's autostart command
+    % (see: https://github.com/pdfpc/pdfpc/issues/495).
+    % This will be cleaned-up/simplified once that change makes it back.
+
+    % A whole bunch of boxes and lengths for the \href hack
+    %%% HREF HACK %%%
+    \newsavebox{\espbeamer@video@posterbox}%
+    \newlength{\espbeamer@video@fudgealignx}%
+    \setlength{\espbeamer@video@fudgealignx}{-1pt}%
+    \newlength{\espbeamer@video@fudgealigny}%
+    \setlength{\espbeamer@video@fudgealigny}{-0.9pt}%
+    \newlength{\espbeamer@video@fudgealignwidth}%
+    \setlength{\espbeamer@video@fudgealignwidth}{-1pt}%-1pt
+    \newlength{\espbeamer@video@fudgealignheight}%
+    \setlength{\espbeamer@video@fudgealignheight}{-1.9pt}%-1.9pt
+    \newbox\espbeamer@video@videobox%
+    \newlength{\espbeamer@video@width}%
+    \newlength{\espbeamer@video@height}%
+    \newlength{\espbeamer@video@depth}%
+    %%% HREF HACK %%%
+
+    % A string of parsed options to the underlying command.
+    \ifespbeamer@handout%
+        % In handout mode, all videos have the same options.
+        \def\espbeamer@video@optionstring{once,showcontrols=true}% No HREF HACK
+    \else
+        % In presentation mode, all videos receive autostarts as we achieve "onclick" by duplicating a static slide infront of an autostart slide.
+        %%% BEAMER MULTIMEDIA %%%
+        %\def\espbeamer@video@optionstring{autostart}%
+        %%% BEAMER MULTIMEDIA %%%
+        %%% HREF HACK %%%
+        \def\espbeamer@video@optionstring{?autostart}%
+        %%% HREF HACK %%%
+    \fi%
+\fi%
+
+% Define keys
+\definecomplimentarykeys{espbeamer}{videokeys}{autostart}{onclick}%
+\definecomplimentarykeys{espbeamer}{videokeys}{loop}{once}%
+\definecomplimentarykeys{espbeamer}{videokeys}{noprogress}{progress}%
+\newlength{\espbeamer@video@captionheight}%
+\newsavebox{\espbeamer@video@captionbox}%
+\NewDocumentCommand{\video}{O{} O{} m m}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[espbeamer]{videokeys}{autostart=true, loop=true, noprogress=true}{}
+        \setkeys[espbeamer]{videokeys}{#2}%
+
+        % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+        \ifx\relax#1\relax%
+            \setlength{\espbeamer@video@captionheight}{0pt}%
+        \else%
+            \savebox{\espbeamer@video@captionbox}%
+            {%
+                \begin{minipage}{\elementwidth}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
+                    \centering%
+                    \strut#1%
+                \end{minipage}%
+            }%
+            \settototalheight{\espbeamer@video@captionheight}{\usebox{\espbeamer@video@captionbox}}%
+        \fi%
+
+        % Parse the options and configure the poster
+        \ifespbeamer@adobe%
+        \else%
+            \ifespbeamer@handout%
+            \else%
+                %Parse the keys into the option string for the lower-level command. Autostart is already included
+                \ifespbeamer@videokeys@noprogress%
+                   %%% HREF HACK %%%
+                   \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&noprogress}%
+                   %%% HREF HACK %%%
+                    %%% BEAMER MULTIMEDIA %%%
+                    %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols=false}
+               %\else
+                   %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,showcontrols=true}
+                    %%% BEAMER MULTIMEDIA %%%
+                \fi%
+                \ifespbeamer@videokeys@loop%
+                    %%% HREF HACK %%%
+                    \edef\espbeamer@video@optionstring{\espbeamer@video@optionstring\&loop}%
+                    %%% HREF HACK %%%
+                    %%% BEAMER MULTIMEDIA %%%
+                    %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,loop}
+                %\else
+                    %\edef\espbeamer@video@optionstring{\espbeamer@video@optionstring,once}
+                    %%% BEAMER MULTIMEDIA %%%
+                \fi%
+            \fi%
+
+            %%% HREF HACK: Poster/video size fixes %%%
+            % Fix the size of the \href video relative to the poster
+            % Save the poster so we know its size (and ratio).
+            \savebox{\espbeamer@video@posterbox}%
+            {%
+                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+            }%
+
+            % Calculate the size of the video from the poster
+            \settowidth{\espbeamer@video@width}{\usebox{\espbeamer@video@posterbox}}%
+            \settoheight{\espbeamer@video@height}{\usebox{\espbeamer@video@posterbox}}%
+            \settodepth{\espbeamer@video@depth}{\usebox{\espbeamer@video@posterbox}}%
+            %Then adjust to fix the difference in size
+            \addtolength{\espbeamer@video@width}{\espbeamer@video@fudgealignwidth}%
+            \addtolength{\espbeamer@video@height}{\espbeamer@video@fudgealignheight}%
+
+            % Define a box to define the video size, and put the poster inside it.
+            \setbox\espbeamer@video@videobox=\vbox{\vspace{\espbeamer@video@fudgealigny}\usebox{\espbeamer@video@posterbox}}%
+            \wd\espbeamer@video@videobox=\espbeamer@video@width%
+            \ht\espbeamer@video@videobox=\espbeamer@video@height%
+            \dp\espbeamer@video@videobox=\espbeamer@video@depth%
+            %%% HREF HACK: Poster/video size fixes %%%
+        \fi%
+
+        % Actually typeset the poster & video
+        \centering%
+        \vfil%
+
+        %If we are starting onclick, create a copy of the video slide showing only the poster.
+        \ifespbeamer@videokeys@onclick%
+            \ifespbeamer@handout%
+            \else%
+                \only<1>%
+                {%
+                    %%% HREF HACK %%%
+                    % When multimedia works, adobe and pdfpc will both just use an image here regardless of present/handout. Until then, we have to switch on both
+                    \ifespbeamer@adobe%
+                    %%% HREF HACK %%%
+                        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                    %%% HREF HACK %%%
+                    \else%
+                        \ifespbeamer@handout%
+                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                        \else%
+                            %We use an empty href inorder to keep spacing exactly the same.
+                            \href%
+                            {%
+                                %Do nothing
+                            }%
+                            {%
+                                % Poster
+                                % Shift the poster to line up with the video
+                                \hskip\espbeamer@video@fudgealignx%
+                                % Insert the video box containing the poster
+                                \box\espbeamer@video@videobox%
+                            }%
+                        \fi%
+                    \fi%
+                    %%% HREF HACK %%%
+                    % \href can't be followed by a newline
+                    % Set the caption
+                    \ifx\relax#1\relax%
+                    \else%
+                        \usebeamerfont{caption}\\%
+                        %%% HREF HACK %%%
+                        \ifespbeamer@adobe%
+                        \else%
+                            \ifespbeamer@handout% Because handout isn't using the href hack
+                            \else%
+                                \vspace{-\espbeamer@video@fudgealignheight}%
+                            \fi%
+                        \fi%
+                        %%% HREF HACK %%%
+                        \usebox{\espbeamer@video@captionbox}%
+                    \fi%
+                }%
+
+                % Start a second slide that will contain the autostart video
+                \only<2>%
+                {%
+            \fi%
+        \fi%
+
+        % This is the video slide, regardless of autostart/onclick
+        \ifespbeamer@adobe%
+            % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
+            % Note that we are defining \x inside a group which is closed when by USING \x, which forces the expansions of the if statements without expanding anything else. I think.
+            % https://tex.stackexchange.com/a/228329
+            % https://tex.stackexchange.com/a/152048
+            \begingroup\edef\x%
+            {%
+                \endgroup%
+                \noexpand\includemedia%
+                \expandafter%
+                [%
+                    keepaspectratio,%
+                    \ifespbeamer@handout%
+                        playbutton=fancy,% This would apparently need to be "plain" for XeLaTeX according to media9 doc.
+                        activate=onclick,%
+                        deactivate=pageinvisible,%
+                    \else%
+                        playbutton=none,%
+                        activate=pagevisible,%
+                        deactivate=pageinvisible,%
+                    \fi%
+                    passcontext,% passthrough right-clicks to VPlayer instead of Adobe Reader
+                    transparent,% transparent player background
+                    addresource=#4,%
+                    flashvars=%
+                    {%
+                        source=#4%
+                        &autoPlay=true% Automatically starts playback after activation
+                        \ifespbeamer@handout%
+                            &autoRewind=true% Automatically rewind to the first frame after playback has finished
+                        \else%
+                            \ifespbeamer@videokeys@loop%
+                                &autoRewind=true% Automatically rewind to the first frame after playback has finished
+                                &loop=true% Media is played in a loop
+                            \fi%
+                        \fi%
+                    }%
+                ]%
+                {%
+                    \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                }%
+                {VPlayer.swf}%
+            }%
+            \x%
+        \else%
+            %%% HREF HACK %%%
+            % When multimedia works, the only difference between pdfpc handout and presentation will be the option string. Until then, we have to switch
+            \ifespbeamer@handout%
+            %%% HREF HACK %%%
+
+                % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
+                % Note that we are defining \x inside a group which is closed when by USING \x, which forces the expansions of the if statements without expanding anything else. I think.
+                % https://tex.stackexchange.com/a/228329
+                % https://tex.stackexchange.com/a/152048
+                \begingroup\edef\x%
+                {%
+                    \endgroup%
+                    \noexpand\movie%
+                    \expandafter%
+                    [%
+                        \espbeamer@video@optionstring%
+                    ]%
+                    {%
+                        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                    }%
+                    {#4}%
+                }%
+                \x%
+                % The \x hack can't have a new line afterwards
+            %%% HREF HACK %%%
+            \else%
+                \href%
+                {%
+                    % Video
+                    run:#4\espbeamer@video@optionstring%
+                }%
+                {%
+                    % Poster
+                    % Shift the poster to line up with the video
+                    \hskip\espbeamer@video@fudgealignx%
+                    % Insert the video box containing the poster
+                    \box\espbeamer@video@videobox%
+                }%
+            \fi%
+            %%% HREF HACK %%%
+        \fi%
+        % \href can't be followed by a newline
+        % Set the caption
+        \ifx\relax#1\relax%
+        \else%
+            \usebeamerfont{caption}\\%
+            %%% HREF HACK %%%
+            \ifespbeamer@adobe%
+            \else%
+                \ifespbeamer@handout% Because handout isn't using the href hack
+                \else%
+                    \vspace{-\espbeamer@video@fudgealignheight}%
+                \fi%
+            \fi%
+            %%% HREF HACK %%%
+            \usebox{\espbeamer@video@captionbox}%
+        \fi%
+
+        % Close the second slide created to support onclick
+        \ifespbeamer@videokeys@onclick%
+            \ifespbeamer@handout%
+            \else%
+                }%
+            \fi%
+        \fi%
+
+        % Center vertically
+        \vfil%
+    \endgroup%
+}%
+
+%%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
+%
+% Usage: See \video for options
+\NewDocumentCommand{\fullvideo}{O{noprogress,autostart,loop} m m}%
+{%
+    \multirowlayout[decorations=false, fullscreen, gutter=0pt]%
+    {1.0}%
+    {%
+        \video[][#1]{#2}{#3}
+    }%
+}
+%%%%%%%%%%%% END VIDEO COMMANDS %%%%%%%%%%%%

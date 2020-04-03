@@ -34,45 +34,12 @@
 %%% Sidebars %%%
 %Make sidebars take up zero width (i.e., make the entire width available for content
 \setbeamersize{sidebar width left=0pt, sidebar width right=0pt}%
-% Left (logos at bottom):
+% Sidebars are set outside of the Beamer theme so elements can sit above/below content, as desired.
 \setbeamertemplate{sidebar canvas left}{}%
-\setbeamertemplate{sidebar left}%
-{%
-%    \fbox{\Gm@lmargin{}}%\Gm@lmargin{} is a macro, not a LaTeX length
-    \vfill%
-    \hskip\espbeamer@border@left%
-    \ifbeamertemplateempty{logo}%
-    {}%
-    {%
-        \mbox%
-        {%
-            \usebeamertemplate*{logo}%
-        }%
-    }%
-    \vskip\espbeamer@border@bottom%
-}%
-% Right (bio photos at top and page number at bottom):
+\setbeamertemplate{sidebar left}{}%
 \setbeamertemplate{sidebar canvas right}{}%
-\setbeamertemplate{sidebar right}%
-{%
-%    \llap{\fbox{\Gm@rmargin{}}}%\Gm@rmargin{} is a macro, not a LaTeX length
-    \ifbeamertemplateempty{bio}{}%
-    {%
-        \vskip\espbeamer@border@top%
-        \llap%
-        {%
-            \usebeamertemplate*{bio}%
-            \hskip\espbeamer@border@right%
-        }%
-    }%
-    \vfill%
-    \llap%
-    {%
-        \usebeamertemplate*{page number in head/foot}
-        \hskip\espbeamer@border@right%
-    }%
-    \vskip\espbeamer@border@bottom%
-}%
+\setbeamertemplate{sidebar right}{}%
+
 %Sections (not used):
 \setbeamertemplate{section in sidebar}{}%
 \setbeamertemplate{section in sidebar shaded}{}%
@@ -83,34 +50,8 @@
 
 
 %%% Frame elements %%%
-\NewDocumentCommand{\setframetitle}{O{} O{}}%
-{%
-    \begin{beamercolorbox}[sep=0pt]{frametitle}%
-        \usebeamerfont{frametitle}%
-        \usebeamercolor[fg]{frametitle}%
-        \strut#1%
-%        % Insert the subtitle on the same line
-%        \ifx\insertframesubtitle\@empty%
-%        \else%
-%            \hskip1ex%
-%            \usebeamerfont{framesubtitle}%
-%            \usebeamercolor[fg]{framesubtitle}%
-%            #2%
-%        \fi
-        % Insert the subtitle on a newline
-        \vskip-2pt%
-        \usebeamerfont{framesubtitle}%
-        \usebeamercolor[fg]{framesubtitle}%
-        \strut#2%
-    \end{beamercolorbox}%
-}%
-\setbeamertemplate{frametitle}%
-{%
-    \nointerlineskip%
-    \vskip\espbeamer@border@top%
-    \setframetitle[\insertframetitle{}][\insertframesubtitle{}]
-}%
-\setbeamertemplate{logo}{}% - Set by the addLogo commands
+\setbeamertemplate{frametitle}{}% Set outside of the Beamer theme so it can sit above/below content, as desired.
+\setbeamertemplate{logo}{}% Set outside of the Beamer theme so it can sit above/below content, as desired.
 \setbeamertemplate{navigation symbols}{}% - Not used
     %{} No symbols
     %[default] Organizes the navigation symbols horizontally.

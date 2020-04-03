@@ -1,0 +1,37 @@
+%%%%%%%%%%%% CONTENT FRAMES %%%%%%%%%%%%
+\newlength{\espbeamer@thanks@origlogowidth}
+\NewDocumentCommand{\thankspage}{+O{Thank you}}%
+{%
+    \settowidth{\espbeamer@thanks@origlogowidth}{\espbeamer@titlelogos}%
+    \multirowlayout[decorations=false, gutter=0pt]%
+    {0.5}%
+    {%
+        \usebeamerfont{thanks}%
+        \usebeamercolor{thanks}%
+        \centering%
+        \vfill%
+        #1%
+    }%
+    [0.5]%
+    [%
+        \ifx\espbeamer@footlogos\@empty%
+        \else%
+            \centering%
+            \vfil%
+            \ifdim\espbeamer@thanks@origlogowidth>0.5\elementwidth%
+                \resizebox{0.5\elementwidth}{!}%
+                {%
+                    \usebeamercolor*{logo}%
+                    \usebeamerfont*{logo}%
+                    \espbeamer@footlogos{}%
+                }%
+            \else%
+                \usebeamercolor*{logo}%
+                \usebeamerfont*{logo}%
+                \espbeamer@footlogos{}%
+            \fi%
+            \vfil%
+        \fi%
+    ]%
+}%
+%%%%%%%%%%%% END CONTENT FRAMES %%%%%%%%%%%%

@@ -10,21 +10,29 @@
 %%% Special pages %%%
 \newlength{\espbeamer@titlepage@toprowheight}% The height of the top row
 \newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
+\newlength{\espbeamer@titlepage@origlogowidth}% The original width of the logos
 \setbeamertemplate{title page}% The title page
 {%
-    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    \settowidth{\espbeamer@titlepage@origlogowidth}{\espbeamer@titlelogos}%
+    \multirowlayout[decorations=false, gutter=0pt]%
     {0.6}%
     {%
-        \ifbeamertemplateempty{titlelogo}%
-        {}%
-        {%
+        \ifx\espbeamer@titlelogos\@empty%
+        \else%
             \vfill%
-            \ifdim\espbeamer@titlelogo@maxwidth>\elementwidth%
-                \resizebox{\elementwidth}{!}{\usebeamertemplate*{titlelogo}}%
+            \ifdim\espbeamer@titlepage@origlogowidth>\elementwidth%
+                \resizebox{\elementwidth}{!}%
+                {%
+                    \usebeamercolor*{titlelogo}%
+                    \usebeamerfont*{titlelogo}%
+                    \espbeamer@titlelogos{}%
+                }%
             \else%
-                \usebeamertemplate*{titlelogo}%
+                \usebeamercolor*{titlelogo}%
+                \usebeamerfont*{titlelogo}%
+                \espbeamer@titlelogos{}%
             \fi%
-        }%
+        \fi%
         \vfill%
         \begin{minipage}[b]{\elementwidth}%
             \usebeamerfont{title}%
@@ -46,50 +54,41 @@
 }%
 \setbeamertemplate{part page}% The titlepage of a presentation part
 {%
-    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    \multirowlayout[decorations=false, gutter=0pt]%
     {1.0}%
     {%
         \centering%
-        \vbox to \elementheight%
-        {%
-            \vfil%
-            \usebeamerfont{part title}
-            \usebeamercolor{part title}
-            \insertpart{}%
-            \vfil%
-        }%
+        \vfil%
+        \usebeamerfont{part title}
+        \usebeamercolor{part title}
+        \insertpart{}%
+        \vfil%
     }%
 }%
 \setbeamertemplate{section page}% The titlepage of a presentation section
 {%
-    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    \multirowlayout[decorations=false, gutter=0pt]%
     {1.0}%
     {%
         \centering%
-        \vbox to \elementheight%
-        {%
-            \vfil%
-            \usebeamerfont{section title}
-            \usebeamercolor{section title}
-            \insertsection{}%
-            \vfil%
-        }%
+        \vfil%
+        \usebeamerfont{section title}
+        \usebeamercolor{section title}
+        \insertsection{}%
+        \vfil%
     }%
 }%
 \setbeamertemplate{subsection page}% The titlepage of a presentation subsection
 {%
-    \multirowlayout[leftmargin=\espbeamer@border@left, rightmargin=\espbeamer@border@right, topmargin=\espbeamer@border@top, bottommargin=\espbeamer@border@bottom, gutter=0pt]%
+    \multirowlayout[decorations=false, gutter=0pt]%
     {1.0}%
     {%
         \centering%
-        \vbox to \elementheight%
-        {%
-            \vfil%
-            \usebeamerfont{subsection title}
-            \usebeamercolor{subsection title}
-            \insertsubsection{}%
-            \vfil%
-        }%
+        \vfil%
+        \usebeamerfont{subsection title}
+        \usebeamercolor{subsection title}
+        \insertsubsection{}%
+        \vfil%
     }%
 }%
 
@@ -106,7 +105,7 @@
 
 %%% Lists %%%
 %\setbeamertemplate{itemize/enumerate body begin}{}% begin of first-level itemize/enumerate environment
-%\setbeamertemplate{itemize/enumerate body end}{}% end of first-level 
+%\setbeamertemplate{itemize/enumerate body end}{}% end of first-level
 %\setbeamertemplate{itemize/enumerate subbody begin}{}% begin of second-level
 %\setbeamertemplate{itemize/enumerate subbody end}{}% enf of second-level
 %\setbeamertemplate{itemize/enumerate subsubbody begin}{}% begin of third-level
@@ -123,7 +122,7 @@
     %[circle] Uses little circles (or dots) as item markers.
     %[square] Uses little squares as item markers.
     %[ball] Uses little balls as item markers.
-    
+
 \setbeamertemplate{itemize item}[circle]% First-level markers
 \setbeamertemplate{itemize subitem}{$\circ$}% Second-level
 \setbeamertemplate{itemize subsubitem}{--}% Third-level
@@ -134,7 +133,7 @@
     %[circle] Uses little circles (or dots) as item markers.
     %[square] Uses little squares as item markers.
     %[ball] Uses little balls as item markers.
-    
+
 \setbeamertemplate{enumerate item}{\insertenumlabel.}% First-level markers
 \setbeamertemplate{enumerate subitem}{\insertsubenumlabel.}% Second-level
 \setbeamertemplate{enumerate subsubitem}{\insertsubsubenumlabel.}% Third-level
@@ -155,7 +154,7 @@
     %\insertcaption Inserts the text of the current caption.
     %\insertcaptionname Inserts the name of the current caption (e.g., Figured).
     %\insertcaptionnumber Inserts the number of the current figure or table.
-    
+
 %\setbeamertemplate{caption label separator}{}% The seperator between the caption name (e.g., Figure) & caption
     %[none] Typesets no separator.
     %[colon] Typesets the colon followed by the space (default).
@@ -168,13 +167,13 @@
 %%% Math %%%
 %\setbeamertemplate{qed symbol}{}% The symbol is shown at the end of every proof. Default: Empty square
     %Filled square: \vrule width1.5ex height1.5ex depth0pt
-    
+
 %\setbeamertemplate{theorems}{}%
     %[default] The font specification for the body is honored, the font specification for the head is ignored. No theorem number is printed.
     %[normal font] Like the default, except all font specifications for the body are ignored. Thus, the fonts are used that are normally used for blocks.
     %[numbered] This option is like the default, except that the theorem number is printed for environments that are numbered.
     %[ams style] This causes theorems to be put in a block or exampleblock, but to be otherwise typeset as is normally done in amsthm. Thus the head font and body font depend on the setting for the theorem to be typeset and theorems are numbered.
-    
+
 \setbeamertemplate{theorem begin}% Begin of environment defined by \newtheorem
 {%
     \begin{\inserttheoremblockenv}%
@@ -197,7 +196,7 @@
     %\inserttheorempunctuation The punctuation character for the current environment. This is usually a period.
     %\inserttheoremheadfont A font changing command that switches to the font to be used in the head of the theorem. By not inserting it, you can ignore the head font.
     %\inserttheoremblockenv Expands to "block" unless theorem style example is typeset, then "exampleblock". Thus you can use this insert to decide which environment should be used when typesetting the theorem.
-    
+
 \setbeamertemplate{theorem end}% End of \newtheorem defined environment
 {%
     \end{\inserttheoremblockenv}%
@@ -225,7 +224,7 @@
     %[triangle] A triangle as the reference as per itemize default.
     %[text] Uses the reference text (like “[Dijkstra, 1982]”) as the reference text.
     %\insertbiblabel inserts the current citation label.
-    
+
 \setbeamertemplate{bibliography entry author}{\usebeamerfont{bibliography entry author}\usebeamercolor{bibliography entry author}}% Inserted before author
 \setbeamertemplate{bibliography entry title}{\usebeamerfont{bibliography entry title}\usebeamercolor{bibliography entry title}}% Inserted before title
 \setbeamertemplate{bibliography entry location}{\usebeamerfont{bibliography entry location}\usebeamercolor{bibliography entry location}}% Inserted before where published

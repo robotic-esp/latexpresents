@@ -1,0 +1,203 @@
+
+
+
+
+%%%%%%%%%%%% LOGO COMMANDS %%%%%%%%%%%%%%%%%%
+%
+% Usage: \addlogo[optional/path/to/special/titlepage/logo]{path/to/logo}
+\NewDocumentCommand{\addlogo}{O{#2} m}{\addtitlelogo{#1}\addfootlogo{#2}}%
+\newcommand*{\savelogos}{\savetitlelogos{}\savefootlogos{}}%
+\newcommand*{\resetlogos}{\resettitlelogos{}\resetfootlogos{}}%
+\newcommand*{\clearlogos}{\cleartitlelogos{}\clearfootlogos{}}%
+
+%%% TITLE LOGOS %%%
+% https://tex.stackexchange.com/questions/451/when-to-use-edef-noexpand-and-expandafter
+%
+% Usage: \addtitlelogo{path/to/titlelogo}
+\def\espbeamer@titlelogos{}%
+\def\espbeamer@defaulttitlelogos{}%
+\newcommand*{\addtitlelogo}[1]%
+{%
+    \edef\espbeamer@titlelogos%
+    {%
+        \ifx\espbeamer@titlelogos\empty%
+        \else%
+            \espbeamer@titlelogos%
+            \hskip\espbeamer@titlelogo@sep%
+        \fi%
+        \includegraphics[height=\espbeamer@titlelogo@maxheight]{#1}%
+    }%
+}%
+% Usage: \resettitlelogo{}
+\newcommand*{\savetitlelogos}%
+{%
+    \edef\espbeamer@defaulttitlelogos{\espbeamer@titlelogos}%
+}%
+% Usage: \savetitlelogo{}
+\newcommand*{\resettitlelogos}%
+{%
+    \edef\espbeamer@titlelogos{\espbeamer@defaulttitlelogos}%
+}%
+% Usage: \cleartitlelogo{}
+\newcommand*{\cleartitlelogos}%
+{%
+    \def\espbeamer@titlelogos{}%
+}%
+
+%%% FOOT LOGOS %%%
+%
+% Usage: \addfootlogo{path/to/footerlogo}
+\def\espbeamer@footlogos{}%
+\def\espbeamer@defaultfootlogos{}%
+\newcommand*{\addfootlogo}[1]%
+{%
+    \edef\espbeamer@footlogos%
+    {%
+        \ifx\espbeamer@footlogos\empty%
+        \else%
+            \espbeamer@footlogos%
+            \hskip\espbeamer@footlogo@sep%
+        \fi%
+        \includegraphics[height=\espbeamer@footlogo@height]{#1}%
+    }%
+    \settowidth{\espbeamer@footlogo@width}{\espbeamer@footlogos}%
+}%
+% Usage: \savefootlogo{}
+\newcommand*{\savefootlogos}%
+{%
+    \edef\espbeamer@defaultfootlogos{\espbeamer@footlogos}%
+}%
+% Usage: \resetfootlogo{}
+\newcommand*{\resetfootlogos}%
+{%
+    \edef\espbeamer@footlogos{\espbeamer@defaultfootlogos}%
+    \settowidth{\espbeamer@footlogo@width}{\espbeamer@footlogos}%
+}%
+% Usage: \clearfootlogo{}
+\newcommand*{\clearfootlogos}%
+{%
+    \def\espbeamer@footlogos{}%
+    \setlength{\espbeamer@footlogo@width}{0pt}%
+}%
+%%%%%%%%%%%% END LOGO COMMANDS %%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
+%
+% Usage: \addperson{path/to/bio}
+\def\espbeamer@bios{}%
+\newcommand*\addperson[1]%
+{%
+    \edef\espbeamer@bios%
+    {%
+        \includegraphics[height=\espbeamer@bio@height]{#1}%
+        \ifx\espbeamer@bios\empty%
+        \else%
+            \hskip\espbeamer@bio@sep%
+            \espbeamer@bios%
+        \fi%
+    }%
+    \settowidth{\espbeamer@bio@width}{\espbeamer@bios}%
+}%
+% Usage: \clearpeople{}
+\newcommand*{\clearpeople}%
+{%
+    \def\espbeamer@bios{}%
+    \setlength{\espbeamer@bio@width}{0pt}%
+}%
+%%%%%%%%%%%% END BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% FRAME DECORATIONS %%%%%%%%%%%%
+%%% Frame decorations with control of front/back relative to content%%%
+%
+% Usage: \setbackdecorations[debug]{}
+%
+\define@boolkey[espbeamer]{setbackdecorations}{debug}[true]{}%
+\NewDocumentCommand{\setbackdecorations}{O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[espbeamer]{setbackdecorations}{debug=false}{}%
+        \setkeys[espbeamer]{setbackdecorations}{#1}%
+
+        \ifespbeamer@setbackdecorations@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+
+        % Footer logos
+        \ifx\espbeamer@footlogos\@empty%
+        \else%
+            \begin{textblock*}{\espbeamer@footlogo@width}(\espbeamer@border@left, \paperheight - \espbeamer@border@bottom - \espbeamer@footlogo@height)%
+                \ifespbeamer@setbackdecorations@debug%
+                    \textblockcolour{GREEN!25!BACKGROUND}%
+                \fi%
+
+                \begin{minipage}[t][\espbeamer@footlogo@height]{\espbeamer@footlogo@width}%
+                    \usebeamercolor*{logo}%
+                    \usebeamerfont*{logo}%
+                    \espbeamer@footlogos{}%
+                \end{minipage}%
+            \end{textblock*}%
+        \fi%
+    \endgroup%
+}%
+%
+% Usage: setfrontdecorations[debug]{}
+%
+\define@boolkey[espbeamer]{setfrontdecorations}{debug}[true]{}%
+\NewDocumentCommand{\setfrontdecorations}{O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[espbeamer]{setfrontdecorations}{debug=false}{}
+        \setkeys[espbeamer]{setfrontdecorations}{#1}%
+
+        \ifespbeamer@setfrontdecorations@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+
+        % Frame title
+        \begin{textblock*}{\espbeamer@slide@frametitle@width}(\espbeamer@border@left, \espbeamer@border@top)%
+            \usebeamercolor{frametitle}%
+
+            \ifespbeamer@setfrontdecorations@debug%
+                \textblockcolour{RED!25!BACKGROUND}%
+            \else%
+                \textblockcolour{frametitle.bg}%
+            \fi%
+
+            \begin{minipage}[t][\espbeamer@slide@frametitle@height][t]{\espbeamer@slide@frametitle@width}%
+                \setframetitle[\insertframetitle{}][\insertframesubtitle{}]%
+            \end{minipage}%
+        \end{textblock*}%
+
+        %Bio block
+        \ifx\espbeamer@bios\@empty%
+        \else%
+            \begin{textblock*}{\espbeamer@bio@width}(\paperwidth - \espbeamer@bio@width - \espbeamer@border@right, \espbeamer@border@top)%
+                \ifespbeamer@setfrontdecorations@debug%
+                    \textblockcolour{ORANGE!25!BACKGROUND}%
+                \fi%
+
+                \begin{minipage}[t][\espbeamer@bio@height][t]{\espbeamer@bio@width}%
+                    \usebeamercolor*{bio}%
+                    \usebeamerfont*{bio}%
+                    \espbeamer@bios%
+                \end{minipage}
+            \end{textblock*}%
+        \fi%
+
+        % Slide number
+        \begin{textblock*}{\espbeamer@slide@pgnum@width}(\paperwidth - \espbeamer@slide@pgnum@width - \espbeamer@border@right, \paperheight - \espbeamer@border@bottom - \espbeamer@slide@pgnum@height)%
+            \ifespbeamer@setfrontdecorations@debug%
+                \textblockcolour{YELLOW!25!BACKGROUND}%
+            \fi%
+
+            \begin{minipage}[t][\espbeamer@slide@pgnum@height][t]{\espbeamer@slide@pgnum@width}%
+                \hfill\usebeamertemplate*{page number in head/foot}%
+            \end{minipage}
+        \end{textblock*}%
+    \endgroup%
+}%
+%%%%%%%%%%%% END FRAME DECORATIONS %%%%%%%%%%%%
