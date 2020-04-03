@@ -27,15 +27,19 @@
 
 %%%%%%%%%%%% CONTENT-DRIVEN LAYOUTS %%%%%%%%%%%%
 %%% ONE-COLUMN %%%
-\NewDocumentCommand{\imagecenter}{O{} O{} m O{}}{\onecolumnfull[#4]{\image[#1][#2]{#3}}}% Usage: see \image
-\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m O{}}{\onecolumnfull[#5]{\pdfpage[#1][#2]{#3}{#4}}}% Usage: see \image
-\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m O{}}{\onecolumnfull[#5]{\video[#1][#2]{#3}{#4}}}% Usage: see \video
-\NewDocumentCommand{\envleft}{O{itemize} +m O{}}{\onecolumnfull[#3]{\begin{#1}#2\end{#1}}}% Usage: [environment]{environment content}
+\NewDocumentCommand{\imagecenter}{O{} O{} m O{}}{\onecolumnfull[#4]{\image[#1][#2]{#3}}}% Usage: see \image + [layout flags]
+\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m O{}}{\onecolumnfull[#5]{\pdfpage[#1][#2]{#3}{#4}}}% Usage: see \pdfpage + [layout flags]
+\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m O{}}{\onecolumnfull[#5]{\video[#1][#2]{#3}{#4}}}% Usage: see \video + [layout flags]
+\NewDocumentCommand{\envleft}{O{itemize} +m O{}}{\onecolumnfull[#3]{\begin{#1}#2\end{#1}}}% Usage: [environment]{environment content}[layout flags]
 
 %%% TWO-COLUMNS %%%
-\NewDocumentCommand{\envleftboxright}{O{itemize} +m +m O{}}{\twocolumneven{\begin{#1}#2\end{#1}}{#3}}% Usage: [environment]{environment content}{media content}
-\NewDocumentCommand{\boxleftenvright}{+m O{itemize} +m O{}}{\twocolumneven{#1}{\begin{#2}#3\end{#2}}}% Usage: {media content}[environment]{environment content}
-\NewDocumentCommand{\envleftright}{O{itemize} +m O{itemize} +m O{}}{\twocolumneven{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}}% Usage: [environment]{environment content}[environment]{environment content}
+\NewDocumentCommand{\envleftimageright}{O{itemize} +m O{} O{} m O{}}{\twocolumneven[raggedtop,raggedbottom,#6]{\begin{#1}#2\end{#1}}{\image[#3][#4]{#5}}}% Usage: [environment]{environment content}[\image arg1][\image arg2]{\image arg3}[layout flags]
+\NewDocumentCommand{\envleftpdfpageright}{O{itemize} +m O{} O{} m m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\begin{#1}#2\end{#1}}{\pdfpage[#3][#4]{#5}{#6}}}% Usage: [environment]{environment content}[\pdfpage arg1][\pdfpage arg2]{\pdfpage arg3}{\pdfpage arg4}[layout flags]
+\NewDocumentCommand{\envleftvideoright}{O{itemize} +m O{} O{noprogress,autostart,loop} m m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\begin{#1}#2\end{#1}}{\video[#3][#4]{#5}{#6}}}% Usage: [environment]{environment content}[\video arg1][\video arg2]{\video arg3}{\video arg4}[layout flags]
+\NewDocumentCommand{\imageleftenvright}{O{} O{} m O{itemize} +m O{}}{\twocolumneven[raggedtop,raggedbottom,#6]{\image[#1][#2]{#3}}{\begin{#4}#5\end{#4}}}% Usage: [\image arg1][\image arg2]{\image arg3}[environment]{environment content}[layout flags]
+\NewDocumentCommand{\pdfpageleftenvright}{O{} O{} m m O{itemize} +m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\pdfpage[#1][#2]{#3}{#4}}{\begin{#5}#6\end{#5}}}% Usage: [\pdfpage arg1][\pdfpage arg2]{\pdfpage arg3}{\pdfpage arg4}[environment]{environment content}[layout flags]
+\NewDocumentCommand{\videoleftenvright}{O{itemize} +m O{} O{noprogress,autostart,loop} m m O{itemize} +m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\video[#1][#2]{#3}{#4}}{\begin{#5}#6\end{#5}}}% Usage: [\video arg1][\video arg2]{\video arg3}{\video arg4}[environment]{environment content}[layout flags]
+\NewDocumentCommand{\envleftright}{O{itemize} +m O{itemize} +m O{}}{\twocolumneven[#5]{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}}% Usage: [environment]{environment content}[environment]{environment content}[layout flags]
 %%%%%%%%%%%% END CONTENT-DRIVEN LAYOUTS %%%%%%%%%%%%
 
 
@@ -80,6 +84,11 @@
 \newlength{\espbeamer@columnlayout@leftcolumnwidth}%
 \newlength{\espbeamer@columnlayout@middlecolumnwidth}%
 \newlength{\espbeamer@columnlayout@rightcolumnwidth}%
+\newlength{\espbeamer@columnlayout@topleftextent}%
+\newlength{\espbeamer@columnlayout@toprightextent}%
+\newlength{\espbeamer@columnlayout@bottomleftextent}%
+\newlength{\espbeamer@columnlayout@bottomrightextent}%
+\newlength{\espbeamer@columnlayout@columnextent}%
 %
 \NewDocumentCommand{\multicolumnlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
@@ -89,7 +98,17 @@
         \else%
             \presetkeys[espbeamer]{columnlayoutkeys}{debug=false}{}%
         \fi%
-        \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, raggedtop=false, raggedbottom=false, fullscreen=false, gutter=\espbeamer@gutter@column}{}
+        \ifespbeamer@raggedtop%
+            \presetkeys[espbeamer]{columnlayoutkeys}{raggedtop=true}{}%
+        \else%
+            \presetkeys[espbeamer]{columnlayoutkeys}{raggedtop=false}{}%
+        \fi%
+        \ifespbeamer@raggedbottom%
+            \presetkeys[espbeamer]{columnlayoutkeys}{raggedbottom=true}{}%
+        \else%
+            \presetkeys[espbeamer]{columnlayoutkeys}{raggedbottom=false}{}%
+        \fi%
+        \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, fullscreen=false, gutter=\espbeamer@gutter@column}{}
         \setkeys[espbeamer]{columnlayoutkeys}{#1}%
 
         % These only apply to this call because of the begingroup
@@ -107,11 +126,21 @@
             \calcdims[decorations=false]{}%
         \fi%
 
+        \ifespbeamer@columnlayoutkeys@raggedtop%
+            \setlength{\espbeamer@columnlayout@topleftextent}{\espbeamer@border@left + \espbeamer@slide@topmatter@widthleft}%
+            \setlength{\espbeamer@columnlayout@toprightextent}{\paperwidth - \espbeamer@slide@topmatter@widthright - \espbeamer@border@right}%
+        \fi%
+        \ifespbeamer@columnlayoutkeys@raggedbottom%
+            \setlength{\espbeamer@columnlayout@bottomleftextent}{\espbeamer@border@left + \espbeamer@slide@bottommatter@widthleft}%
+%            \setlength{\espbeamer@columnlayout@bottomrightextent}{\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right}
+            \setlength{\espbeamer@columnlayout@bottomrightextent}{\paperwidth}% To allow overwriting the page number
+        \fi%
+
         % Calculate the content width/height given the provided margins.
         \setlength{\contentposx}{\espbeamer@border@left}%
-        \setlength{\contentposy}{\espbeamer@slide@topmatter@height}%
+        \setlength{\contentposy}{\espbeamer@border@top + \espbeamer@slide@topmatter@height}%
         \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
-        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom}%
 
         \ifespbeamer@columnlayoutkeys@debug%
             \debugmargins{}%
@@ -164,13 +193,30 @@
             {}%
         \fi%
 
-        % Common elements
+        % First element
         \setlength{\elementposy}{\contentposy}%
         \setlength{\elementheight}{\contentheight}%
-
-        % First element
         \setlength{\elementposx}{\contentposx}% Record the top-left of the first column
         \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth}%
+        \ifespbeamer@columnlayoutkeys@raggedtop%
+            \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+                \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                \else%
+                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
+                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
+                \fi%
+            \fi%
+        \fi%
+        \ifespbeamer@columnlayoutkeys@raggedbottom%
+            \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                \else%
+                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
+                \fi%
+            \fi%
+        \fi%
         \ifespbeamer@columnlayoutkeys@debug%
             \layoutelement[debug]{#3}%
         \else%
@@ -180,8 +226,29 @@
         % Second element
         \ifx\relax#4\relax%
         \else%
+            \setlength{\elementposy}{\contentposy}%
+            \setlength{\elementheight}{\contentheight}%
             \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
             \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth}%
+            \ifespbeamer@columnlayoutkeys@raggedtop%
+                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent%"<=" is not a valid comparator
+                    \else%
+                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
+                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
+                    \fi%
+                \fi%
+            \fi%
+            \ifespbeamer@columnlayoutkeys@raggedbottom%
+                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                    \else%
+                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
+                    \fi%
+                \fi%
+            \fi%
             \ifespbeamer@columnlayoutkeys@debug%
                 \layoutelement[debug]{#5}%
             \else%
@@ -192,15 +259,35 @@
         % Third element
         \ifx\relax#6\relax%
         \else%
+            \setlength{\elementposy}{\contentposy}%
+            \setlength{\elementheight}{\contentheight}%
             \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
             \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth}%
+            \ifespbeamer@columnlayoutkeys@raggedtop%
+                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                    \else%
+                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
+                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
+                    \fi%
+                \fi%
+            \fi%
+            \ifespbeamer@columnlayoutkeys@raggedbottom%
+                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                    \else%
+                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
+                    \fi%
+                \fi%
+            \fi%
             \ifespbeamer@columnlayoutkeys@debug%
                 \layoutelement[debug]{#7}%
             \else%
                 \layoutelement{#7}%
             \fi%
         \fi%
-
 
         \ifespbeamer@columnlayoutkeys@decorations%
             % Set the foreground frame decorations
@@ -258,9 +345,9 @@
 
         % Calculate the content width/height given the provided margins
         \setlength{\contentposx}{\espbeamer@border@left}%
-        \setlength{\contentposy}{\espbeamer@slide@topmatter@height}%
+        \setlength{\contentposy}{\espbeamer@border@top + \espbeamer@slide@topmatter@height}%
         \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
-        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom}%
 
         \ifespbeamer@rowlayoutkeys@debug%
             \debugmargins{}%
@@ -448,7 +535,7 @@
     % The height of a bio photo, when present
     \setlength{\espbeamer@bio@height}%
     {%
-        \espbeamer@frametitle@defaultheight - \espbeamer@gutter@bio%
+        \espbeamer@frametitle@defaultheight + \espbeamer@gutter@frametitle - \espbeamer@gutter@bio%
     }%
 }%
 
@@ -524,22 +611,24 @@
         % Height
         \setlength{\espbeamer@slide@topmatter@height}%
         {%
-            \espbeamer@border@top + \espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle%
+            \espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle%
         }%
         % Left-extent
-        \setlength{\espbeamer@slide@topmatter@extentleft}{\espbeamer@border@left}%
         \ifdim\espbeamer@slide@frametitle@width>0pt%
-            \addtolength{\espbeamer@slide@topmatter@extentleft}{\espbeamer@slide@frametitle@width + \espbeamer@gutter@frametitle}%
+            \setlength{\espbeamer@slide@topmatter@widthleft}{\espbeamer@slide@frametitle@width + \espbeamer@gutter@frametitle}%
+        \else%
+            \setlength{\espbeamer@slide@topmatter@widthleft}{0pt}%
         \fi%
         % Right-extent
-        \setlength{\espbeamer@slide@topmatter@extentright}{\espbeamer@border@right}%
         \ifdim\espbeamer@bio@width>0pt%
-            \addtolength{\espbeamer@slide@topmatter@extentright}{\espbeamer@gutter@bio + \espbeamer@bio@width}%
+            \setlength{\espbeamer@slide@topmatter@widthright}{\espbeamer@gutter@bio + \espbeamer@bio@width}%
+        \else%
+            \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
         \fi%
     \else%
         \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@border@top}%
-        \setlength{\espbeamer@slide@topmatter@extentleft}{\paperwidth}%
-        \setlength{\espbeamer@slide@topmatter@extentright}{0pt}%
+        \setlength{\espbeamer@slide@topmatter@widthleft}{\paperwidth}%
+        \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
     \fi%
 
     % Combined bottom matter
@@ -547,19 +636,20 @@
         % Height
         \setlength{\espbeamer@slide@bottommatter@height}%
         {%
-            \espbeamer@gutter@footlogo + \espbeamer@footlogo@height + \espbeamer@border@bottom%
+            \espbeamer@gutter@footlogo + \espbeamer@footlogo@height%
         }%
         % Left extent
-        \setlength{\espbeamer@slide@bottommatter@extentleft}{\espbeamer@border@left}%
         \ifdim\espbeamer@footlogo@width>0pt%
-            \addtolength{\espbeamer@slide@bottommatter@extentleft}{\espbeamer@footlogo@width + \espbeamer@gutter@footlogo}%
+            \setlength{\espbeamer@slide@bottommatter@widthleft}{\espbeamer@footlogo@width + \espbeamer@gutter@footlogo}%
+        \else%
+            \setlength{\espbeamer@slide@bottommatter@widthleft}{0pt}%
         \fi%
         % Right extent
-        \setlength{\espbeamer@slide@bottommatter@extentright}{\espbeamer@border@right + \espbeamer@slide@pgnum@width}%
+        \setlength{\espbeamer@slide@bottommatter@widthright}{\espbeamer@slide@pgnum@width}%
     \else%
         \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@border@bottom}%
-        \setlength{\espbeamer@slide@bottommatter@extentleft}{\paperwidth}%
-        \setlength{\espbeamer@slide@bottommatter@extentright}{0pt}%
+        \setlength{\espbeamer@slide@bottommatter@widthleft}{\paperwidth}%
+        \setlength{\espbeamer@slide@bottommatter@widthright}{0pt}%
     \fi%
 }%
 %%%%%%%%%%%% END LAYOUT HELPERS %%%%%%%%%%%%
@@ -570,7 +660,7 @@
 \newcommand*{\debugmargins}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \TPoptions{showboxes = false}%
+        \TPoptions{showboxes = true}%
 
         %Margins
         % Top
@@ -596,23 +686,23 @@
 
         %Decorations
         % Top left
-        \begin{textblock*}{\espbeamer@slide@topmatter@extentleft}(0pt,0pt)%
+        \begin{textblock*}{\espbeamer@slide@topmatter@widthleft}(\espbeamer@border@left, \espbeamer@border@top)%
             \textblockcolour{GRAY!50!BACKGROUND}%
             \vbox to \espbeamer@slide@topmatter@height{\hfill}%
         \end{textblock*}%
         % Top right
-        \begin{textblock*}{\espbeamer@slide@topmatter@extentright}(\paperwidth - \espbeamer@slide@topmatter@extentright,0pt)%
+        \begin{textblock*}{\espbeamer@slide@topmatter@widthright}(\paperwidth - \espbeamer@slide@topmatter@widthright - \espbeamer@border@right, \espbeamer@border@top)%
             \textblockcolour{GRAY!50!BACKGROUND}%
             \vbox to \espbeamer@slide@topmatter@height{\hfill}%
         \end{textblock*}%
 
         % Bottom left
-        \begin{textblock*}{\espbeamer@slide@bottommatter@extentleft}(0pt,\paperheight - \espbeamer@slide@bottommatter@height)%
+        \begin{textblock*}{\espbeamer@slide@bottommatter@widthleft}(\espbeamer@border@left, \paperheight - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom)%
             \textblockcolour{GRAY!50!BACKGROUND}%
             \vbox to \espbeamer@slide@bottommatter@height{\hfill}%
         \end{textblock*}%
         % Bottom right
-        \begin{textblock*}{\espbeamer@slide@bottommatter@extentright}(\paperwidth - \espbeamer@slide@bottommatter@extentright,\paperheight - \espbeamer@slide@bottommatter@height)%
+        \begin{textblock*}{\espbeamer@slide@bottommatter@widthright}(\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right, \paperheight - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom)%
             \textblockcolour{GRAY!50!BACKGROUND}%
             \vbox to \espbeamer@slide@bottommatter@height{\hfill}%
         \end{textblock*}%

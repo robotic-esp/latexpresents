@@ -11,12 +11,15 @@
 \DeclareBoolOption[false]{debug}% espbeamer@debug
 \DeclareBoolOption[false]{dark}% espbeamer@dark
 \DeclareComplementaryOption{light}{dark}%
-%%Which multimedia package to use
+% Which multimedia package to use
 \DeclareBoolOption[false]{adobe}% espbeamer@adobe
 \DeclareComplementaryOption{pdfpc}{adobe}%
-%%Make a handout or presentation
+% Make a handout or presentation
 \DeclareBoolOption[false]{handout}% espbeamer@handout
 \DeclareComplementaryOption{present}{handout}%
+% Greedily increase height of columns, when possible
+\DeclareBoolOption[false]{raggedtop}% espbeamer@raggedtop
+\DeclareBoolOption[false]{raggedbottom}% espbeamer@raggedbottom
 \ProcessKeyvalOptions*%
 %%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
 
@@ -123,16 +126,18 @@
 \setlength{\espbeamer@slide@pgnum@width}{0pt}%
 \newlength{\espbeamer@slide@topmatter@height}% Height of everything above content on a specific slide. Calc'ed by \calcdims.
 \setlength{\espbeamer@slide@topmatter@height}{0pt}%
-\newlength{\espbeamer@slide@topmatter@extentleft}% Width from left of top matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@topmatter@extentleft}{0pt}%
-\newlength{\espbeamer@slide@topmatter@extentright}% Width from right of top matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@topmatter@extentright}{0pt}%
+\newlength{\espbeamer@slide@topmatter@widthleft}% Width from left of top matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@topmatter@widthleft}{0pt}%
+\newlength{\espbeamer@slide@topmatter@widthright}% Width from right of top matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
 \newlength{\espbeamer@slide@bottommatter@height}% Height of everything below content on a specific slide. Calc'ed by \calcdims.
 \setlength{\espbeamer@slide@bottommatter@height}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@extentleft}% Width from left of bottom matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@bottommatter@extentleft}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@extentright}% Width from right of bottom matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@bottommatter@extentright}{0pt}%
+\newlength{\espbeamer@slide@bottommatter@widthleft}% Width from left of bottom matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@bottommatter@widthleft}{0pt}%
+\newlength{\espbeamer@slide@bottommatter@widthright}% Width from right of bottom matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@bottommatter@widthright}{0pt}%
+
+
 
 %%% Manually specified lengths %%%
 \newlength{\espbeamer@beamer@heightdiff}% This is Beamer's difference between \pageheight and \textheight regardless of aspect ratio.
