@@ -133,11 +133,10 @@
         \fi%
         \ifespbeamer@columnlayoutkeys@raggedbottom%
             \setlength{\espbeamer@columnlayout@bottomleftextent}{\espbeamer@border@left + \espbeamer@slide@bottommatter@widthleft}%
-%            \setlength{\espbeamer@columnlayout@bottomrightextent}{\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right}
-            \setlength{\espbeamer@columnlayout@bottomrightextent}{\paperwidth}% To allow overwriting the page number
+            \setlength{\espbeamer@columnlayout@bottomrightextent}{\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right}%
         \fi%
 
-        % Calculate the content width/height given the provided margins.
+        % Calculate the content width/height given the margins.
         \setlength{\contentposx}{\espbeamer@border@left}%
         \setlength{\contentposy}{\espbeamer@border@top + \espbeamer@slide@topmatter@height}%
         \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
@@ -199,25 +198,49 @@
         \setlength{\elementheight}{\contentheight}%
         \setlength{\elementposx}{\contentposx}% Record the top-left of the first column
         \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth}%
+
+        % Adjust top if ragged
         \ifespbeamer@columnlayoutkeys@raggedtop%
             \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            % Where are we horizontally?
             \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+                % Past left topmatter, what about right?
                 \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                    % Under right topmatter
+                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightright}%
+                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightright}%
                 \else%
+                    % Under no topmatter
                     \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
                     \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
                 \fi%
+            \else%
+                % Under left topmatter
+                \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightleft}%
+                \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightleft}%
             \fi%
         \fi%
+
+        % Adjust bottom if ragged
         \ifespbeamer@columnlayoutkeys@raggedbottom%
             \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            % Where are we horizontally?
             \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                % Past left bottommatter, what about right?
                 \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                    % Above right bottommatter
+                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightright}%
                 \else%
+                    % Above no bottommatter
                     \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
                 \fi%
+            \else%
+                % Above left bottom matter
+                \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightleft}%
             \fi%
         \fi%
+
+        % Layout
         \ifespbeamer@columnlayoutkeys@debug%
             \layoutelement[debug]{#3}%
         \else%
@@ -231,25 +254,49 @@
             \setlength{\elementheight}{\contentheight}%
             \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
             \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth}%
+
+            % Adjust top if ragged
             \ifespbeamer@columnlayoutkeys@raggedtop%
                 \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
                 \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
-                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent%"<=" is not a valid comparator
+                    % Past left topmatter, what about right?
+                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                        % Under right topmatter
+                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightright}%
+                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightright}%
                     \else%
+                        % Under no topmatter
                         \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
                         \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
                     \fi%
+                \else%
+                    % Under left topmatter
+                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightleft}%
+                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightleft}%
                 \fi%
             \fi%
+
+            % Adjust bottom if ragged
             \ifespbeamer@columnlayoutkeys@raggedbottom%
                 \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
                 \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                    % Past left bottommatter, what about right?
                     \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                        % Above right bottommatter
+                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightright}%
                     \else%
+                        % Above no bottommatter
                         \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
                     \fi%
+                \else%
+                    % Above left bottom matter
+                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightleft}%
                 \fi%
             \fi%
+
+            % Layout
             \ifespbeamer@columnlayoutkeys@debug%
                 \layoutelement[debug]{#5}%
             \else%
@@ -264,25 +311,49 @@
             \setlength{\elementheight}{\contentheight}%
             \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
             \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth}%
+
+            % Adjust top if ragged
             \ifespbeamer@columnlayoutkeys@raggedtop%
                 \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
                 \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+                    % Past left topmatter, what about right?
                     \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                        % Under right topmatter
+                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightright}%
+                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightright}%
                     \else%
+                        % Under no topmatter
                         \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
                         \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
                     \fi%
+                \else%
+                    % Under left topmatter
+                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightleft}%
+                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightleft}%
                 \fi%
             \fi%
+
+            % Adjust bottom if ragged
             \ifespbeamer@columnlayoutkeys@raggedbottom%
                 \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
                 \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                    % Past left bottommatter, what about right?
                     \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                        % Above right bottommatter
+                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightright}%
                     \else%
+                        % Above no bottommatter
                         \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
                     \fi%
+                \else%
+                    % Above left bottom matter
+                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightleft}%
                 \fi%
             \fi%
+
+            % Layout
             \ifespbeamer@columnlayoutkeys@debug%
                 \layoutelement[debug]{#7}%
             \else%
@@ -290,8 +361,8 @@
             \fi%
         \fi%
 
+        % Set the foreground frame decorations
         \ifespbeamer@columnlayoutkeys@decorations%
-            % Set the foreground frame decorations
             \ifespbeamer@columnlayoutkeys@debug%
                 \setfrontdecorations[debug]{}%
             \else%
@@ -345,7 +416,7 @@
             \calcdims[nodecorations]{}%
         \fi%
 
-        % Calculate the content width/height given the provided margins
+        % Calculate the content width/height given the margins
         \setlength{\contentposx}{\espbeamer@border@left}%
         \setlength{\contentposy}{\espbeamer@border@top + \espbeamer@slide@topmatter@height}%
         \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
@@ -608,28 +679,47 @@
         \setlength{\espbeamer@slide@pgnum@width}{0pt}%
     \fi%
 
-    % The size of footer logos and the bios are calculated by their macros on config and their use will be switched.
+    % The sizes of footer logos and the bios are calculated by their macros as they are set.
 
     % Combined top matter
     \ifespbeamer@calcdims@decorations%
-        % Height
-        \setlength{\espbeamer@slide@topmatter@height}%
-        {%
-            \espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle%
-        }%
-        % Left-extent
+        % Left
         \ifdim\espbeamer@slide@frametitle@width>0pt%
+            % Height
+            \setlength{\espbeamer@slide@topmatter@heightleft}%
+            {%
+                \espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle%
+            }%
+            % Width
             \setlength{\espbeamer@slide@topmatter@widthleft}{\espbeamer@slide@frametitle@width + \espbeamer@gutter@frametitle}%
         \else%
+            \setlength{\espbeamer@slide@topmatter@heightleft}{0pt}%
             \setlength{\espbeamer@slide@topmatter@widthleft}{0pt}%
         \fi%
-        % Right-extent
+
+        % Right
         \ifdim\espbeamer@bio@width>0pt%
+            % Height
+            \setlength{\espbeamer@slide@topmatter@heightright}%
+            {%
+                \espbeamer@bio@height + \espbeamer@gutter@bio%
+            }%
+            % Width
             \setlength{\espbeamer@slide@topmatter@widthright}{\espbeamer@gutter@bio + \espbeamer@bio@width}%
         \else%
+            \setlength{\espbeamer@slide@topmatter@heightright}{0pt}%
             \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
         \fi%
+
+        % Max height
+        \ifdim\espbeamer@slide@topmatter@heightleft>\espbeamer@slide@topmatter@heightright%
+            \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@slide@topmatter@heightleft}%
+        \else%
+            \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@slide@topmatter@heightright}%
+        \fi%
     \else%
+        \setlength{\espbeamer@slide@topmatter@heightleft}{\espbeamer@border@top}%
+        \setlength{\espbeamer@slide@topmatter@heightright}{\espbeamer@border@top}%
         \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@border@top}%
         \setlength{\espbeamer@slide@topmatter@widthleft}{\paperwidth}%
         \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
@@ -637,20 +727,33 @@
 
     % Combined bottom matter
     \ifespbeamer@calcdims@decorations%
-        % Height
-        \setlength{\espbeamer@slide@bottommatter@height}%
-        {%
-            \espbeamer@gutter@footlogo + \espbeamer@footlogo@height%
-        }%
-        % Left extent
+        % Left
         \ifdim\espbeamer@footlogo@width>0pt%
+            % Height
+            \setlength{\espbeamer@slide@bottommatter@heightleft}%
+            {%
+                \espbeamer@gutter@footlogo + \espbeamer@footlogo@height%
+            }%
+            % Width
             \setlength{\espbeamer@slide@bottommatter@widthleft}{\espbeamer@footlogo@width + \espbeamer@gutter@footlogo}%
         \else%
+            \setlength{\espbeamer@slide@bottommatter@heightleft}{0pt}%
             \setlength{\espbeamer@slide@bottommatter@widthleft}{0pt}%
         \fi%
-        % Right extent
+
+        % Right
+        \setlength{\espbeamer@slide@bottommatter@heightright}{\espbeamer@slide@pgnum@height}%
         \setlength{\espbeamer@slide@bottommatter@widthright}{\espbeamer@slide@pgnum@width}%
+
+        % Max height
+        \ifdim\espbeamer@slide@bottommatter@heightleft>\espbeamer@slide@bottommatter@heightright%
+            \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@slide@bottommatter@heightleft}%
+        \else%
+            \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@slide@bottommatter@heightright}%
+        \fi%
     \else%
+        \setlength{\espbeamer@slide@bottommatter@heightleft}{\espbeamer@border@bottom}%
+        \setlength{\espbeamer@slide@bottommatter@heightright}{\espbeamer@border@bottom}%
         \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@border@bottom}%
         \setlength{\espbeamer@slide@bottommatter@widthleft}{\paperwidth}%
         \setlength{\espbeamer@slide@bottommatter@widthright}{0pt}%
@@ -692,23 +795,23 @@
         % Top left
         \begin{textblock*}{\espbeamer@slide@topmatter@widthleft}(\espbeamer@border@left, \espbeamer@border@top)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@topmatter@height{\hfill}%
+            \vbox to \espbeamer@slide@topmatter@heightleft{\hfill}%
         \end{textblock*}%
         % Top right
         \begin{textblock*}{\espbeamer@slide@topmatter@widthright}(\paperwidth - \espbeamer@slide@topmatter@widthright - \espbeamer@border@right, \espbeamer@border@top)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@topmatter@height{\hfill}%
+            \vbox to \espbeamer@slide@topmatter@heightright{\hfill}%
         \end{textblock*}%
 
         % Bottom left
-        \begin{textblock*}{\espbeamer@slide@bottommatter@widthleft}(\espbeamer@border@left, \paperheight - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom)%
+        \begin{textblock*}{\espbeamer@slide@bottommatter@widthleft}(\espbeamer@border@left, \paperheight - \espbeamer@slide@bottommatter@heightleft - \espbeamer@border@bottom)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@bottommatter@height{\hfill}%
+            \vbox to \espbeamer@slide@bottommatter@heightleft{\hfill}%
         \end{textblock*}%
         % Bottom right
-        \begin{textblock*}{\espbeamer@slide@bottommatter@widthright}(\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right, \paperheight - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom)%
+        \begin{textblock*}{\espbeamer@slide@bottommatter@widthright}(\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right, \paperheight - \espbeamer@slide@bottommatter@heightright - \espbeamer@border@bottom)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@bottommatter@height{\hfill}%
+            \vbox to \espbeamer@slide@bottommatter@heightright{\hfill}%
         \end{textblock*}%
     \endgroup%
 }

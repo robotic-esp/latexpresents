@@ -21,7 +21,7 @@
 % Greedily increase height of columns, when possible
 \DeclareBoolOption[false]{raggedtop}% espbeamer@raggedtop
 \DeclareComplementaryOption{alignedtop}{raggedtop}%
-\DeclareBoolOption[false]{raggedbottom}% espbeamer@raggedbottom
+\DeclareBoolOption[true]{raggedbottom}% espbeamer@raggedbottom
 \DeclareComplementaryOption{alignedbottom}{raggedbottom}%
 \ProcessKeyvalOptions*%
 %%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
@@ -127,14 +127,22 @@
 \setlength{\espbeamer@slide@pgnum@height}{0pt}%
 \newlength{\espbeamer@slide@pgnum@width}% Width of the slide number on a specific slide. Calc'ed by \calcdims.
 \setlength{\espbeamer@slide@pgnum@width}{0pt}%
-\newlength{\espbeamer@slide@topmatter@height}% Height of everything above content on a specific slide. Calc'ed by \calcdims.
+\newlength{\espbeamer@slide@topmatter@height}% Height of everything above content on a specific slide. Calc'ed by \calcdims as max of left/right height.
 \setlength{\espbeamer@slide@topmatter@height}{0pt}%
+\newlength{\espbeamer@slide@topmatter@heightleft}% Height of everything above content left on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@topmatter@heightleft}{0pt}%
+\newlength{\espbeamer@slide@topmatter@heightright}% Height of everything above content right on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@topmatter@heightright}{0pt}%
 \newlength{\espbeamer@slide@topmatter@widthleft}% Width from left of top matter on a specific slide. Calc'ed by \calcdims.
 \setlength{\espbeamer@slide@topmatter@widthleft}{0pt}%
 \newlength{\espbeamer@slide@topmatter@widthright}% Width from right of top matter on a specific slide. Calc'ed by \calcdims.
 \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@height}% Height of everything below content on a specific slide. Calc'ed by \calcdims.
+\newlength{\espbeamer@slide@bottommatter@height}% Height of everything below content on a specific slide. Calc'ed by \calcdims as max of left/right height.
 \setlength{\espbeamer@slide@bottommatter@height}{0pt}%
+\newlength{\espbeamer@slide@bottommatter@heightleft}% Height of everything below content left on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@bottommatter@heightleft}{0pt}%
+\newlength{\espbeamer@slide@bottommatter@heightright}% Height of everything below content right on a specific slide. Calc'ed by \calcdims.
+\setlength{\espbeamer@slide@bottommatter@heightright}{0pt}%
 \newlength{\espbeamer@slide@bottommatter@widthleft}% Width from left of bottom matter on a specific slide. Calc'ed by \calcdims.
 \setlength{\espbeamer@slide@bottommatter@widthleft}{0pt}%
 \newlength{\espbeamer@slide@bottommatter@widthright}% Width from right of bottom matter on a specific slide. Calc'ed by \calcdims.
