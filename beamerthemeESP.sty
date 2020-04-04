@@ -9,6 +9,7 @@
 
 % Colour theme
 \DeclareBoolOption[false]{debug}% espbeamer@debug
+\DeclareComplementaryOption{nodebug}{debug}%
 \DeclareBoolOption[false]{dark}% espbeamer@dark
 \DeclareComplementaryOption{light}{dark}%
 % Which multimedia package to use
@@ -19,7 +20,9 @@
 \DeclareComplementaryOption{present}{handout}%
 % Greedily increase height of columns, when possible
 \DeclareBoolOption[false]{raggedtop}% espbeamer@raggedtop
+\DeclareComplementaryOption{alignedtop}{raggedtop}%
 \DeclareBoolOption[false]{raggedbottom}% espbeamer@raggedbottom
+\DeclareComplementaryOption{alignedbottom}{raggedbottom}%
 \ProcessKeyvalOptions*%
 %%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
 

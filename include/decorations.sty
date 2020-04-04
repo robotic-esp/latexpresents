@@ -115,7 +115,8 @@
 %
 % Usage: \setbackdecorations[debug]{}
 %
-\define@boolkey[espbeamer]{setbackdecorations}{debug}[true]{}%
+\definecomplimentarykeys{espbeamer}{setbackdecorations}{nodebug}{debug}%
+%\define@boolkey[espbeamer]{setbackdecorations}{debug}[true]{}%
 \NewDocumentCommand{\setbackdecorations}{O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
@@ -146,7 +147,8 @@
 %
 % Usage: setfrontdecorations[debug]{}
 %
-\define@boolkey[espbeamer]{setfrontdecorations}{debug}[true]{}%
+\definecomplimentarykeys{espbeamer}{setfrontdecorations}{nodebug}{debug}%
+%\define@boolkey[espbeamer]{setfrontdecorations}{debug}[true]{}%
 \NewDocumentCommand{\setfrontdecorations}{O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.

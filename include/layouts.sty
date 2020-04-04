@@ -68,14 +68,15 @@
 %
 %%% COLUMNS %%%
 %
-% Usage: \multicolumnlayout[debug,decorations,raggedtop,raggedbottom,fullscreen,gutter=]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]
+% Usage: \multicolumnlayout[nodebug/debug,decorations/nodecorations,alignedtop/raggedtop,alignedbottom/raggedbottom,border/noborder,gutter=]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]
 %
 \define@key[espbeamer]{columnlayoutkeys}{gutter}[]{\setlength{\espbeamer@columnlayout@gutter}{#1}}%
-\define@boolkey[espbeamer]{columnlayoutkeys}{decorations}[true]{}%
-\define@boolkey[espbeamer]{columnlayoutkeys}{raggedtop}[true]{}%
-\define@boolkey[espbeamer]{columnlayoutkeys}{raggedbottom}[true]{}%
-\define@boolkey[espbeamer]{columnlayoutkeys}{fullscreen}[true]{}%
-\define@boolkey[espbeamer]{columnlayoutkeys}{debug}[true]{}%
+\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{decorations}{nodecorations}%
+\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{alignedtop}{raggedtop}%
+\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{alignedbottom}{raggedbottom}%
+\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{border}{noborder}%
+\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{nodebug}{debug}%
+%\define@boolkey[espbeamer]{columnlayoutkeys}{debug}[true]{}%
 %
 \newlength{\espbeamer@columnlayout@gutter}%
 \newcounter{espbeamer@columnlayout@numgutters}%
@@ -108,11 +109,11 @@
         \else%
             \presetkeys[espbeamer]{columnlayoutkeys}{raggedbottom=false}{}%
         \fi%
-        \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, fullscreen=false, gutter=\espbeamer@gutter@column}{}
+        \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@column}{}
         \setkeys[espbeamer]{columnlayoutkeys}{#1}%
 
         % These only apply to this call because of the begingroup
-        \ifespbeamer@rowlayoutkeys@fullscreen%
+        \ifespbeamer@rowlayoutkeys@noborder%
             \setlength{\espbeamer@border@left}{0pt}%
             \setlength{\espbeamer@border@right}{0pt}%
             \setlength{\espbeamer@border@top}{0pt}%
@@ -121,9 +122,9 @@
 
         % Calculate the slide's dimensions
         \ifespbeamer@columnlayoutkeys@decorations%
-            \calcdims{}%
+            \calcdims[decorations]{}%
         \else%
-            \calcdims[decorations=false]{}%
+            \calcdims[nodecorations]{}%
         \fi%
 
         \ifespbeamer@columnlayoutkeys@raggedtop%
@@ -302,12 +303,13 @@
 
 %%% ROWS %%%
 %
-% Usage: \multirowlayout[debug,decorations,fullscreen,gutter=]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]
+% Usage: \multirowlayout[nodebug/debug,decorations/nodecorations,border/noborder,gutter=]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]
 %
 \define@key[espbeamer]{rowlayoutkeys}{gutter}[]{\setlength{\espbeamer@rowlayout@gutter}{#1}}%
-\define@boolkey[espbeamer]{rowlayoutkeys}{decorations}[true]{}%
-\define@boolkey[espbeamer]{rowlayoutkeys}{fullscreen}[true]{}%
-\define@boolkey[espbeamer]{rowlayoutkeys}{debug}[true]{}%
+\definecomplimentarykeys{espbeamer}{rowlayoutkeys}{decorations}{nodecorations}%
+\definecomplimentarykeys{espbeamer}{rowlayoutkeys}{border}{noborder}%
+\definecomplimentarykeys{espbeamer}{rowlayoutkeys}{nodebug}{debug}%
+%\define@boolkey[espbeamer]{rowlayoutkeys}{debug}[true]{}%
 %
 \newlength{\espbeamer@rowlayout@gutter}%
 \newcounter{espbeamer@rowlayout@numgutters}%
@@ -325,11 +327,11 @@
         \else%
             \presetkeys[espbeamer]{rowlayoutkeys}{debug=false}{}%
         \fi%
-        \presetkeys[espbeamer]{rowlayoutkeys}{decorations=true, fullscreen=false, gutter=\espbeamer@gutter@row}{}
+        \presetkeys[espbeamer]{rowlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@row}{}
         \setkeys[espbeamer]{rowlayoutkeys}{#1}%
 
         % These only apply to this call because of the begingroup
-        \ifespbeamer@rowlayoutkeys@fullscreen%
+        \ifespbeamer@rowlayoutkeys@noborder%
             \setlength{\espbeamer@border@left}{0pt}%
             \setlength{\espbeamer@border@right}{0pt}%
             \setlength{\espbeamer@border@top}{0pt}%
@@ -338,9 +340,9 @@
 
         % Calculate the slide's dimensions
         \ifespbeamer@rowlayoutkeys@decorations%
-            \calcdims{}%
+            \calcdims[decorations]{}%
         \else%
-            \calcdims[decorations=false]{}%
+            \calcdims[nodecorations]{}%
         \fi%
 
         % Calculate the content width/height given the provided margins
@@ -475,9 +477,10 @@
 
 %%% Individual element of a multielement layout %%%
 %
-% Usage: \layoutelement[debug]{content}
+% Usage: \layoutelement[nodebug/debug]{content}
 %
-\define@boolkey[espbeamer]{layoutelement}{debug}[true]{}%
+\definecomplimentarykeys{espbeamer}{layoutelement}{nodebug}{debug}%
+%\define@boolkey[espbeamer]{layoutelement}{debug}[true]{}%
 \NewDocumentCommand{\layoutelement}{O{} +m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
@@ -543,7 +546,8 @@
 %
 % Usage: \calcdims[decorations]{}
 %
-\define@boolkey[espbeamer]{calcdims}{decorations}[true]{}%
+\definecomplimentarykeys{espbeamer}{calcdims}{decorations}{nodecorations}%
+%\define@boolkey[espbeamer]{calcdims}{decorations}[true]{}%
 %
 \newlength{\espbeamer@calcdims@titlewidth}
 \newlength{\espbeamer@calcdims@subtitlewidth}

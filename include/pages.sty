@@ -1,9 +1,11 @@
-%%%%%%%%%%%% CONTENT FRAMES %%%%%%%%%%%%
+% \titlepage, \partpage, \sectionpage, and \subsectionpage are defined in beamerinnerthemeESP.sty
+
+%%%%%%%%%%%% SPECIAL PAGES %%%%%%%%%%%%
 \newlength{\espbeamer@thanks@origlogowidth}
 \NewDocumentCommand{\thankspage}{+O{Thank you}}%
 {%
     \settowidth{\espbeamer@thanks@origlogowidth}{\espbeamer@titlelogos}%
-    \multirowlayout[decorations=false, gutter=0pt]%
+    \multirowlayout[nodecorations, gutter=0pt]%
     {0.5}%
     {%
         \usebeamerfont{thanks}%
@@ -34,4 +36,4 @@
         \fi%
     ]%
 }%
-%%%%%%%%%%%% END CONTENT FRAMES %%%%%%%%%%%%
+%%%%%%%%%%%% END SPECIAL PAGES %%%%%%%%%%%%

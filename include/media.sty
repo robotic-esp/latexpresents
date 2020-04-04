@@ -390,7 +390,7 @@
 % Usage: See \video for options
 \NewDocumentCommand{\fullvideo}{O{noprogress,autostart,loop} m m}%
 {%
-    \multirowlayout[decorations=false, fullscreen, gutter=0pt]%
+    \multirowlayout[nodecorations, noborder, gutter=0pt]%
     {1.0}%
     {%
         \video[][#1]{#2}{#3}
