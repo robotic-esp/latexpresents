@@ -143,6 +143,7 @@
         \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom}%
 
         \ifespbeamer@columnlayoutkeys@debug%
+            \TPoptions{showboxes = true}%
             \debugmargins{}%
         \fi%
 
@@ -240,7 +241,7 @@
             \fi%
         \fi%
 
-        % Layout
+        % Typeset the content of the first column
         \ifespbeamer@columnlayoutkeys@debug%
             \layoutelement[debug]{#3}%
         \else%
@@ -250,6 +251,15 @@
         % Second element
         \ifx\relax#4\relax%
         \else%
+            % Debug the 1--2 gutter
+            \ifespbeamer@columnlayoutkeys@debug%
+                \begin{textblock*}{\espbeamer@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \elementheight{\hfill}%
+                \end{textblock*}%
+            \fi%%
+
+            % Calc position
             \setlength{\elementposy}{\contentposy}%
             \setlength{\elementheight}{\contentheight}%
             \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
@@ -296,7 +306,7 @@
                 \fi%
             \fi%
 
-            % Layout
+            % Typeset the content of the second column
             \ifespbeamer@columnlayoutkeys@debug%
                 \layoutelement[debug]{#5}%
             \else%
@@ -307,6 +317,15 @@
         % Third element
         \ifx\relax#6\relax%
         \else%
+            % Debug the 2--3 gutter
+            \ifespbeamer@columnlayoutkeys@debug%
+                \begin{textblock*}{\espbeamer@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \elementheight{\hfill}%
+                \end{textblock*}%
+            \fi%%
+
+            % Calc position
             \setlength{\elementposy}{\contentposy}%
             \setlength{\elementheight}{\contentheight}%
             \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
@@ -353,7 +372,7 @@
                 \fi%
             \fi%
 
-            % Layout
+            % Typeset the content of the third column
             \ifespbeamer@columnlayoutkeys@debug%
                 \layoutelement[debug]{#7}%
             \else%
@@ -423,6 +442,7 @@
         \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom}%
 
         \ifespbeamer@rowlayoutkeys@debug%
+            \TPoptions{showboxes = true}%
             \debugmargins{}%
         \fi%
 
@@ -480,6 +500,8 @@
         % First element
         \setlength{\elementposy}{\contentposy}%  Record the top-left of the first row
         \setlength{\elementheight}{\espbeamer@rowlayout@toprowheight}%
+
+        % Typeset the content of the first row
         \ifespbeamer@rowlayoutkeys@debug%
             \layoutelement[debug]{#3}%
         \else%
@@ -489,8 +511,19 @@
         % Second element
         \ifx\relax#4\relax%
         \else%
+            % Debug the 1--2 gutter
+            \ifespbeamer@rowlayoutkeys@debug%
+                \begin{textblock*}{\elementwidth}(\elementposx, \elementposy + \elementheight)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \espbeamer@rowlayout@gutter{\hfill}%
+                \end{textblock*}%
+            \fi%%
+
+            % Calc position
             \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
             \setlength{\elementheight}{\espbeamer@rowlayout@middlerowheight}%
+
+            % Typeset the content of the second row
             \ifespbeamer@rowlayoutkeys@debug%
                 \layoutelement[debug]{#5}%
             \else%
@@ -501,8 +534,19 @@
         % Third element
         \ifx\relax#6\relax%
         \else%
+            % Debug the 2--3 gutter
+            \ifespbeamer@rowlayoutkeys@debug%
+                \begin{textblock*}{\elementwidth}(\elementposx, \elementposy + \elementheight)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \espbeamer@rowlayout@gutter{\hfill}%
+                \end{textblock*}%
+            \fi%
+
+            % Calc position
             \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
             \setlength{\elementheight}{\espbeamer@rowlayout@bottomrowheight}%
+
+            % Typeset the content of the third row
             \ifespbeamer@rowlayoutkeys@debug%
                 \layoutelement[debug]{#7}%
             \else%
