@@ -162,10 +162,12 @@
 \setbeamersize{text margin left=\espbeamer@border@left, text margin right=\espbeamer@border@right}%
 
 % Beamer specific divisions for elements of a theme. In theory, any entry can appear anywhere
-\usecolortheme{ESP}%
-\usefonttheme{ESP}%
-\useinnertheme{ESP}%
-\useoutertheme{ESP}%
+% \usepackage is the same as \useXtheme{ESP}, but does not expect the files to be at document root
+\usepackage{include/beamercolorthemeESP}%
+\usepackage{include/beamerfontthemeESP}%
+\usepackage{include/beamerinnerthemeESP}%
+\usepackage{include/beamerouterthemeESP}%
+
 
 % ESP Components
 \input{include/latex.sty}
