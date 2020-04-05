@@ -136,8 +136,8 @@
                 \fi%
 
                 \begin{minipage}[t][\espbeamer@footlogo@height]{\espbeamer@footlogo@width}%
-                    \usebeamercolor*{logo}%
-                    \usebeamerfont*{logo}%
+                    \usebeamercolor{logo}%
+                    \usebeamerfont{logo}%
                     \espbeamer@footlogos{}%
                 \end{minipage}%
             \end{textblock*}%
@@ -165,8 +165,6 @@
 
             \ifespbeamer@setfrontdecorations@debug%
                 \textblockcolour{RED!25!BACKGROUND}%
-            \else%
-                \textblockcolour{frametitle.bg}%
             \fi%
 
             \begin{minipage}[t][\espbeamer@slide@frametitle@height][t]{\espbeamer@slide@frametitle@width}%
@@ -183,8 +181,8 @@
                 \fi%
 
                 \begin{minipage}[t][\espbeamer@bio@height][t]{\espbeamer@bio@width}%
-                    \usebeamercolor*{bio}%
-                    \usebeamerfont*{bio}%
+                    \usebeamercolor{bio}%
+                    \usebeamerfont{bio}%
                     \espbeamer@bios%
                 \end{minipage}
             \end{textblock*}%

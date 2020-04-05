@@ -572,7 +572,7 @@
 \NewDocumentCommand{\setframetitle}{O{} O{}}%
 {%
     \usebeamerfont{frametitle}%
-    \usebeamercolor[fg]{frametitle}%
+    \usebeamercolor{frametitle}%
     \strut#1%
 %    % Insert the subtitle on the same line
 %    \ifx\insertframesubtitle\@empty%
@@ -584,7 +584,7 @@
 %    \fi
     % Insert the subtitle on a newline
     \usebeamerfont{framesubtitle}%
-    \usebeamercolor[fg]{framesubtitle}%
+    \usebeamercolor{framesubtitle}%
     \vspace{-2pt}%
     \newline%
     \strut#2%
