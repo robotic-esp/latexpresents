@@ -722,10 +722,7 @@
         % Left
         \ifdim\espbeamer@slide@frametitle@width>0pt%
             % Height
-            \setlength{\espbeamer@slide@topmatter@heightleft}%
-            {%
-                \espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle%
-            }%
+            \setlength{\espbeamer@slide@topmatter@heightleft}{\espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle}%
             % Width
             \setlength{\espbeamer@slide@topmatter@widthleft}{\espbeamer@slide@frametitle@width + \espbeamer@gutter@frametitle}%
         \else%
@@ -736,10 +733,7 @@
         % Right
         \ifdim\espbeamer@bio@width>0pt%
             % Height
-            \setlength{\espbeamer@slide@topmatter@heightright}%
-            {%
-                \espbeamer@bio@height + \espbeamer@gutter@bio%
-            }%
+            \setlength{\espbeamer@slide@topmatter@heightright}{\espbeamer@bio@height + \espbeamer@gutter@bio}%
             % Width
             \setlength{\espbeamer@slide@topmatter@widthright}{\espbeamer@gutter@bio + \espbeamer@bio@width}%
         \else%
@@ -766,10 +760,7 @@
         % Left
         \ifdim\espbeamer@footlogo@width>0pt%
             % Height
-            \setlength{\espbeamer@slide@bottommatter@heightleft}%
-            {%
-                \espbeamer@gutter@footlogo + \espbeamer@footlogo@height%
-            }%
+            \setlength{\espbeamer@slide@bottommatter@heightleft}{\espbeamer@gutter@footlogo + \espbeamer@footlogo@height}%
             % Width
             \setlength{\espbeamer@slide@bottommatter@widthleft}{\espbeamer@footlogo@width + \espbeamer@gutter@footlogo}%
         \else%
@@ -778,8 +769,8 @@
         \fi%
 
         % Right
-        \setlength{\espbeamer@slide@bottommatter@heightright}{\espbeamer@slide@pgnum@height}%
-        \setlength{\espbeamer@slide@bottommatter@widthright}{\espbeamer@slide@pgnum@width}%
+        \setlength{\espbeamer@slide@bottommatter@heightright}{\espbeamer@gutter@pgnum + \espbeamer@slide@pgnum@height}%
+        \setlength{\espbeamer@slide@bottommatter@widthright}{\espbeamer@gutter@pgnum + \espbeamer@slide@pgnum@width}%
 
         % Max height
         \ifdim\espbeamer@slide@bottommatter@heightleft>\espbeamer@slide@bottommatter@heightright%
