@@ -89,8 +89,15 @@
 %%%%%%%%%%%% VIDEO COMMANDS %%%%%%%%%%%%
 %%% In column video %%%
 %
-% Usage: \video[optional caption][noprogress,autostart,loop]{path/to/thumbnail}{path/to/video}
+% Usage: \video[optional caption][noprogress/progress, autostart/onclick, loop/once, center/nocenter]{path/to/thumbnail}{path/to/video}
 
+
+% Define keys
+\definecomplimentarykeys{espbeamer}{videokeys}{autostart}{onclick}%
+\definecomplimentarykeys{espbeamer}{videokeys}{loop}{once}%
+\definecomplimentarykeys{espbeamer}{videokeys}{noprogress}{progress}%
+\definecomplimentarykeys{espbeamer}{videokeys}{center}{nocenter}%
+%
 \ifespbeamer@adobe%
 \else
     % This is a hack because pdfpc (and most linux viewers) do not currently support \movie's autostart command
@@ -128,17 +135,13 @@
         %%% HREF HACK %%%
     \fi%
 \fi%
-
-% Define keys
-\definecomplimentarykeys{espbeamer}{videokeys}{autostart}{onclick}%
-\definecomplimentarykeys{espbeamer}{videokeys}{loop}{once}%
-\definecomplimentarykeys{espbeamer}{videokeys}{noprogress}{progress}%
+%
 \newlength{\espbeamer@video@captionheight}%
 \newsavebox{\espbeamer@video@captionbox}%
 \NewDocumentCommand{\video}{O{} O{} m m}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \presetkeys[espbeamer]{videokeys}{autostart=true, loop=true, noprogress=true}{}
+        \presetkeys[espbeamer]{videokeys}{autostart=true, loop=true, noprogress=true,center=true}{}
         \setkeys[espbeamer]{videokeys}{#2}%
 
         % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
@@ -210,8 +213,10 @@
         \fi%
 
         % Actually typeset the poster & video
-        \centering%
-        \vfil%
+        \ifespbeamer@videokeys@center%
+            \centering%
+            \vfil%
+        \fi%
 
         %If we are starting onclick, create a copy of the video slide showing only the poster.
         \ifespbeamer@videokeys@onclick%
@@ -381,7 +386,9 @@
         \fi%
 
         % Center vertically
-        \vfil%
+        \ifespbeamer@videokeys@center%
+            \vfil%
+        \fi%
     \endgroup%
 }%
 
