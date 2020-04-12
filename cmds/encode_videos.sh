@@ -28,10 +28,8 @@ for vid in "${INPUT}"/*; do
             mv -n "${vid}" "${srcvid}"
 
             echo "    Encoding ${srcvid} to ${trgtvid}."
-            # Encode the video
-            ffmpeg -n -hide_banner -loglevel error -i "${srcvid}" -c:a copy -c:v libx264 -preset veryslow -g "${keyframerate}" "${trgtvid}"
-            # Removing audio
-            # ffmpeg -n -nostats -i "${vid}" -an -c:v libx264 -preset veryslow -g "${fps}" "${trgtvid}"
+            # Encode the video. To keep use audio, use: "-c:a copy" instead of "-an"
+            ffmpeg -n -hide_banner -loglevel error -i "${srcvid}" -an -c:v libx264 -preset veryslow -g "${keyframerate}" "${trgtvid}"
         elif [[ "${vid: -8}" == "_enc.mp4" ]]; then
             echo "${vid}: Video appears to already be reencoded, will not proceed."
         elif [[ -f "${srcvid}" ]]; then
