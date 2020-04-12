@@ -5,6 +5,9 @@ if [[ $# -ne 1 ]]; then
     exit 2
 fi
 
+# Set the rate of keyframes as multiple of the framerate.
+keyframerate=5
+
 INPUT="${1%/*}"
 
 # -g is the key-frame rate, the lower the number, the more keyframes. (e.g., -g X creates a keyframe every X frames).
@@ -25,13 +28,8 @@ for vid in "${INPUT}"/*; do
             mv -n "${vid}" "${srcvid}"
 
             echo "    Encoding ${srcvid} to ${trgtvid}."
-            # Get the frame rate and evaluate to a real number.
-            fps=$(ffprobe -v 0 -of csv=p=0 -select_streams v:0 -show_entries stream=avg_frame_rate "${srcvid}")
-            # Encode with keyframes at a multiple of it
-            # Preserving audio            
-            ffmpeg -n -hide_banner -loglevel error -i "${srcvid}" -c:a copy -c:v libx264 -preset veryslow -g "${fps}" "${trgtvid}" 
-            # Removing audio
-            # ffmpeg -n -nostats -i "${vid}" -an -c:v libx264 -preset veryslow -g "${fps}" "${trgtvid}"
+            # Encode the video. To keep use audio, use: "-c:a copy" instead of "-an"
+            ffmpeg -n -hide_banner -loglevel error -i "${srcvid}" -an -c:v libx264 -preset veryslow -g "${keyframerate}" "${trgtvid}"
         elif [[ "${vid: -8}" == "_enc.mp4" ]]; then
             echo "${vid}: Video appears to already be reencoded, will not proceed."
         elif [[ -f "${srcvid}" ]]; then
