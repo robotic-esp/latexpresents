@@ -93,6 +93,9 @@
 %
 \NewDocumentCommand{\multicolumnlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
+    % Set the frame transition
+    \espbeamer@transition@cmd
+
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
             \presetkeys[espbeamer]{columnlayoutkeys}{debug=true}{}%
@@ -411,6 +414,9 @@
 %
 \NewDocumentCommand{\multirowlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
+    % Set the frame transition
+    \espbeamer@transition@cmd
+
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
             \presetkeys[espbeamer]{rowlayoutkeys}{debug=true}{}%

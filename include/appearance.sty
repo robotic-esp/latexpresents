@@ -1,4 +1,33 @@
 %%%%%%%%%%%% APPERANCE COMMANDS %%%%%%%%%%%%
+%%% SLIDE TRANSITIONS %%%
+% Require pdfpc >= 4.5.0
+\newcommand*{\espbeamer@transition@cmd}
+{%
+    \ifx\espbeamer@transition@time\empty%
+        \ifx\espbeamer@transition@angle\empty%
+            \espbeamer@transition@effect%
+        \else%
+            \espbeamer@transition@effect[direction=\espbeamer@transition@angle]%
+        \fi%
+    \else%
+        \ifx\espbeamer@transition@angle\empty%
+            \espbeamer@transition@effect[duration=\espbeamer@transition@time]%
+        \else%
+            \espbeamer@transition@effect[duration=\espbeamer@transition@time,direction=\espbeamer@transition@angle]%
+        \fi%
+    \fi%
+}%
+% effect
+\newcommand*{\espbeamer@transition@effect}{}%
+\newcommand*{\settransitioneffect}[1]{\renewcommand*{\espbeamer@transition@effect}{#1}}%
+% duration
+\newcommand*{\espbeamer@transition@time}{}%
+\newcommand*{\settransitiontime}[1]{\renewcommand*{\espbeamer@transition@time}{#1}}%
+% direction
+\newcommand*{\espbeamer@transition@angle}{}%
+\newcommand*{\settransitionangle}[1]{\renewcommand*{\espbeamer@transition@angle}{#1}}%
+%%% SLIDE TRANSITIONS %%%
+
 %%% UNDERLINE %%%
 %From: https://alexwlchan.net/2017/10/latex-underlines/
 \renewcommand{\ULdepth}{1.45pt}
