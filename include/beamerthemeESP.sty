@@ -184,14 +184,14 @@
 
 
 %%%%%%%%%%%% DOCUMENT INIT %%%%%%%%%%%%
+% Set default transitions
+\settransitioneffect{\transfade}
+\settransitiontime{0.2}
+\settransitionangle{}
+
 % Package initialization run at \begin{document}
 \AtBeginDocument%
 {%
-    % Set default transitions
-    \settransitioneffect{\transfade}
-    \settransitiontime{0.2}
-    \settransitionangle{}
-
     % Load logos for theme
     \ifespbeamer@dark%
         \addlogo[logos/Oxford_rect_rev_v300px.png]{logos/Oxford_rev_300px.png}%

@@ -3,17 +3,21 @@
 % Require pdfpc >= 4.5.0
 \newcommand*{\espbeamer@transition@cmd}
 {%
-    \ifx\espbeamer@transition@time\empty%
-        \ifx\espbeamer@transition@angle\empty%
-            \espbeamer@transition@effect%
-        \else%
-            \espbeamer@transition@effect[direction=\espbeamer@transition@angle]%
-        \fi%
+    \ifx\espbeamer@transition@effect\empty%
+        \transreplace%
     \else%
-        \ifx\espbeamer@transition@angle\empty%
-            \espbeamer@transition@effect[duration=\espbeamer@transition@time]%
+        \ifx\espbeamer@transition@time\empty%
+            \ifx\espbeamer@transition@angle\empty%
+                \espbeamer@transition@effect%
+            \else%
+                \espbeamer@transition@effect[direction=\espbeamer@transition@angle]%
+            \fi%
         \else%
-            \espbeamer@transition@effect[duration=\espbeamer@transition@time,direction=\espbeamer@transition@angle]%
+            \ifx\espbeamer@transition@angle\empty%
+                \espbeamer@transition@effect[duration=\espbeamer@transition@time]%
+            \else%
+                \espbeamer@transition@effect[duration=\espbeamer@transition@time,direction=\espbeamer@transition@angle]%
+            \fi%
         \fi%
     \fi%
 }%
