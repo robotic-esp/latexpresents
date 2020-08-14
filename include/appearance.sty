@@ -30,6 +30,8 @@
 % direction
 \newcommand*{\espbeamer@transition@angle}{}%
 \newcommand*{\settransitionangle}[1]{\renewcommand*{\espbeamer@transition@angle}{#1}}%
+% automatic advancement (not really slide transition, despite what Beamer says)
+\newcommand*{\autoadvance}[1]{\transduration{#1}}%
 %%% SLIDE TRANSITIONS %%%
 
 %%% UNDERLINE %%%
