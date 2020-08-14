@@ -25,42 +25,32 @@
 
 
 
-%%%%%%%%%%%% CONTENT-DRIVEN LAYOUTS %%%%%%%%%%%%
-%%% ONE-COLUMN %%%
-\NewDocumentCommand{\imagecenter}{O{} O{} m O{}}{\onecolumnfull[#4]{\image[#1][#2]{#3}}}% Usage: see \image + [layout flags]
-\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m O{}}{\onecolumnfull[#5]{\pdfpage[#1][#2]{#3}{#4}}}% Usage: see \pdfpage + [layout flags]
-\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m O{}}{\onecolumnfull[#5]{\video[#1][#2]{#3}{#4}}}% Usage: see \video + [layout flags]
-\NewDocumentCommand{\envleft}{O{itemize} +m O{}}{\onecolumnfull[#3]{\begin{#1}#2\end{#1}}}% Usage: [environment]{environment content}[layout flags]
-
-%%% TWO-COLUMNS %%%
-\NewDocumentCommand{\envleftimageright}{O{itemize} +m O{} O{} m O{}}{\twocolumneven[raggedtop,raggedbottom,#6]{\begin{#1}#2\end{#1}}{\image[#3][#4]{#5}}}% Usage: [environment]{environment content}[\image arg1][\image arg2]{\image arg3}[layout flags]
-\NewDocumentCommand{\envleftpdfpageright}{O{itemize} +m O{} O{} m m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\begin{#1}#2\end{#1}}{\pdfpage[#3][#4]{#5}{#6}}}% Usage: [environment]{environment content}[\pdfpage arg1][\pdfpage arg2]{\pdfpage arg3}{\pdfpage arg4}[layout flags]
-\NewDocumentCommand{\envleftvideoright}{O{itemize} +m O{} O{noprogress,autostart,loop} m m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\begin{#1}#2\end{#1}}{\video[#3][#4]{#5}{#6}}}% Usage: [environment]{environment content}[\video arg1][\video arg2]{\video arg3}{\video arg4}[layout flags]
-\NewDocumentCommand{\imageleftenvright}{O{} O{} m O{itemize} +m O{}}{\twocolumneven[raggedtop,raggedbottom,#6]{\image[#1][#2]{#3}}{\begin{#4}#5\end{#4}}}% Usage: [\image arg1][\image arg2]{\image arg3}[environment]{environment content}[layout flags]
-\NewDocumentCommand{\pdfpageleftenvright}{O{} O{} m m O{itemize} +m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\pdfpage[#1][#2]{#3}{#4}}{\begin{#5}#6\end{#5}}}% Usage: [\pdfpage arg1][\pdfpage arg2]{\pdfpage arg3}{\pdfpage arg4}[environment]{environment content}[layout flags]
-\NewDocumentCommand{\videoleftenvright}{O{itemize} +m O{} O{noprogress,autostart,loop} m m O{itemize} +m O{}}{\twocolumneven[raggedtop,raggedbottom,#7]{\video[#1][#2]{#3}{#4}}{\begin{#5}#6\end{#5}}}% Usage: [\video arg1][\video arg2]{\video arg3}{\video arg4}[environment]{environment content}[layout flags]
-\NewDocumentCommand{\envleftright}{O{itemize} +m O{itemize} +m O{}}{\twocolumneven[#5]{\begin{#1}#2\end{#1}}{\begin{#3}#4\end{#3}}}% Usage: [environment]{environment content}[environment]{environment content}[layout flags]
-%%%%%%%%%%%% END CONTENT-DRIVEN LAYOUTS %%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%% SIMPLIFIED LAYOUTS %%%%%%%%%%%%
+%%%%%%%%%%%% LAYOUTS %%%%%%%%%%%%
 %%% ONE-COLUMN LAYOUTS %%%
-\NewDocumentCommand{\onecolumnfull}{O{} +m}{\multicolumnlayout[#1]{1.0}{#2}}%
+\NewDocumentCommand{\onecolumnfull}{O{} +m}{\multicolumnlayout[#1]{1.0}{#2}}% Usage: [layout flags]{content}
+\NewDocumentCommand{\imagecenter}{O{} O{} m O{}}{\onecolumnfull[#4]{\image[#1][#2]{#3}}}% Usage: [\image opt1][\image opt2]{\image args}[layout flags]
+\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m O{}}{\onecolumnfull[#5]{\pdfpage[#1][#2]{#3}{#4}}}% Usage: [\pdfpage opt1][\pdfpage opt2]{\pdfpage arg1}{\pdfpage arg1}[layout flags]
+\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m O{}}{\onecolumnfull[#5]{\video[#1][#2]{#3}{#4}}}% Usage: [\video opt1][\video opt2]{\video arg1}{\video arg2}[layout flags]
 
 %%% TWO-COLUMN LAYOUTS %%%
-\NewDocumentCommand{\twocolumneven}{O{} +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.5][#3]}%
-\NewDocumentCommand{\twocolumnbigleft}{O{} +m +m}{\multicolumnlayout[#1]{0.6666}{#2}[0.3333][#3]}%
-\NewDocumentCommand{\twocolumnbigright}{O{} +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.6666][#3]}%
+\NewDocumentCommand{\twocolumneven}{O{} +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.5][#3]}% Usage: [layout flags]{left content}{right content}
+\NewDocumentCommand{\twocolumnbigleft}{O{} +m +m}{\multicolumnlayout[#1]{0.6666}{#2}[0.3333][#3]}% Usage: [layout flags]{left content}{right content}
+\NewDocumentCommand{\twocolumnbigright}{O{} +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.6666][#3]}% Usage: [layout flags]{left content}{right content}
 %%% END TWO-COLUMN LAYOUTS %%%
 
 %%% THREE-COLUMN LAYOUTS %%%
-\NewDocumentCommand{\threecolumneven}{O{} +m +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.3333][#3][0.3333][#4]}%
-\NewDocumentCommand{\threecolumnbigleft}{O{} +m +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.25][#3][0.25][#4]}%
-\NewDocumentCommand{\threecolumnbigmiddle}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.5][#3][0.25][#4]}%
-\NewDocumentCommand{\threecolumnbigright}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.25][#3][0.5][#4]}%
+\NewDocumentCommand{\threecolumneven}{O{} +m +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.3333][#3][0.3333][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
+\NewDocumentCommand{\threecolumnbigleft}{O{} +m +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.25][#3][0.25][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
+\NewDocumentCommand{\threecolumnbigmiddle}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.5][#3][0.25][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
+\NewDocumentCommand{\threecolumnbigright}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.25][#3][0.5][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
 %%% END THREE-COLUMN LAYOUTS %%%
-%%%%%%%%%%%% END SIMPLIFIED LAYOUTS %%%%%%%%%%%%
+
+%%% TWO-ROW LAYOUTS %%%
+\NewDocumentCommand{\tworoweven}{O{} +m +m}{\multirowlayout[#1]{0.5}{#2}[0.5][#3]}% Usage: [layout flags]{top content}{bottom content}
+\NewDocumentCommand{\tworowbigtop}{O{} +m +m}{\multirowlayout[#1]{0.6666}{#2}[0.3333][#3]}% Usage: [layout flags]{top content}{bottom content}
+\NewDocumentCommand{\tworowbigbottom}{O{} +m +m}{\multirowlayout[#1]{0.3333}{#2}[0.6666][#3]}% Usage: [layout flags]{top content}{bottom content}
+%%% END TWO-ROW LAYOUTS %%%
+%%%%%%%%%%%% END LAYOUTS %%%%%%%%%%%%
 
 
 
