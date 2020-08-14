@@ -30,7 +30,9 @@
             \else%
                 \usebeamercolor*{titlelogo}%
                 \usebeamerfont*{titlelogo}%
+                \hfil%
                 \espbeamer@titlelogos{}%
+                \hfil%
             \fi%
         \fi%
         \vfill%
@@ -42,13 +44,17 @@
     }%
     [0.4]%
     [%
-        \usebeamerfont{subtitle}%
-        \usebeamercolor{subtitle}%
+        \usebeamerfont{author}%
+        \usebeamercolor{author}%
         \vskip0.15\baselineskip%
         \rule{\elementwidth}{3pt}%
         \vskip0.15\baselineskip%
         \strut\insertauthor{}\\%
+        \usebeamerfont{institute}%
+        \usebeamercolor{institute}%
         \strut\insertinstitute{}\\%
+        \usebeamerfont{date}%
+        \usebeamercolor{date}%
         \strut\insertdate{}%
     ]%
 }%
@@ -124,7 +130,7 @@
     %[ball] Uses little balls as item markers.
 
 \setbeamertemplate{itemize item}[circle]% First-level markers
-\setbeamertemplate{itemize subitem}{$\circ$}% Second-level
+\setbeamertemplate{itemize subitem}{\setbeamercolor{math text inlined}{parent=subitem}$\circ$}% Second-level
 \setbeamertemplate{itemize subsubitem}{--}% Third-level
 
 %%Enumerate:

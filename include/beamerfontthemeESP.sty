@@ -41,9 +41,9 @@
 \setbeamerfont{title}{parent=structure,size=\Large}
 \setbeamerfont{subtitle}{size=\normalsize,parent=title}% No doc, found in example themes.
 \setbeamerfont{titlegraphic}{}% No doc, found in example themes
-\setbeamerfont{author}{shape=\itshape}
-\setbeamerfont{institute}{family=\rmfamily, series=\bfseries, size=\normalsize}
-\setbeamerfont{date}{}
+\setbeamerfont{author}{parent=title,size=\large}
+\setbeamerfont{institute}{parent=author,size=\normalsize}
+\setbeamerfont{date}{parent=institute}
 
 
 %%% Lists %%%
