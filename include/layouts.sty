@@ -50,6 +50,10 @@
 \NewDocumentCommand{\tworowbigtop}{O{} +m +m}{\multirowlayout[#1]{0.6666}{#2}[0.3333][#3]}% Usage: [layout flags]{top content}{bottom content}
 \NewDocumentCommand{\tworowbigbottom}{O{} +m +m}{\multirowlayout[#1]{0.3333}{#2}[0.6666][#3]}% Usage: [layout flags]{top content}{bottom content}
 %%% END TWO-ROW LAYOUTS %%%
+
+%%% THREE-ROW LAYOUTS %%%
+\NewDocumentCommand{\threeroweven}{O{} +m +m +m}{\multirowlayout[#1]{0.3333}{#2}[0.3333][#3][0.3333][#4]}% Usage: [layout flags]{top content}{middle content}{bottom content}
+%%% END THREE-ROW LAYOUTS %%%
 %%%%%%%%%%%% END LAYOUTS %%%%%%%%%%%%
 
 
@@ -744,9 +748,9 @@
             \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@slide@topmatter@heightright}%
         \fi%
     \else%
-        \setlength{\espbeamer@slide@topmatter@heightleft}{\espbeamer@border@top}%
-        \setlength{\espbeamer@slide@topmatter@heightright}{\espbeamer@border@top}%
-        \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@border@top}%
+        \setlength{\espbeamer@slide@topmatter@heightleft}{0pt}%
+        \setlength{\espbeamer@slide@topmatter@heightright}{0pt}%
+        \setlength{\espbeamer@slide@topmatter@height}{0pt}%
         \setlength{\espbeamer@slide@topmatter@widthleft}{\paperwidth}%
         \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
     \fi%
@@ -775,9 +779,9 @@
             \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@slide@bottommatter@heightright}%
         \fi%
     \else%
-        \setlength{\espbeamer@slide@bottommatter@heightleft}{\espbeamer@border@bottom}%
-        \setlength{\espbeamer@slide@bottommatter@heightright}{\espbeamer@border@bottom}%
-        \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@border@bottom}%
+        \setlength{\espbeamer@slide@bottommatter@heightleft}{0pt}%
+        \setlength{\espbeamer@slide@bottommatter@heightright}{0pt}%
+        \setlength{\espbeamer@slide@bottommatter@height}{0pt}%
         \setlength{\espbeamer@slide@bottommatter@widthleft}{\paperwidth}%
         \setlength{\espbeamer@slide@bottommatter@widthright}{0pt}%
     \fi%
