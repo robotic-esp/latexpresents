@@ -44,6 +44,12 @@
     \RequirePackage{media9}%
 \else%
     \RequirePackage{multimedia}%
+    % Hide pdfpc notes in handouts:
+    \ifespbeamer@handout%
+        \RequirePackage[hidenotes]{pdfpc}%
+    \else%
+        \RequirePackage{pdfpc}%
+    \fi%
 \fi%
 
 \textblockcolour{}%

@@ -31,7 +31,13 @@
 \newcommand*{\espbeamer@transition@angle}{}%
 \newcommand*{\settransitionangle}[1]{\renewcommand*{\espbeamer@transition@angle}{#1}}%
 % automatic advancement (not really slide transition, despite what Beamer says)
-\newcommand*{\autoadvance}[1]{\transduration{#1}}%
+\newcommand*{\autoadvance}[1]{%
+    \transduration{#1}%
+    \ifespbeamer@adobe%
+    \else%
+        \pdfpcnote{\\***AUTO (#1s)***\\}%
+    \fi%
+}%
 %%% SLIDE TRANSITIONS %%%
 
 %%% UNDERLINE %%%
