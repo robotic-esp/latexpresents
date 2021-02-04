@@ -33,6 +33,146 @@
     \vfil%
 }%
 
+%%% Image pairs %%%
+%
+% Usage: \imagestopbottom[optional top caption][optional extra top include options]{path/to/top/image}[optional bottom caption][optional extra bottom include options]{path/to/bottom/image}
+\newlength{\espbeamer@imagestopbottom@captionheighttop}%
+\newsavebox{\espbeamer@imagestopbottom@captionboxtop}%
+\newlength{\espbeamer@imagestopbottom@captionheightbottom}%
+\newsavebox{\espbeamer@imagestopbottom@captionboxbottom}%
+\newlength{\espbeamer@imagestopbottom@imageheight}%
+\NewDocumentCommand{\imagestopbottom}{O{} O{} m O{} O{} m}%
+{%
+    \setlength{\espbeamer@imagestopbottom@imageheight}{0.5\elementheight - 0.5\espbeamer@gutter@row}%
+
+    % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+    \ifx\relax#1\relax%
+        \setlength{\espbeamer@imagestopbottom@captionheighttop}{0pt}%
+    \else%
+        \savebox{\espbeamer@imagestopbottom@captionboxtop}%
+        {%
+            \begin{minipage}{\elementwidth}%
+                \usebeamerfont{caption}%
+                \usebeamercolor{caption}%
+                \centering%
+                \strut#1%
+            \end{minipage}%
+        }%
+        \settototalheight{\espbeamer@imagestopbottom@captionheighttop}{\usebox{\espbeamer@imagestopbottom@captionboxtop}}%
+    \fi%
+    \ifx\relax#4\relax%
+        \setlength{\espbeamer@imagestopbottom@captionheightbottom}{0pt}%
+    \else%
+        \savebox{\espbeamer@imagestopbottom@captionboxbottom}%
+        {%
+            \begin{minipage}{\elementwidth}%
+                \usebeamerfont{caption}%
+                \usebeamercolor{caption}%
+                \centering%
+                \strut#4%
+            \end{minipage}%
+        }%
+        \settototalheight{\espbeamer@imagestopbottom@captionheightbottom}{\usebox{\espbeamer@imagestopbottom@captionboxbottom}}%
+    \fi%
+
+    \vfil%
+    \centering%
+    \includegraphics[width=\elementwidth,height=\espbeamer@imagestopbottom@imageheight -  \espbeamer@imagestopbottom@captionheighttop,keepaspectratio,#2]{#3}%
+    \ifx\relax#1\relax%
+    \else%
+        \usebeamerfont{caption}\\%
+        \usebox{\espbeamer@imagestopbottom@captionboxtop}%
+    \fi%
+    %I don't exactly know why this -1pt is necessary.
+    \vskip-1pt%
+    \vfil%
+    \vskip\espbeamer@gutter@row%
+    \vfil%
+    \includegraphics[width=\elementwidth,height=\espbeamer@imagestopbottom@imageheight - \espbeamer@imagestopbottom@captionheightbottom,keepaspectratio,#5]{#6}%
+    \ifx\relax#4\relax%
+    \else%
+        \usebeamerfont{caption}\\%
+        \usebox{\espbeamer@imagestopbottom@captionboxbottom}%
+    \fi%
+    \vfil%
+}%
+%
+% Usage: \imagesleftright[optional left caption][optional extra left include options]{path/to/left/image}[optional right caption][optional extra right include options]{path/to/right/image}
+\newlength{\espbeamer@imagesleftright@captionheightleft}%
+\newsavebox{\espbeamer@imagesleftright@captionboxleft}%
+\newlength{\espbeamer@imagesleftright@captionheightright}%
+\newsavebox{\espbeamer@imagesleftright@captionboxright}%
+\newlength{\espbeamer@imagesleftright@imagewidth}%
+\NewDocumentCommand{\imagesleftright}{O{} O{} m O{} O{} m}%
+{%
+    %0.505 is to keep rounding from making the images overflow to a new line.
+    \setlength{\espbeamer@imagesleftright@imagewidth}{0.5\elementwidth - 0.505\espbeamer@gutter@column}%
+
+    % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+    \ifx\relax#1\relax%
+        \setlength{\espbeamer@imagesleftright@captionheightleft}{0pt}%
+    \else%
+        \savebox{\espbeamer@imagesleftright@captionboxleft}%
+        {%
+            \begin{minipage}{\espbeamer@imagesleftright@imagewidth}%
+                \usebeamerfont{caption}%
+                \usebeamercolor{caption}%
+                \centering%
+                \strut#1%
+            \end{minipage}%
+        }%
+        \settototalheight{\espbeamer@imagesleftright@captionheightleft}{\usebox{\espbeamer@imagesleftright@captionboxleft}}%
+    \fi%
+    \ifx\relax#4\relax%
+        \setlength{\espbeamer@imagesleftright@captionheightright}{0pt}%
+    \else%
+        \savebox{\espbeamer@imagesleftright@captionboxright}%
+        {%
+            \begin{minipage}{\espbeamer@imagesleftright@imagewidth}%
+                \usebeamerfont{caption}%
+                \usebeamercolor{caption}%
+                \centering%
+                \strut#4%
+            \end{minipage}%
+        }%
+        \settototalheight{\espbeamer@imagesleftright@captionheightright}{\usebox{\espbeamer@imagesleftright@captionboxright}}%
+    \fi%
+
+    \vfil%
+    \centering%
+    \includegraphics[width=\espbeamer@imagesleftright@imagewidth,height=\elementheight - \espbeamer@imagesleftright@captionheightleft,keepaspectratio,#2]{#3}%
+    \hfil%
+    \hskip\espbeamer@gutter@column%
+    \hfil%
+    \includegraphics[width=\espbeamer@imagesleftright@imagewidth,height=\elementheight - \espbeamer@imagesleftright@captionheightright,keepaspectratio,#5]{#6}%
+    \ifx\relax#1\relax%
+    \else%
+        \usebeamerfont{caption}\\%
+        \usebox{\espbeamer@imagesleftright@captionboxleft}%
+    \fi%
+    \ifx\relax#4\relax%
+        \ifx\relax#1\relax%
+        \else%
+            \hfil%
+            \hspace{\espbeamer@gutter@column}%
+            \hfil%
+            \hspace{\espbeamer@imagesleftright@imagewidth}%
+            \strut%
+        \fi%
+    \else%
+        \usebeamerfont{caption}%
+        \ifx\relax#1\relax%
+            \\%
+            \hspace{\espbeamer@imagesleftright@imagewidth}%
+        \fi%
+        \hfil%
+        \hspace{\espbeamer@gutter@column}%
+        \hfil%
+        \usebox{\espbeamer@imagesleftright@captionboxright}%
+    \fi%
+    \vfil%
+}%
+
 %%% In column page from a pdf %%%
 %
 % Usage: \pdfpage[optional caption][optional extra include options]{page num}{path/to/image}
@@ -40,6 +180,18 @@
 {%
     \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
     \image[#1][#2,page=#3]{#4}%
+}%
+% Usage: \pdfpagestopbottom[optional top caption][optional extra top include options]{top page num}{path/to/top/image}[optional bottom caption][optional extra bottom include options]{bottom page num}{path/to/bottom/image}
+\NewDocumentCommand{\pdfpagestopbottom}{O{} O{} m m O{} O{} m m}%
+{%
+    \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
+    \imagestopbottom[#1][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
+}%
+% Usage: \pdfpagesleftright[optional left caption][optional extra left include options]{left page num}{path/to/left/image}[optional right caption][optional extra right include options]{right page num}{path/to/right/image}
+\NewDocumentCommand{\pdfpagesleftright}{O{} O{} m m O{} O{} m m}%
+{%
+    \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
+    \imagesleftright[#1][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
 }%
 
 %%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
