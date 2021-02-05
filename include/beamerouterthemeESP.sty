@@ -15,13 +15,8 @@
 %%% Header/Footer %%%
 \setbeamertemplate{headline}{}% - Rendered immediately after \begin{document} to calculate a height that is then used for the rest of the presentation.
 \setbeamertemplate{footline}{}% - Rendered immediately after \begin{document} to calculate a height that is then used for the rest of the presentation.
-\setbeamertemplate{page number in head/foot}[pagenumber]% - The ESP theme actually renders this in the right-sidebar, but makes use of this standard template to do so.
-    %[default] The default option is empty.
-    %[framenumber] This option inserts the current frame number.
-    %[totalframenumber] In addition to the current frame number, this option also shows the total number of frames.
-    %[appendixframenumber] This options replicates the behaviour of the appendixnumberbeamer package. In the main part before the \appendix command the current frame number and the total number of frames in the main part is displayed. In the appendix only the frame number within the appendix and the total number of frames in the appendix are shown.
-    %[pagenumber] Shows the current page number.
-    %[totalpagenumber] In addition to the current page number also the total page number is displayed.
+%\setbeamertemplate{page number in head/foot}[pagenumber]% - Exposed through a package option, see \AtBeginDocument in beamerthemeESP.sty.
+
 %Sections (not used):
 \setbeamertemplate{section in head/foot}{}%
 \setbeamertemplate{section in head/foot shaded}{}%[default][20]%[default][⟨percentage⟩]

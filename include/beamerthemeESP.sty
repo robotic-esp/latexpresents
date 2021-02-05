@@ -18,6 +18,9 @@
 % Make a handout or presentation
 \DeclareBoolOption[false]{handout}% espbeamer@handout
 \DeclareComplementaryOption{present}{handout}%
+% Configure frame-numbering scheme
+\DeclareBoolOption[true]{pagenumbers}% espbeamer@pagenumbers
+\DeclareComplementaryOption{nonumbers}{pagenumbers}%
 % Greedily increase height of columns, when possible
 \DeclareBoolOption[false]{raggedtop}% espbeamer@raggedtop
 \DeclareComplementaryOption{alignedtop}{raggedtop}%
@@ -208,6 +211,20 @@
         \addlogo{logos/ORI_v300px.png}%
         \addlogo{logos/ESP_v300px.png}%
     \fi%
+
+    % Set the slide numbering (currently only every pdf page or none)
+    \ifespbeamer@pagenumbers%
+        \setbeamertemplate{page number in head/foot}[pagenumber]% - The ESP theme actually renders this in the right-sidebar, but makes use of this standard template to do so.
+        %[default] The default option is empty.
+        %[framenumber] This option inserts the current frame number.
+        %[totalframenumber] In addition to the current frame number, this option also shows the total number of frames.
+        %[appendixframenumber] This options replicates the behaviour of the appendixnumberbeamer package. In the main part before the \appendix command the current frame number and the total number of frames in the main part is displayed. In the appendix only the frame number within the appendix and the total number of frames in the appendix are shown.
+        %[pagenumber] Shows the current page number.
+        %[totalpagenumber] In addition to the current page number also the total page number is displayed.
+    \else%
+        \setbeamertemplate{page number in head/foot}[default]
+    \fi%
+
     % Save as default
     \savelogos{}%
 }
