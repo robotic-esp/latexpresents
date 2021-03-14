@@ -88,9 +88,6 @@
 %
 \NewDocumentCommand{\multicolumnlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
-    % Set the frame transition
-    \espbeamer@transition@cmd
-
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
             \presetkeys[espbeamer]{columnlayoutkeys}{debug=true}{}%
@@ -109,6 +106,13 @@
         \fi%
         \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@column}{}
         \setkeys[espbeamer]{columnlayoutkeys}{#1}%
+
+        % Set the frame transition
+        \ifespbeamer@columnlayoutkeys@debug%
+            \espbeamer@transition@cmd[debug]%
+        \else%
+            \espbeamer@transition@cmd%
+        \fi%
 
         % These only apply to this call because of the begingroup
         \ifespbeamer@rowlayoutkeys@noborder%
@@ -409,9 +413,6 @@
 %
 \NewDocumentCommand{\multirowlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
-    % Set the frame transition
-    \espbeamer@transition@cmd
-
     \begingroup% Sets "scope" so settings/keys don't leak.
         \ifespbeamer@debug%
             \presetkeys[espbeamer]{rowlayoutkeys}{debug=true}{}%
@@ -420,6 +421,13 @@
         \fi%
         \presetkeys[espbeamer]{rowlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@row}{}
         \setkeys[espbeamer]{rowlayoutkeys}{#1}%
+
+        % Set the frame transition
+        \ifespbeamer@rowlayoutkeys@debug%
+            \espbeamer@transition@cmd[debug]%
+        \else%
+            \espbeamer@transition@cmd%
+        \fi%
 
         % These only apply to this call because of the begingroup
         \ifespbeamer@rowlayoutkeys@noborder%

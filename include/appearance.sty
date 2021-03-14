@@ -1,22 +1,60 @@
 %%%%%%%%%%%% APPERANCE COMMANDS %%%%%%%%%%%%
 %%% SLIDE TRANSITIONS %%%
 % Require pdfpc > 4.4.0
-\newcommand*{\espbeamer@transition@cmd}
+\definecomplimentarykeys{espbeamer}{transition}{nodebug}{debug}%
+\NewDocumentCommand{\espbeamer@transition@cmd}{O{}}
 {%
+    \ifespbeamer@debug%
+        \presetkeys[espbeamer]{transition}{debug=true}{}%
+    \else%
+        \presetkeys[espbeamer]{transition}{debug=false}{}%
+    \fi%
+    \setkeys[espbeamer]{transition}{#1}%
+
     \ifx\espbeamer@transition@effect\empty%
         \transreplace%
+        \ifespbeamer@transition@debug%
+            \ifespbeamer@adobe%
+            \else%
+                \pdfpcnote{\\ `\detokenize{\\transreplace}\\}%
+            \fi%
+        \fi%
     \else%
         \ifx\espbeamer@transition@time\empty%
             \ifx\espbeamer@transition@angle\empty%
                 \espbeamer@transition@effect%
+                \ifespbeamer@transition@debug%
+                    \ifespbeamer@adobe%
+                    \else%
+                        \pdfpcnote{\\ `\espbeamer@transition@effect`\\}%
+                    \fi%
+                \fi%
             \else%
                 \espbeamer@transition@effect[direction=\espbeamer@transition@angle]%
+                \ifespbeamer@transition@debug%
+                    \ifespbeamer@adobe%
+                    \else%
+                        \pdfpcnote{\\ `\espbeamer@transition@effect[direction=\espbeamer@transition@angle]`\\}%
+                    \fi%
+                \fi%
             \fi%
         \else%
             \ifx\espbeamer@transition@angle\empty%
                 \espbeamer@transition@effect[duration=\espbeamer@transition@time]%
+                \ifespbeamer@transition@debug%
+                    \ifespbeamer@adobe%
+                    \else%
+                        \pdfpcnote{\\ `\espbeamer@transition@effect[duration=\espbeamer@transition@time]`\\}%
+                    \fi%
+                \fi%
             \else%
                 \espbeamer@transition@effect[duration=\espbeamer@transition@time,direction=\espbeamer@transition@angle]%
+                \ifespbeamer@transition@debug%
+                    \ifespbeamer@adobe%
+                    \else%
+                        \pdfpcnote{\\ `\espbeamer@transition@effect[duration=\espbeamer@transition@time,direction=\espbeamer@transition@angle]`\\}%
+                    \fi%
+                \fi%
             \fi%
         \fi%
     \fi%
