@@ -1,3 +1,24 @@
+%%%%%%%%%%%% SECTIONING %%%%%%%%%%%%
+\newcommand{\backupslides}[1]{\extraslides{#1}}%
+\newcommand{\extraslides}[1]%
+{%
+    \ifespbeamer@handout%
+    \else%
+        \appendix
+        \begin{frame}
+            \onecolumnfull[nodecorations]%
+            {%
+                \vfil%
+                \centering
+                \Huge\textbf{Extra Slides}
+                \vfil%
+            }%
+        \end{frame}
+        #1
+    \fi%
+}%
+%%%%%%%%%%%% END SECTIONING %%%%%%%%%%%%
+
 %%%%%%%%%%%% FRAME ENVIRONMENTS %%%%%%%%%%%%
 %A frame for full screen media.
 \newenvironment{fullframe}%
