@@ -45,6 +45,8 @@
 %For media (depending on optional flag)
 \ifespbeamer@adobe%
     \RequirePackage{media9}%
+    % Hide any pdfpcnotes:
+    \newcommand{\pdfpcnote}[1]{}
 \else%
     \RequirePackage{multimedia}%
     % Hide pdfpc notes in handouts:
