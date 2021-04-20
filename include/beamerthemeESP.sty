@@ -45,25 +45,37 @@
 \RequirePackage[normalem]{ulem}% For a custom definition of \underline that looks better, with option to not redefine \emph.
 \RequirePackage{datetime2}% Better date formatting, ISO by default.
 \uselengthunit{pt}% Unit for \printlength
-%For media (depending on optional flag)
+
+%For media (depending on adobe/pdfpc option)
 \ifespbeamer@adobe%
     \RequirePackage{media9}%
-    % Hide any pdfpcnotes:
-    \newcommand{\pdfpcnote}[1]{}
 \else%
     \RequirePackage{multimedia}%
+\fi%
+
+% Speaker notes (depending on present/handout option)
+% (Unclear if adobe/pdfpc option should use different approaches)
+\ifespbeamer@handout%
+    % Hide any notes (as done with \RequirePackage[hidenotes]{pdfpc}):
+    \newcommand{\say}[1]{}%
+\else%
     \IfFileExists{pdfpc.sty}
     {%
-        % Hide pdfpc notes in handouts:
-        \ifespbeamer@handout%
-            \RequirePackage[hidenotes]{pdfpc}%
-        \else%
-            \RequirePackage{pdfpc}%
-        \fi%
+        \RequirePackage{pdfpc}%
+        \newcommand{\say}[1]{\pdfpcnote{##1}}%
     }%
     {%
-        % Hide any pdfpcnotes:
-        \newcommand{\pdfpcnote}[1]{}
+        % This is a version of \pdfpcnote copied from pdfpc.sty (#1 changed to ##1).
+        \RequirePackage{hyperxmp}
+        \newcommand{\say}[1]{%
+            \edef\\{\string\n}%
+            \pdfannot width 0pt height 0pt depth 0pt {%
+                /Subtype /Text%
+                /Contents (##1)%
+                /F 6%
+            }%
+            \relax%
+        }%
     }%
 \fi%
 
