@@ -48,7 +48,9 @@
 
 %%%%%%%%%%%% LAYOUTS %%%%%%%%%%%%
 %%% ONE-COLUMN LAYOUTS %%%
+\NewDocumentCommand{\oneroweven}{O{} +m}{\onecolumnfull[#1]{#2}}% Usage: [layout flags]{content}
 \NewDocumentCommand{\onerowfull}{O{} +m}{\onecolumnfull[#1]{#2}}% Usage: [layout flags]{content}
+\NewDocumentCommand{\onecolumneven}{O{} +m}{\onecolumnfull[#1]{#2}}% Usage: [layout flags]{content}
 \NewDocumentCommand{\onecolumnfull}{O{} +m}{\multicolumnlayout[#1]{1.0}{#2}}% Usage: [layout flags]{content}
 \NewDocumentCommand{\imagecenter}{O{} O{} m O{}}{\onecolumnfull[#4]{\image[#1][#2]{#3}}}% Usage: [\image opt1][\image opt2]{\image args}[layout flags]
 \NewDocumentCommand{\pdfpagecenter}{O{} O{} m m O{}}{\onecolumnfull[#5]{\pdfpage[#1][#2]{#3}{#4}}}% Usage: [\pdfpage opt1][\pdfpage opt2]{\pdfpage arg1}{\pdfpage arg1}[layout flags]
