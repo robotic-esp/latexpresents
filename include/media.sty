@@ -386,108 +386,65 @@
         \ifespbeamer@videokeys@onclick%
             \ifespbeamer@handout%
             \else%
-                \only<1>%
-                {%
-                    %%% HREF HACK %%%
-                    % When multimedia works, adobe and pdfpc will both just use an image here regardless of present/handout. Until then, we have to switch on both
-                    \ifespbeamer@adobe%
-                    %%% HREF HACK %%%
-                        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
-                    %%% HREF HACK %%%
-                    \else%
-                        \ifespbeamer@handout%
-                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
-                        \else%
-                            %We use an empty href inorder to keep spacing exactly the same.
-                            \href%
-                            {%
-                                %Do nothing
-                            }%
-                            {%
-                                % Poster
-                                % Shift the poster to line up with the video
-                                \hskip\espbeamer@video@fudgealignx%
-                                % Insert the video box containing the poster
-                                \box\espbeamer@video@videobox%
-                            }%
-                        \fi%
-                    \fi%
-                    %%% HREF HACK %%%
-                    % \href can't be followed by a newline
-                    % Set the caption
-                    \ifx\relax#1\relax%
-                    \else%
-                        \usebeamerfont{caption}\\%
+                \ifespbeamer@novideos%
+                \else%
+                    \only<1>%
+                    {%
                         %%% HREF HACK %%%
+                        % When multimedia works, adobe and pdfpc will both just use an image here regardless of present/handout. Until then, we have to switch on both
                         \ifespbeamer@adobe%
+                        %%% HREF HACK %%%
+                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                        %%% HREF HACK %%%
                         \else%
-                            \ifespbeamer@handout% Because handout isn't using the href hack
+                            \ifespbeamer@handout%
+                                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
                             \else%
-                                \vspace{-\espbeamer@video@fudgealignheight}%
+                                %We use an empty href inorder to keep spacing exactly the same.
+                                \href%
+                                {%
+                                    %Do nothing
+                                }%
+                                {%
+                                    % Poster
+                                    % Shift the poster to line up with the video
+                                    \hskip\espbeamer@video@fudgealignx%
+                                    % Insert the video box containing the poster
+                                    \box\espbeamer@video@videobox%
+                                }%
                             \fi%
                         \fi%
                         %%% HREF HACK %%%
-                        \usebox{\espbeamer@video@captionbox}%
-                    \fi%
-                }%
+                        % \href can't be followed by a newline
+                        % Set the caption
+                        \ifx\relax#1\relax%
+                        \else%
+                            \usebeamerfont{caption}\\%
+                            %%% HREF HACK %%%
+                            \ifespbeamer@adobe%
+                            \else%
+                                \ifespbeamer@handout% Because handout isn't using the href hack
+                                \else%
+                                    \vspace{-\espbeamer@video@fudgealignheight}%
+                                \fi%
+                            \fi%
+                            %%% HREF HACK %%%
+                            \usebox{\espbeamer@video@captionbox}%
+                        \fi%
+                    }%
 
-                % Start a second slide that will contain the autostart video
-                \only<2>%
-                {%
+                    % Start a second slide that will contain the autostart video
+                    \only<2>%
+                    {%
+                \fi%
             \fi%
         \fi%
 
         % This is the video slide, regardless of autostart/onclick
-        \ifespbeamer@adobe%
-            % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
-            % Note that we are defining \x inside a group which is closed when by USING \x, which forces the expansions of the if statements without expanding anything else. I think.
-            % https://tex.stackexchange.com/a/228329
-            % https://tex.stackexchange.com/a/152048
-            \begingroup\edef\x%
-            {%
-                \endgroup%
-                \noexpand\includemedia%
-                \expandafter%
-                [%
-                    keepaspectratio,%
-                    \ifespbeamer@handout%
-                        playbutton=fancy,% This would apparently need to be "plain" for XeLaTeX according to media9 doc.
-                        activate=onclick,%
-                        deactivate=pageinvisible,%
-                    \else%
-                        playbutton=none,%
-                        activate=pagevisible,%
-                        deactivate=pageinvisible,%
-                    \fi%
-                    passcontext,% passthrough right-clicks to VPlayer instead of Adobe Reader
-                    transparent,% transparent player background
-                    addresource=#4,%
-                    flashvars=%
-                    {%
-                        source=#4%
-                        &autoPlay=true% Automatically starts playback after activation
-                        \ifespbeamer@handout%
-                            &autoRewind=true% Automatically rewind to the first frame after playback has finished
-                        \else%
-                            \ifespbeamer@videokeys@loop%
-                                &autoRewind=true% Automatically rewind to the first frame after playback has finished
-                                &loop=true% Media is played in a loop
-                            \fi%
-                        \fi%
-                    }%
-                ]%
-                {%
-                    \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
-                }%
-                {VPlayer.swf}%
-            }%
-            \x%
-        \else%
-            %%% HREF HACK %%%
-            % When multimedia works, the only difference between pdfpc handout and presentation will be the option string. Until then, we have to switch
-            \ifespbeamer@handout%
-            %%% HREF HACK %%%
-
+        \ifespbeamer@novideos%
+            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+        \else
+            \ifespbeamer@adobe%
                 % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
                 % Note that we are defining \x inside a group which is closed when by USING \x, which forces the expansions of the if statements without expanding anything else. I think.
                 % https://tex.stackexchange.com/a/228329
@@ -495,34 +452,84 @@
                 \begingroup\edef\x%
                 {%
                     \endgroup%
-                    \noexpand\movie%
+                    \noexpand\includemedia%
                     \expandafter%
                     [%
-                        \espbeamer@video@optionstring%
+                        keepaspectratio,%
+                        \ifespbeamer@handout%
+                            playbutton=fancy,% This would apparently need to be "plain" for XeLaTeX according to media9 doc.
+                            activate=onclick,%
+                            deactivate=pageinvisible,%
+                        \else%
+                            playbutton=none,%
+                            activate=pagevisible,%
+                            deactivate=pageinvisible,%
+                        \fi%
+                        passcontext,% passthrough right-clicks to VPlayer instead of Adobe Reader
+                        transparent,% transparent player background
+                        addresource=#4,%
+                        flashvars=%
+                        {%
+                            source=#4%
+                            &autoPlay=true% Automatically starts playback after activation
+                            \ifespbeamer@handout%
+                                &autoRewind=true% Automatically rewind to the first frame after playback has finished
+                            \else%
+                                \ifespbeamer@videokeys@loop%
+                                    &autoRewind=true% Automatically rewind to the first frame after playback has finished
+                                    &loop=true% Media is played in a loop
+                                \fi%
+                            \fi%
+                        }%
                     ]%
                     {%
                         \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
                     }%
-                    {#4}%
+                    {VPlayer.swf}%
                 }%
                 \x%
-                % The \x hack can't have a new line afterwards
-            %%% HREF HACK %%%
             \else%
-                \href%
-                {%
-                    % Video
-                    run:#4\espbeamer@video@optionstring%
-                }%
-                {%
-                    % Poster
-                    % Shift the poster to line up with the video
-                    \hskip\espbeamer@video@fudgealignx%
-                    % Insert the video box containing the poster
-                    \box\espbeamer@video@videobox%
-                }%
+                %%% HREF HACK %%%
+                % When multimedia works, the only difference between pdfpc handout and presentation will be the option string. Until then, we have to switch
+                \ifespbeamer@handout%
+                %%% HREF HACK %%%
+
+                    % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
+                    % Note that we are defining \x inside a group which is closed when by USING \x, which forces the expansions of the if statements without expanding anything else. I think.
+                    % https://tex.stackexchange.com/a/228329
+                    % https://tex.stackexchange.com/a/152048
+                    \begingroup\edef\x%
+                    {%
+                        \endgroup%
+                        \noexpand\movie%
+                        \expandafter%
+                        [%
+                            \espbeamer@video@optionstring%
+                        ]%
+                        {%
+                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                        }%
+                        {#4}%
+                    }%
+                    \x%
+                    % The \x hack can't have a new line afterwards
+                %%% HREF HACK %%%
+                \else%
+                    \href%
+                    {%
+                        % Video
+                        run:#4\espbeamer@video@optionstring%
+                    }%
+                    {%
+                        % Poster
+                        % Shift the poster to line up with the video
+                        \hskip\espbeamer@video@fudgealignx%
+                        % Insert the video box containing the poster
+                        \box\espbeamer@video@videobox%
+                    }%
+                \fi%
+                %%% HREF HACK %%%
             \fi%
-            %%% HREF HACK %%%
         \fi%
         % \href can't be followed by a newline
         % Set the caption
@@ -545,7 +552,10 @@
         \ifespbeamer@videokeys@onclick%
             \ifespbeamer@handout%
             \else%
-                }%
+                \ifespbeamer@novideos%
+                \else%
+                    }%
+                \fi%
             \fi%
         \fi%
 
