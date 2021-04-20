@@ -52,12 +52,19 @@
     \newcommand{\pdfpcnote}[1]{}
 \else%
     \RequirePackage{multimedia}%
-    % Hide pdfpc notes in handouts:
-    \ifespbeamer@handout%
-        \RequirePackage[hidenotes]{pdfpc}%
-    \else%
-        \RequirePackage{pdfpc}%
-    \fi%
+    \IfFileExists{pdfpc.sty}
+    {%
+        % Hide pdfpc notes in handouts:
+        \ifespbeamer@handout%
+            \RequirePackage[hidenotes]{pdfpc}%
+        \else%
+            \RequirePackage{pdfpc}%
+        \fi%
+    }%
+    {%
+        % Hide any pdfpcnotes:
+        \newcommand{\pdfpcnote}[1]{}
+    }%
 \fi%
 
 \textblockcolour{}%
