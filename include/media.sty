@@ -186,7 +186,7 @@
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
-        \image[#1][#2,page=#3]{#4}%
+        \image[\color{TEXT}#1][#2,page=#3]{#4}%
     \endgroup%
 }%
 % Usage: \pdfpagestopbottom[optional top caption][optional extra top include options]{top page num}{path/to/top/image}[optional bottom caption][optional extra bottom include options]{bottom page num}{path/to/bottom/image}
@@ -194,7 +194,7 @@
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
-        \imagestopbottom[#1][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
+        \imagestopbottom[\color{TEXT}#1][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#7]{#8}%
     \endgroup%
 }%
 % Usage: \pdfpagesleftright[optional left caption][optional extra left include options]{left page num}{path/to/left/image}[optional right caption][optional extra right include options]{right page num}{path/to/right/image}
@@ -202,7 +202,7 @@
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
-        \imagesleftright[#1][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
+        \imagesleftright[\color{TEXT}#1][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
     \endgroup%
 }%
 
