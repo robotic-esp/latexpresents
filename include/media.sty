@@ -186,7 +186,12 @@
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
-        \image[\color{TEXT}#1][#2,page=#3]{#4}%
+        % Only pass the argument on if it exists, as setting the colour will result in a null caption.
+        \ifx\relax#1\relax%
+            \image[][#2,page=#3]{#4}%
+        \else
+            \image[\color{TEXT}#1][#2,page=#3]{#4}%
+        \fi
     \endgroup%
 }%
 % Usage: \pdfpagestopbottom[optional top caption][optional extra top include options]{top page num}{path/to/top/image}[optional bottom caption][optional extra bottom include options]{bottom page num}{path/to/bottom/image}
@@ -194,7 +199,12 @@
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
-        \imagestopbottom[\color{TEXT}#1][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#7]{#8}%
+        % Only pass the argument on if it exists, as setting the colour will result in a null caption.
+        \ifx\relax#1\relax%
+            \imagestopbottom[][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#7]{#8}%
+        \else
+            \imagestopbottom[\color{TEXT}#1][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#7]{#8}%
+        \fi
     \endgroup%
 }%
 % Usage: \pdfpagesleftright[optional left caption][optional extra left include options]{left page num}{path/to/left/image}[optional right caption][optional extra right include options]{right page num}{path/to/right/image}
@@ -202,7 +212,12 @@
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
-        \imagesleftright[\color{TEXT}#1][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
+        % Only pass the argument on if it exists, as setting the colour will result in a null caption.
+        \ifx\relax#1\relax%
+            \imagesleftright[][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
+        \else
+            \imagesleftright[\color{TEXT}#1][#2,page=#3]{#4}[#5][#6,page=#7]{#8}%
+        \fi
     \endgroup%
 }%
 
