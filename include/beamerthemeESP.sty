@@ -225,6 +225,9 @@
 % Package initialization run at \begin{document}
 \AtBeginDocument%
 {%
+    % Initialize the \onlyonce counter. I couldn't get it to work with an automatic reset on the Beamer counter "framenumber"...
+    \newcounter{espbeamer@counter@only}
+
     % Load logos for theme
     \ifespbeamer@dark%
         \addlogo[logos/Oxford_rect_rev_v300px.png]{logos/Oxford_rev_300px.png}%

@@ -1,4 +1,29 @@
 %%%%%%%%%%%% APPERANCE COMMANDS %%%%%%%%%%%%
+%%% INCREMENTAL REVEAL %%%
+\NewDocumentCommand{\onlyonce}{+m}
+{%
+    \only<\value{espbeamer@counter@only}>%
+    {%
+        #1
+    }%
+    \stepcounter{espbeamer@counter@only}%
+}%
+% I no longer see a need for this duration-based function.
+% It requires an additional counter to be initialized in include/beamerthemeESP.sty:
+%   \newcounter{espbeamer@counter@onlylast}
+%\NewDocumentCommand{\onlyfor}{m +m}
+%{%
+%    \setcounter{espbeamer@counter@onlylast}{\value{espbeamer@counter@only}}
+%    \addtocounter{espbeamer@counter@onlylast}{#1}
+%    \addtocounter{espbeamer@counter@onlylast}{-1}
+%    \only<\value{espbeamer@counter@only}-\value{espbeamer@counter@onlylast}>%
+%    {%
+%        #2
+%    }%
+%    \addtocounter{espbeamer@counter@only}{#1}%
+%}%
+%%% INCREMENTAL REVEAL %%%
+
 %%% SLIDE TRANSITIONS %%%
 % Require pdfpc > 4.4.0
 \definecomplimentarykeys{espbeamer}{transition}{nodebug}{debug}%

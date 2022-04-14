@@ -130,6 +130,9 @@
         \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@column}{}
         \setkeys[espbeamer]{columnlayoutkeys}{#1}%
 
+        % Initialize the \onlyonce counter
+        \setcounter{espbeamer@counter@only}{1}
+
         % Set the frame transition
         \ifespbeamer@columnlayoutkeys@debug%
             \espbeamer@transition@cmd[debug]%
@@ -444,6 +447,9 @@
         \fi%
         \presetkeys[espbeamer]{rowlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@row}{}
         \setkeys[espbeamer]{rowlayoutkeys}{#1}%
+
+        % Initialize the \onlyonce counter
+        \setcounter{espbeamer@counter@only}{1}
 
         % Set the frame transition
         \ifespbeamer@rowlayoutkeys@debug%
