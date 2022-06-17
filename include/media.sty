@@ -4,9 +4,13 @@
 % Usage: \image[optional caption][optional extra include options]{path/to/image}
 \newlength{\espbeamer@image@captionheight}%
 \newsavebox{\espbeamer@image@captionbox}%
-\NewDocumentCommand{\image}{O{} O{} m}%
+\definecomplimentarykeys{espbeamer}{imagekeys}{strictcaption}{underhangcaption}%
+\NewDocumentCommand{\image}{O{} O{} O{} m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[espbeamer]{imagekeys}{strictcaption=true}{}%
+        \setkeys[espbeamer]{imagekeys}{#3}%
+
         % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
         \ifx\relax#1\relax%
             \setlength{\espbeamer@image@captionheight}{0pt}%
@@ -20,12 +24,16 @@
                     \strut#1%
                 \end{minipage}%
             }%
-            \settototalheight{\espbeamer@image@captionheight}{\usebox{\espbeamer@image@captionbox}}%
+            \ifespbeamer@imagekeys@strictcaption%
+                \settototalheight{\espbeamer@image@captionheight}{\usebox{\espbeamer@image@captionbox}}%
+            \else%
+                \setlength{\espbeamer@image@captionheight}{0pt}%
+            \fi%
         \fi%
 
         \centering%
         \vfil%
-        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio,#2]{#3}%
+        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionheight,keepaspectratio,#2]{#4}%
         \ifx\relax#1\relax%
         \else%
             \usebeamerfont{caption}\\%
@@ -182,15 +190,15 @@
 %%% In column page from a pdf %%%
 %
 % Usage: \pdfpage[optional caption][optional extra include options]{page num}{path/to/image}
-\NewDocumentCommand{\pdfpage}{O{} O{} m m}%
+\NewDocumentCommand{\pdfpage}{O{} O{} O{} m m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
         % Only pass the argument on if it exists, as setting the colour will result in a null caption.
         \ifx\relax#1\relax%
-            \image[][#2,page=#3]{#4}%
+            \image[][#2,page=#4][#3]{#5}%
         \else
-            \image[\color{TEXT}#1][#2,page=#3]{#4}%
+            \image[\color{TEXT}#1][#2,page=#4][#3]{#5}%
         \fi
     \endgroup%
 }%
@@ -276,6 +284,7 @@
 \definecomplimentarykeys{espbeamer}{videokeys}{loop}{once}%
 \definecomplimentarykeys{espbeamer}{videokeys}{noprogress}{progress}%
 \definecomplimentarykeys{espbeamer}{videokeys}{center}{nocenter}%
+\definecomplimentarykeys{espbeamer}{videokeys}{strictcaption}{underhangcaption}%
 %
 \ifespbeamer@adobe%
 \else
@@ -320,7 +329,7 @@
 \NewDocumentCommand{\video}{O{} O{} m m}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \presetkeys[espbeamer]{videokeys}{autostart=true, loop=true, noprogress=true,center=true}{}
+        \presetkeys[espbeamer]{videokeys}{autostart=true, loop=true, noprogress=true, center=true, strictcaption=true}{}
         \setkeys[espbeamer]{videokeys}{#2}%
 
         % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
@@ -336,7 +345,11 @@
                     \strut#1%
                 \end{minipage}%
             }%
-            \settototalheight{\espbeamer@video@captionheight}{\usebox{\espbeamer@video@captionbox}}%
+            \ifespbeamer@videokeys@strictcaption%
+                \settototalheight{\espbeamer@video@captionheight}{\usebox{\espbeamer@video@captionbox}}%
+            \else%
+                \setlength{\espbeamer@video@captionheight}{0pt}%
+            \fi%
         \fi%
 
         % Parse the options and configure the poster
