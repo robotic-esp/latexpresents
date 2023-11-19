@@ -1,13 +1,51 @@
 %%%%%%%%%%%% APPERANCE COMMANDS %%%%%%%%%%%%
-%%% INCREMENTAL REVEAL %%%
+%TODO: Should only and uncover have different counters?
+%%% INCREMENTAL UNCOVER (Stays) %%%
+\NewDocumentCommand{\uncoverstep}{+m}
+{%
+    % Step counter before so that the first \uncoverstep is slide 2
+    \stepcounter{espbeamer@counter@only}%
+    % All future slides
+    \uncover<\value{espbeamer@counter@only}->%
+    {%
+        #1
+    }%
+}%
+%%% INCREMENTAL ONLY (Goes away) %%%
 \NewDocumentCommand{\onlyonce}{+m}
 {%
+    % Just current slide
     \only<\value{espbeamer@counter@only}>%
     {%
         #1
     }%
     \stepcounter{espbeamer@counter@only}%
+    % Step counter after so that the first \onlyonce is slide 1
 }%
+%%%% REPLACE (for one slide) %%%
+%\NewDocumentCommand{\replaceonce}{+m +m}
+%{%
+%    % Up to the current slide
+%    \only<-\value{espbeamer@counter@only}>%
+%    {%
+%        #1
+%    }%
+%    % Step counter inbetween
+%    \stepcounter{espbeamer@counter@only}%
+%    % A new slide
+%    \only<\value{espbeamer@counter@only}>%
+%    {%
+%        #2
+%    }%
+%    % Step counter inbetween
+%    \stepcounter{espbeamer@counter@only}%
+%    % All future slides
+%    \only<\value{espbeamer@counter@only}->%
+%    {%
+%      #1
+%    }%
+%}%
+
 % I no longer see a need for this duration-based function.
 % It requires an additional counter to be initialized in include/beamerthemeESP.sty:
 %   \newcounter{espbeamer@counter@onlylast}
