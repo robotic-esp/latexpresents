@@ -2,7 +2,7 @@
 
 %%%%%%%%%%%% SPECIAL PAGES %%%%%%%%%%%%
 \newlength{\espbeamer@thanks@origlogowidth}
-\NewDocumentCommand{\thankspage}{+O{Thank you}}%
+\NewDocumentCommand{\thankspage}{+O{Thank you} +O{https://robotic-esp.com}}%
 {%
     \settowidth{\espbeamer@thanks@origlogowidth}{\espbeamer@titlelogos}%
     \multirowlayout[nodecorations, gutter=0pt]%
@@ -33,7 +33,7 @@
                 \espbeamer@footlogos{}%
             \fi%
             \vfill%
-            \url{https://robotic-esp.com}
+            \url{#2}
         \fi%
     ]%
 }%
