@@ -1,22 +1,28 @@
-%%%%%%%%%%%% AFFILIATION COMMANDS %%%%%%%%%%%%%%%%%%
-\def\espbeamer@group{}%
-\newcommand*{\group}[1]%
-{%
-    \def\espbeamer@group{#1}%
-}%
-\def\espbeamer@contact{}%
-\newcommand*{\contact}[1]%
-{%
-    \def\espbeamer@contact{#1}%
-}%
-
-%%%%%%%%%%%% END AFFILIATION COMMANDS %%%%%%%%%%%%%%%%%%
-
-
 %%%%%%%%%%%% LOGO COMMANDS %%%%%%%%%%%%%%%%%%
 %
+% Usage: \adddarkmodelogo[optional/path/to/special/titlepage/logo/for/dark/mode]{path/to/logo/for/dark/mode}
+\NewDocumentCommand{\adddarkmodelogo}{O{#2} m}%
+{%
+    \ifespbeamer@dark%
+        \addtitlelogo{#1}%
+        \addfootlogo{#2}%
+    \fi%
+}%
+% Usage: \addlightmodelogo[optional/path/to/special/titlepage/logo/for/light/mode]{path/to/logo/for/light/mode}
+\NewDocumentCommand{\addlightmodelogo}{O{#2} m}%
+{%
+    \ifespbeamer@dark%
+    \else
+        \addtitlelogo{#1}%
+        \addfootlogo{#2}%
+    \fi%
+}%
 % Usage: \addlogo[optional/path/to/special/titlepage/logo]{path/to/logo}
-\NewDocumentCommand{\addlogo}{O{#2} m}{\addtitlelogo{#1}\addfootlogo{#2}}%
+\NewDocumentCommand{\addlogo}{O{#2} m}%
+{%
+    \addtitlelogo{#1}%
+    \addfootlogo{#2}%
+}%
 \newcommand*{\savelogos}{\savetitlelogos{}\savefootlogos{}}%
 \newcommand*{\resetlogos}{\resettitlelogos{}\resetfootlogos{}}%
 \newcommand*{\clearlogos}{\cleartitlelogos{}\clearfootlogos{}}%

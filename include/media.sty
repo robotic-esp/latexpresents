@@ -250,9 +250,9 @@
 % Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}
 %
 % Adapted from: https://www.ojdo.de/wp/2018/06/finally-the-definitive-full-frame-graphic-commands-for-beamer-in-latex/
-\newcommand{\fullimagelight}[2][]{\fullimage[#1][OxfordBlue][white]{#2}}%
-\newcommand{\fullimagedark}[2][]{\fullimage[#1][white][OxfordBlue]{#2}}%
-\NewDocumentCommand{\fullimage}{O{} O{white} O{OxfordBlue} m}%
+\newcommand{\fullimagelight}[2][]{\fullimage[#1][ThemePaletteDarkText][ThemePaletteLightBackground]{#2}}%
+\newcommand{\fullimagedark}[2][]{\fullimage[#1][ThemePaletteLightBackground][ThemePaletteDarkText]{#2}}%
+\NewDocumentCommand{\fullimage}{O{} O{ThemePaletteLightBackground} O{ThemePaletteDarkText} m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \tikzset%

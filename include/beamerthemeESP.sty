@@ -7,9 +7,12 @@
     prefix = espbeamer@%
 }%
 
-% Colour theme
+% Debug
 \DeclareBoolOption[false]{debug}% espbeamer@debug
 \DeclareComplementaryOption{nodebug}{debug}%
+% Theme
+\DeclareStringOption{theme}% espbeamer@theme
+% Colour theme
 \DeclareBoolOption[false]{dark}% espbeamer@dark
 \DeclareComplementaryOption{light}{dark}%
 % Which multimedia package to use
@@ -89,11 +92,6 @@
 %%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%
 
 
-
-\institute{Estimation, Search, and Planning (ESP) Research Group\\ Oxford Robotics Institute (ORI)\\ University of Oxford}
-
-
-
 %%%%%%%%%%%% DIMENSIONS %%%%%%%%%%%%
 %%% Publically available positions and lengths (Set by ESP) %%%
 \newlength{\contentposx}% The starting x-position of all content in a frame.
@@ -139,12 +137,12 @@
 \newlength{\espbeamer@titlelogo@maxheight}%
 \setlength{\espbeamer@titlelogo@maxheight}{56pt}%
 \newlength{\espbeamer@titlelogo@sep}%
-\setlength{\espbeamer@titlelogo@sep}{8pt}% This may not be the exact logo separation used as title logos are scaled as a group if they are wider than the title page
+\setlength{\espbeamer@titlelogo@sep}{12pt}% This may not be the exact logo separation used as title logos are scaled as a group if they are wider than the title page
 % Footer logos
 \newlength{\espbeamer@footlogo@height}%
 \setlength{\espbeamer@footlogo@height}{28pt}%
 \newlength{\espbeamer@footlogo@sep}%
-\setlength{\espbeamer@footlogo@sep}{4pt}%
+\setlength{\espbeamer@footlogo@sep}{12pt}%
 % Biographical photos (height is derived)
 \newlength{\espbeamer@bio@sep}%
 \setlength{\espbeamer@bio@sep}{1.5pt}%
@@ -197,6 +195,26 @@
 
 
 
+%%%%%%%%%%%% ESP PRESENTS %%%%%%%%%%%%%%%%%%
+\input{include/latex.sty}
+\input{include/layouts.sty}
+\input{include/decorations.sty}
+\input{include/pages.sty}
+\input{include/media.sty}
+\input{include/appearance.sty}
+\input{include/theme.sty}
+\initdims{}
+
+% Load the default theme, to define a complete colour pallete
+\input{include/theme_default.sty}
+
+% Load the user's theme (if present), to set affiliations/decorations/etc. and to override and default colours as desired
+\ifx\espbeamer@theme\empty%
+\else%
+    \input{\espbeamer@theme}
+\fi%
+%%%%%%%%%%%% END ESP PRESENTS %%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%% BEAMER %%%%%%%%%%%%%%%%%%
 % Pass options to Beamer
 \setbeamersize{text margin left=\espbeamer@border@left, text margin right=\espbeamer@border@right}%
@@ -207,19 +225,7 @@
 \usepackage{include/beamerfontthemeESP}%
 \usepackage{include/beamerinnerthemeESP}%
 \usepackage{include/beamerouterthemeESP}%
-
-
-% ESP Components
-\input{include/latex.sty}
-\input{include/layouts.sty}
-\input{include/decorations.sty}
-\input{include/pages.sty}
-\input{include/media.sty}
-\input{include/appearance.sty}
-\initdims{}
 %%%%%%%%%%%% END BEAMER %%%%%%%%%%%%%%%%%%
-
-
 
 %%%%%%%%%%%% DOCUMENT INIT %%%%%%%%%%%%
 % Set default transitions
@@ -232,17 +238,6 @@
 {%
     % Initialize the \onlyonce counter. I couldn't get it to work with an automatic reset on the Beamer counter "framenumber"...
     \newcounter{espbeamer@counter@only}
-
-    % Load logos for theme
-    \ifespbeamer@dark%
-        \addlogo[logos/Oxford_rect_rev_v300px.png]{logos/Oxford_rev_300px.png}%
-        \addlogo{logos/ORI_rev_v300px.png}%
-        \addlogo{logos/ESP_rev_v300px.png}%
-    \else%
-        \addlogo[logos/Oxford_rect_v300px.png]{logos/Oxford_300px.png}%
-        \addlogo{logos/ORI_v300px.png}%
-        \addlogo{logos/ESP_v300px.png}%
-    \fi%
 
     % Set the slide numbering (currently only every pdf page or none)
     \ifespbeamer@pagenumbers%
