@@ -89,11 +89,11 @@
 % Usage: \multicolumnlayout[nodebug/debug,decorations/nodecorations,alignedtop/raggedtop,alignedbottom/raggedbottom,border/noborder,gutter=]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]
 %
 \define@key[espbeamer]{columnlayoutkeys}{gutter}[]{\setlength{\espbeamer@columnlayout@gutter}{#1}}%
-\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{decorations}{nodecorations}%
-\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{alignedtop}{raggedtop}%
-\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{alignedbottom}{raggedbottom}%
-\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{border}{noborder}%
-\definecomplimentarykeys{espbeamer}{columnlayoutkeys}{nodebug}{debug}%
+\definecomplementarykeys{espbeamer}{columnlayoutkeys}{decorations}{nodecorations}%
+\definecomplementarykeys{espbeamer}{columnlayoutkeys}{alignedtop}{raggedtop}%
+\definecomplementarykeys{espbeamer}{columnlayoutkeys}{alignedbottom}{raggedbottom}%
+\definecomplementarykeys{espbeamer}{columnlayoutkeys}{border}{noborder}%
+\definecomplementarykeys{espbeamer}{columnlayoutkeys}{nodebug}{debug}%
 %\define@boolkey[espbeamer]{columnlayoutkeys}{debug}[true]{}%
 %
 \newlength{\espbeamer@columnlayout@gutter}%
@@ -424,9 +424,9 @@
 % Usage: \multirowlayout[nodebug/debug,decorations/nodecorations,border/noborder,gutter=]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]
 %
 \define@key[espbeamer]{rowlayoutkeys}{gutter}[]{\setlength{\espbeamer@rowlayout@gutter}{#1}}%
-\definecomplimentarykeys{espbeamer}{rowlayoutkeys}{decorations}{nodecorations}%
-\definecomplimentarykeys{espbeamer}{rowlayoutkeys}{border}{noborder}%
-\definecomplimentarykeys{espbeamer}{rowlayoutkeys}{nodebug}{debug}%
+\definecomplementarykeys{espbeamer}{rowlayoutkeys}{decorations}{nodecorations}%
+\definecomplementarykeys{espbeamer}{rowlayoutkeys}{border}{noborder}%
+\definecomplementarykeys{espbeamer}{rowlayoutkeys}{nodebug}{debug}%
 %\define@boolkey[espbeamer]{rowlayoutkeys}{debug}[true]{}%
 %
 \newlength{\espbeamer@rowlayout@gutter}%
@@ -624,7 +624,7 @@
 %
 % Usage: \layoutelement[nodebug/debug]{content}
 %
-\definecomplimentarykeys{espbeamer}{layoutelement}{nodebug}{debug}%
+\definecomplementarykeys{espbeamer}{layoutelement}{nodebug}{debug}%
 %\define@boolkey[espbeamer]{layoutelement}{debug}[true]{}%
 \NewDocumentCommand{\layoutelement}{O{} +m}%
 {%
@@ -691,7 +691,7 @@
 %
 % Usage: \calcdims[decorations]{}
 %
-\definecomplimentarykeys{espbeamer}{calcdims}{decorations}{nodecorations}%
+\definecomplementarykeys{espbeamer}{calcdims}{decorations}{nodecorations}%
 %\define@boolkey[espbeamer]{calcdims}{decorations}[true]{}%
 %
 \newlength{\espbeamer@calcdims@titlewidth}

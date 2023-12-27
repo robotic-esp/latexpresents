@@ -1,10 +1,10 @@
 %%%%%%%%%%%% IMAGE COMMANDS %%%%%%%%%%%%
 %%% In column image %%%
 %
-% Usage: \image[optional caption][optional extra include options]{path/to/image}
+% Usage: \image[optional caption][optional extra include options][strictcaption/underhangcaption]{path/to/image}
 \newlength{\espbeamer@image@captionheight}%
 \newsavebox{\espbeamer@image@captionbox}%
-\definecomplimentarykeys{espbeamer}{imagekeys}{strictcaption}{underhangcaption}%
+\definecomplementarykeys{espbeamer}{imagekeys}{strictcaption}{underhangcaption}%
 \NewDocumentCommand{\image}{O{} O{} O{} m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
@@ -296,11 +296,11 @@
 
 
 % Define keys
-\definecomplimentarykeys{espbeamer}{videokeys}{autostart}{onclick}%
-\definecomplimentarykeys{espbeamer}{videokeys}{loop}{once}%
-\definecomplimentarykeys{espbeamer}{videokeys}{noprogress}{progress}%
-\definecomplimentarykeys{espbeamer}{videokeys}{center}{nocenter}%
-\definecomplimentarykeys{espbeamer}{videokeys}{strictcaption}{underhangcaption}%
+\definecomplementarykeys{espbeamer}{videokeys}{autostart}{onclick}%
+\definecomplementarykeys{espbeamer}{videokeys}{loop}{once}%
+\definecomplementarykeys{espbeamer}{videokeys}{noprogress}{progress}%
+\definecomplementarykeys{espbeamer}{videokeys}{center}{nocenter}%
+\definecomplementarykeys{espbeamer}{videokeys}{strictcaption}{underhangcaption}%
 %
 \ifespbeamer@adobe%
 \else
