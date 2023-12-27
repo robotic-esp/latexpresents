@@ -52,6 +52,10 @@
         \strut\insertauthor{}\\%
         \usebeamerfont{institute}%
         \usebeamercolor{institute}%
+        \ifx\espbeamer@group\empty%
+        \else%
+            \espbeamer@group\\
+        \fi%
         \strut\insertinstitute{}%
         \vfill%
         \usebeamerfont{date}%
