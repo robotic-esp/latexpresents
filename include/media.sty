@@ -250,51 +250,72 @@
 % Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}
 %
 % Adapted from: https://www.ojdo.de/wp/2018/06/finally-the-definitive-full-frame-graphic-commands-for-beamer-in-latex/
-\newcommand{\fullimagelight}[2][]{\fullimage[#1][ThemePaletteDarkText][ThemePaletteLightBackground]{#2}}%
-\newcommand{\fullimagedark}[2][]{\fullimage[#1][ThemePaletteLightBackground][ThemePaletteDarkText]{#2}}%
+\define@boolkey[espbeamer]{fullimagekeys}{darkcaption}[true]%
+{%
+    \ifespbeamer@fullimagekeys@darkcaption%
+        \def\espbeamer@fullimage@caption@textcolour{ThemePaletteLightBackground}%
+        \def\espbeamer@fullimage@caption@backgroundcolour{ThemePaletteDarkText}%
+    \fi%
+}%
+\define@boolkey[espbeamer]{fullimagekeys}{lightcaption}[true]%
+{%
+    \ifespbeamer@fullimagekeys@lightcaption%
+        \def\espbeamer@fullimage@caption@textcolour{ThemePaletteDarkText}%
+        \def\espbeamer@fullimage@caption@backgroundcolour{ThemePaletteLightBackground}%
+    \fi%
+}%
+\define@key[espbeamer]{fullimagekeys}{captiontext}%
+{%
+    \def\espbeamer@fullimage@caption@textcolour{#1}%
+}%
+\define@key[espbeamer]{fullimagekeys}{captionbackground}%
+{%
+    \def\espbeamer@fullimage@caption@backgroundcolour{#1}%
+}%
 \define@choicekey*[espbeamer]{fullimagekeys}{captionposition}[\val\nr]{southwest,south,southeast,east,northeast,north,northwest,west}%
 {%
     \ifcase\nr\relax%
         %\nr=0, southwest
-        \def\espbeamer@fullimage@captionnode{\node[above right = \espbeamer@border@bottom and \espbeamer@border@right of image.south west, ffgcaption, anchor = south west]}
+        \def\espbeamer@fullimage@caption@node{\node[above right = \espbeamer@border@bottom and \espbeamer@border@right of image.south west, ffgcaption, anchor = south west]}
     \or
         %\nr=1, south
-        \def\espbeamer@fullimage@captionnode{\node[above = \espbeamer@border@bottom and \espbeamer@border@right of image.south, ffgcaption, anchor = south]}
+        \def\espbeamer@fullimage@caption@node{\node[above = \espbeamer@border@bottom and \espbeamer@border@right of image.south, ffgcaption, anchor = south]}
     \or
         %\nr=3, southeast
-        \def\espbeamer@fullimage@captionnode{\node[above left = \espbeamer@border@bottom and \espbeamer@border@right of image.south east, ffgcaption, anchor = south east]}
+        \def\espbeamer@fullimage@caption@node{\node[above left = \espbeamer@border@bottom and \espbeamer@border@right of image.south east, ffgcaption, anchor = south east]}
     \or
         %\nr=4, east
-        \def\espbeamer@fullimage@captionnode{\node[left = \espbeamer@border@bottom and \espbeamer@border@right of image.east, ffgcaption, anchor = east]}
+        \def\espbeamer@fullimage@caption@node{\node[left = \espbeamer@border@bottom and \espbeamer@border@right of image.east, ffgcaption, anchor = east]}
     \or
         %\nr=5, northeast
-        \def\espbeamer@fullimage@captionnode{\node[below left = \espbeamer@border@bottom and \espbeamer@border@right of image.north east, ffgcaption, anchor = north east]}
+        \def\espbeamer@fullimage@caption@node{\node[below left = \espbeamer@border@bottom and \espbeamer@border@right of image.north east, ffgcaption, anchor = north east]}
     \or
         %\nr=6, north
-        \def\espbeamer@fullimage@captionnode{\node[below = \espbeamer@border@bottom and \espbeamer@border@right of image.north, ffgcaption, anchor = north]}
+        \def\espbeamer@fullimage@caption@node{\node[below = \espbeamer@border@bottom and \espbeamer@border@right of image.north, ffgcaption, anchor = north]}
     \or
         %\nr=7, northwest
-        \def\espbeamer@fullimage@captionnode{\node[below right = \espbeamer@border@bottom and \espbeamer@border@right of image.north west, ffgcaption, anchor = north west]}
+        \def\espbeamer@fullimage@caption@node{\node[below right = \espbeamer@border@bottom and \espbeamer@border@right of image.north west, ffgcaption, anchor = north west]}
     \or
         %\nr=8, west
-        \def\espbeamer@fullimage@captionnode{\node[right = \espbeamer@border@bottom and \espbeamer@border@right of image.west, ffgcaption, anchor = west]}
+        \def\espbeamer@fullimage@caption@node{\node[right = \espbeamer@border@bottom and \espbeamer@border@right of image.west, ffgcaption, anchor = west]}
     \fi%
 }%
-\NewDocumentCommand{\fullimage}{O{} O{ThemePaletteLightBackground} O{ThemePaletteDarkText} O{} m}%
+\NewDocumentCommand{\fullimage}{O{} O{} m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \presetkeys[espbeamer]{fullimagekeys}{captionposition=southeast}{}%
-        \setkeys[espbeamer]{fullimagekeys}{#4}%
+        %captiontext and captionbackground defaults to darkcaption values
+        \presetkeys[espbeamer]{fullimagekeys}{captionposition=southeast,captiontext=ThemePaletteLightBackground,captionbackground=ThemePaletteDarkText,darkcaption=false,lightcaption=false}{}%
+        \setkeys[espbeamer]{fullimagekeys}{#2}%
 
         \tikzset%
         {%
             ffgcaption/.style=%
             {%
                 font=\small,%
-                text=#2,%
+                text=\espbeamer@fullimage@caption@textcolour,%
                 text opacity=1,%
                 inner sep=0.25\baselineskip,%
-                fill=#3,%
+                fill=\espbeamer@fullimage@caption@backgroundcolour,%
                 fill opacity=.5,%
                 rounded corners=0.5ex%
             }%
@@ -302,11 +323,11 @@
         \begin{tikzpicture}[remember picture, overlay]%
             \node[at=(current page.center), inner sep = 0pt] (image)%
             {%
-                \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio]{#5}%
+                \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio]{#3}%
             };%
             \ifx\relax#1\relax%
             \else%
-            \espbeamer@fullimage@captionnode%
+            \espbeamer@fullimage@caption@node%
             {%
                 #1%
             };%
