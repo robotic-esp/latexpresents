@@ -245,11 +245,9 @@
     \endgroup%
 }%
 
-%%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
+%%% Full-screen image %%%
 %
 % Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}
-%
-% Adapted from: https://www.ojdo.de/wp/2018/06/finally-the-definitive-full-frame-graphic-commands-for-beamer-in-latex/
 \define@boolkey[espbeamer]{fullimagekeys}{darkcaption}[true]%
 {%
     \ifespbeamer@fullimagekeys@darkcaption%
@@ -276,63 +274,87 @@
 {%
     \ifcase\nr\relax%
         %\nr=0, southwest
-        \def\espbeamer@fullimage@caption@node{\node[above right = \espbeamer@border@bottom and \espbeamer@border@right of image.south west, ffgcaption, anchor = south west]}
+        \setlength{\espbeamer@fullimage@vertical}{\espbeamer@border@bottom}
+        \setlength{\espbeamer@fullimage@horizontal}{\espbeamer@border@left}
+        \def\espbeamer@fullimage@caption@node{\node[above right = \espbeamer@fullimage@vertical and \espbeamer@fullimage@horizontal of image.south west, ffgcaption, anchor = south west]}
     \or
         %\nr=1, south
-        \def\espbeamer@fullimage@caption@node{\node[above = \espbeamer@border@bottom and \espbeamer@border@right of image.south, ffgcaption, anchor = south]}
+        \setlength{\espbeamer@fullimage@vertical}{\espbeamer@border@bottom}
+        \def\espbeamer@fullimage@caption@node{\node[above = \espbeamer@fullimage@vertical of image.south, ffgcaption, anchor = south]}
     \or
         %\nr=3, southeast
-        \def\espbeamer@fullimage@caption@node{\node[above left = \espbeamer@border@bottom and \espbeamer@border@right of image.south east, ffgcaption, anchor = south east]}
+        \setlength{\espbeamer@fullimage@vertical}{\espbeamer@border@bottom}
+        \setlength{\espbeamer@fullimage@horizontal}{\espbeamer@border@right}
+        \def\espbeamer@fullimage@caption@node{\node[above left = \espbeamer@fullimage@vertical and \espbeamer@fullimage@horizontal of image.south east, ffgcaption, anchor = south east]}
     \or
         %\nr=4, east
-        \def\espbeamer@fullimage@caption@node{\node[left = \espbeamer@border@bottom and \espbeamer@border@right of image.east, ffgcaption, anchor = east]}
+        \setlength{\espbeamer@fullimage@horizontal}{\espbeamer@border@right}
+        \def\espbeamer@fullimage@caption@node{\node[left = \espbeamer@fullimage@horizontal of image.east, ffgcaption, anchor = east]}
     \or
         %\nr=5, northeast
-        \def\espbeamer@fullimage@caption@node{\node[below left = \espbeamer@border@bottom and \espbeamer@border@right of image.north east, ffgcaption, anchor = north east]}
+        \setlength{\espbeamer@fullimage@vertical}{\espbeamer@border@top}
+        \setlength{\espbeamer@fullimage@horizontal}{\espbeamer@border@right}
+        \def\espbeamer@fullimage@caption@node{\node[below left = \espbeamer@fullimage@vertical and \espbeamer@fullimage@horizontal of image.north east, ffgcaption, anchor = north east]}
     \or
         %\nr=6, north
-        \def\espbeamer@fullimage@caption@node{\node[below = \espbeamer@border@bottom and \espbeamer@border@right of image.north, ffgcaption, anchor = north]}
+        \setlength{\espbeamer@fullimage@vertical}{\espbeamer@border@top}
+        \def\espbeamer@fullimage@caption@node{\node[below = \espbeamer@fullimage@vertical of image.north, ffgcaption, anchor = north]}
     \or
         %\nr=7, northwest
-        \def\espbeamer@fullimage@caption@node{\node[below right = \espbeamer@border@bottom and \espbeamer@border@right of image.north west, ffgcaption, anchor = north west]}
+        \setlength{\espbeamer@fullimage@vertical}{\espbeamer@border@top}
+        \setlength{\espbeamer@fullimage@horizontal}{\espbeamer@border@left}
+        \def\espbeamer@fullimage@caption@node{\node[below right = \espbeamer@fullimage@vertical and \espbeamer@fullimage@horizontal of image.north west, ffgcaption, anchor = north west]}
     \or
         %\nr=8, west
-        \def\espbeamer@fullimage@caption@node{\node[right = \espbeamer@border@bottom and \espbeamer@border@right of image.west, ffgcaption, anchor = west]}
+        \setlength{\espbeamer@fullimage@horizontal}{\espbeamer@border@left}
+        \def\espbeamer@fullimage@caption@node{\node[right = \espbeamer@fullimage@horizontal of image.west, ffgcaption, anchor = west]}
     \fi%
 }%
+\newlength{\espbeamer@fullimage@vertical}%
+\newlength{\espbeamer@fullimage@horizontal}%
 \NewDocumentCommand{\fullimage}{O{} O{} m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        %captiontext and captionbackground defaults to darkcaption values
+        % captiontext and captionbackground default to the values for darkcaption
         \presetkeys[espbeamer]{fullimagekeys}{captionposition=southeast,captiontext=ThemePaletteLightBackground,captionbackground=ThemePaletteDarkText,darkcaption=false,lightcaption=false}{}%
         \setkeys[espbeamer]{fullimagekeys}{#2}%
 
-        \tikzset%
+        % The picture is set in TikZ, so doesn't need the container. But doing this (1) provides an easy way to create the black background and (2) ensures that the enivornment variables (e.g., dimensions) are consistent with all the other frames.
+        % This unfortunately means that we have to store the relevant borders into temporary variables (done in the captionposition key) since the noborder option termporarily zeroes out the global values.
+        \multirowlayout[nodecorations, noborder, gutter=0pt]%
+        {1.0}%
         {%
-            ffgcaption/.style=%
+            % Black background
+            \textblockcolour{black}%
+
+            % Adapted from: https://www.ojdo.de/wp/2018/06/finally-the-definitive-full-frame-graphic-commands-for-beamer-in-latex/
+            \tikzset%
             {%
-                font=\small,%
-                text=\espbeamer@fullimage@caption@textcolour,%
-                text opacity=1,%
-                inner sep=0.25\baselineskip,%
-                fill=\espbeamer@fullimage@caption@backgroundcolour,%
-                fill opacity=.5,%
-                rounded corners=0.5ex%
+                ffgcaption/.style=%
+                {%
+                    font=\small,%
+                    text=\espbeamer@fullimage@caption@textcolour,%
+                    text opacity=1,%
+                    inner sep=0.25\baselineskip,%
+                    fill=\espbeamer@fullimage@caption@backgroundcolour,%
+                    fill opacity=.5,%
+                    rounded corners=0.5ex%
+                }%
             }%
+            \begin{tikzpicture}[remember picture, overlay]%
+                \node[at=(current page.center), inner sep = 0pt] (image)%
+                {%
+                    \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio]{#3}%
+                };%
+                \ifx\relax#1\relax%
+                \else%
+                \espbeamer@fullimage@caption@node%
+                {%
+                    #1%
+                };%
+                \fi%
+            \end{tikzpicture}%
         }%
-        \begin{tikzpicture}[remember picture, overlay]%
-            \node[at=(current page.center), inner sep = 0pt] (image)%
-            {%
-                \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio]{#3}%
-            };%
-            \ifx\relax#1\relax%
-            \else%
-            \espbeamer@fullimage@caption@node%
-            {%
-                #1%
-            };%
-            \fi%
-        \end{tikzpicture}%
     \endgroup%
 }
 %%%%%%%%%%%% END IMAGE COMMANDS %%%%%%%%%%%%
@@ -660,7 +682,7 @@
     \endgroup%
 }%
 
-%%% Full-screen image (use in \begin{fullframe}\end{fullframe}) %%%
+%%% Full-screen image%%%
 %
 % Usage: See \video for options
 \NewDocumentCommand{\fullvideo}{O{noprogress,autostart,loop} m m}%
@@ -668,6 +690,8 @@
     \multirowlayout[nodecorations, noborder, gutter=0pt]%
     {1.0}%
     {%
+        % Black background
+        \textblockcolour{black}%
         \video[][#1]{#2}{#3}
     }%
 }

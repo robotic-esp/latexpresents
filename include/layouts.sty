@@ -19,31 +19,6 @@
 }%
 %%%%%%%%%%%% END SECTIONING %%%%%%%%%%%%
 
-%%%%%%%%%%%% FRAME ENVIRONMENTS %%%%%%%%%%%%
-%A frame for full screen media.
-\newenvironment{fullframe}%
-{%
-    \setbeamertemplate{background canvas}{\color{black}\vrule width\paperwidth height\paperheight}%
-    \setbeamertemplate{headline}{}%
-    \setbeamertemplate{footline}{}%
-    \setbeamertemplate{sidebar left}{}%
-    \setbeamertemplate{sidebar right}{}%
-    \setbeamertemplate{frametitle}{}%
-    \setlength{\contentposx}{0pt}%
-    \setlength{\contentposy}{0pt}%
-    \setlength{\contentwidth}{\paperwidth}%
-    \setlength{\contentheight}{\paperheight}%
-    \setlength{\elementposx}{\contentposx}%
-    \setlength{\elementposy}{\contentposy}%
-    \setlength{\elementwidth}{\contentwidth}%
-    \setlength{\elementheight}{\contentheight}%
-    \begin{frame}%
-}%
-{%
-    \end{frame}%
-}%
-%%%%%%%%%%%% END FRAME ENVIRONMENTS %%%%%%%%%%%%
-
 
 
 %%%%%%%%%%%% LAYOUTS %%%%%%%%%%%%
