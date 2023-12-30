@@ -458,6 +458,7 @@
     \fi%
 \fi%
 %
+\newlength{\espbeamer@video@captionskip}%
 \newlength{\espbeamer@video@captionheight}%
 \newsavebox{\espbeamer@video@captionbox}%
 \NewDocumentCommand{\video}{O{} O{} m m}
@@ -468,6 +469,7 @@
 
         % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
         \ifx\relax#1\relax%
+            \setlength{\espbeamer@video@captionskip}{0pt}%
             \setlength{\espbeamer@video@captionheight}{0pt}%
         \else%
             \savebox{\espbeamer@video@captionbox}%
@@ -480,8 +482,11 @@
                 \end{minipage}%
             }%
             \ifespbeamer@videokeys@strictcaption%
+                % The height of the space between the figure and caption is (approx?) the depth of one-line of text.
+                \settodepth{\espbeamer@video@captionskip}{\usebeamerfont{caption}\strut}%
                 \settototalheight{\espbeamer@video@captionheight}{\usebox{\espbeamer@video@captionbox}}%
             \else%
+                \setlength{\espbeamer@video@captionskip}{0pt}%
                 \setlength{\espbeamer@video@captionheight}{0pt}%
             \fi%
         \fi%
@@ -519,7 +524,7 @@
             % Save the poster so we know its size (and ratio).
             \savebox{\espbeamer@video@posterbox}%
             {%
-                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionskip - \espbeamer@video@captionheight,keepaspectratio]{#3}%
             }%
 
             % Calculate the size of the video from the poster
@@ -556,11 +561,11 @@
                         % When multimedia works, adobe and pdfpc will both just use an image here regardless of present/handout. Until then, we have to switch on both
                         \ifespbeamer@adobe%
                         %%% HREF HACK %%%
-                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionskip - \espbeamer@video@captionheight,keepaspectratio]{#3}%
                         %%% HREF HACK %%%
                         \else%
                             \ifespbeamer@handout%
-                                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                                \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionskip - \espbeamer@video@captionheight,keepaspectratio]{#3}%
                             \else%
                                 %We use an empty href inorder to keep spacing exactly the same.
                                 \href%
@@ -604,7 +609,7 @@
 
         % This is the video slide, regardless of autostart/onclick
         \ifespbeamer@novideos%
-            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionskip - \espbeamer@video@captionheight,keepaspectratio]{#3}%
         \else
             \ifespbeamer@adobe%
                 % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
@@ -645,7 +650,7 @@
                         }%
                     ]%
                     {%
-                        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionskip - \espbeamer@video@captionheight,keepaspectratio]{#3}%
                     }%
                     {VPlayer.swf}%
                 }%
@@ -669,7 +674,7 @@
                             \espbeamer@video@optionstring%
                         ]%
                         {%
-                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionheight,keepaspectratio]{#3}%
+                            \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@video@captionskip - \espbeamer@video@captionheight,keepaspectratio]{#3}%
                         }%
                         {#4}%
                     }%
