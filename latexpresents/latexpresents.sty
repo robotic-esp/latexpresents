@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{include/latexpresents}[2023/12/30 v1.0 LaTeXPresents]
+\ProvidesPackage{latexpresents/latexpresents}[2023/12/30 v1.0 LaTeXPresents]
 %%%%%%%%%%%% CLASS OPTIONS %%%%%%%%%%%%
 % Setup
 \RequirePackage{kvoptions}% For defining package options as key-value pairs
@@ -198,18 +198,18 @@
 
 
 %%%%%%%%%%%% LATEXPRESENTS %%%%%%%%%%%%%%%%%%
-\input{include/latex.sty}
-\input{include/layouts.sty}
-\input{include/decorations.sty}
-\input{include/pages.sty}
-\input{include/media.sty}
-\input{include/appearance.sty}
-\input{include/theme.sty}
-\input{include/legacy.sty}
+\input{latexpresents/latex.sty}
+\input{latexpresents/layouts.sty}
+\input{latexpresents/decorations.sty}
+\input{latexpresents/pages.sty}
+\input{latexpresents/media.sty}
+\input{latexpresents/appearance.sty}
+\input{latexpresents/theme.sty}
+\input{latexpresents/legacy.sty}
 \initdims{}
 
 % Load the default theme, to define a complete colour pallete
-\input{include/theme_default.sty}
+\input{latexpresents/theme_default.sty}
 
 % Load the user's theme (if present), to set affiliations/decorations/etc. and to override and default colours as desired
 \ifx\latexpresents@theme\empty%
@@ -224,10 +224,10 @@
 
 % Beamer specific divisions for elements of a theme. In theory, any entry can appear anywhere
 % \usepackage is the same as \useXtheme{}, but does not expect the files to be at document root
-\usepackage{include/beamercolortheme}%
-\usepackage{include/beamerfonttheme}%
-\usepackage{include/beamerinnertheme}%
-\usepackage{include/beameroutertheme}%
+\usepackage{latexpresents/beamercolortheme}%
+\usepackage{latexpresents/beamerfonttheme}%
+\usepackage{latexpresents/beamerinnertheme}%
+\usepackage{latexpresents/beameroutertheme}%
 %%%%%%%%%%%% END BEAMER %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%% DOCUMENT INIT %%%%%%%%%%%%
