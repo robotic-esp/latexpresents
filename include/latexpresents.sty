@@ -1,38 +1,38 @@
 \NeedsTeXFormat{LaTeX2e}
-%\ProvidesPackage{ESPPresents}
+\ProvidesPackage{include/latexpresents}[2023/12/30 v1.0 LaTeXPresents]
 %%%%%%%%%%%% CLASS OPTIONS %%%%%%%%%%%%
 % Setup
 \RequirePackage{kvoptions}% For defining package options as key-value pairs
 \SetupKeyvalOptions%
 {%
-    family = espbeamer,%
-    prefix = espbeamer@%
+    family = latexpresents,%
+    prefix = latexpresents@%
 }%
 
 % Debug
-\DeclareBoolOption[false]{debug}% espbeamer@debug
+\DeclareBoolOption[false]{debug}% latexpresents@debug
 \DeclareComplementaryOption{nodebug}{debug}%
 % Theme
-\DeclareStringOption{theme}% espbeamer@theme
+\DeclareStringOption{theme}% latexpresents@theme
 % Colour theme
-\DeclareBoolOption[false]{dark}% espbeamer@dark
+\DeclareBoolOption[false]{dark}% latexpresents@dark
 \DeclareComplementaryOption{light}{dark}%
 % Which multimedia package to use
-\DeclareBoolOption[false]{adobe}% espbeamer@adobe
+\DeclareBoolOption[false]{adobe}% latexpresents@adobe
 \DeclareComplementaryOption{pdfpc}{adobe}%
 % Make a handout or presentation
-\DeclareBoolOption[false]{handout}% espbeamer@handout
+\DeclareBoolOption[false]{handout}% latexpresents@handout
 \DeclareComplementaryOption{present}{handout}%
 % Include videos or not (lightweight files)
-\DeclareBoolOption[false]{novideos}% espbeamer@videos
+\DeclareBoolOption[false]{novideos}% latexpresents@videos
 \DeclareComplementaryOption{videos}{novideos}%
 % Configure frame-numbering scheme
-\DeclareBoolOption[true]{pagenumbers}% espbeamer@pagenumbers
+\DeclareBoolOption[true]{pagenumbers}% latexpresents@pagenumbers
 \DeclareComplementaryOption{nonumbers}{pagenumbers}%
 % Greedily increase height of columns, when possible
-\DeclareBoolOption[false]{raggedtop}% espbeamer@raggedtop
+\DeclareBoolOption[false]{raggedtop}% latexpresents@raggedtop
 \DeclareComplementaryOption{alignedtop}{raggedtop}%
-\DeclareBoolOption[true]{raggedbottom}% espbeamer@raggedbottom
+\DeclareBoolOption[true]{raggedbottom}% latexpresents@raggedbottom
 \DeclareComplementaryOption{alignedbottom}{raggedbottom}%
 \ProcessKeyvalOptions*%
 %%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
@@ -52,18 +52,18 @@
 \uselengthunit{pt}% Unit for \printlength
 
 %For media (depending on adobe/pdfpc option)
-\ifespbeamer@adobe%
+\iflatexpresents@adobe%
     \RequirePackage{media9}%
 \else%
     \RequirePackage{multimedia}%
 \fi%
 
 % Speaker notes (depending on present/handout option)
-\ifespbeamer@handout%
+\iflatexpresents@handout%
     % Hide any notes (as done with \RequirePackage[hidenotes]{pdfpc}):
     \newcommand{\say}[1]{}%
 \else%
-    \ifespbeamer@adobe%
+    \iflatexpresents@adobe%
         % Hide any notes since \pdfpcnote notes create an on-screen text bubble in Adobe.
         % TODO: Is there any options for Adobe?
         \newcommand{\say}[1]{}%
@@ -95,7 +95,7 @@
 
 
 %%%%%%%%%%%% DIMENSIONS %%%%%%%%%%%%
-%%% Publically available positions and lengths (Set by ESP) %%%
+%%% Publically available positions and lengths (Set by latexpresents) %%%
 \newlength{\contentposx}% The starting x-position of all content in a frame.
 \newlength{\contentposy}% The starting y-position of all content in a frame.
 \newlength{\contentwidth}% The total width for all content in a frame.
@@ -114,90 +114,90 @@
 
 %%% Internal Parameters %%%
 % Slide spacing
-\newlength{\espbeamer@border@left}%
-\setlength{\espbeamer@border@left}{8pt}%
-\newlength{\espbeamer@border@right}%
-\setlength{\espbeamer@border@right}{8pt}%
-\newlength{\espbeamer@border@top}%
-\setlength{\espbeamer@border@top}{8pt}%
-\newlength{\espbeamer@border@bottom}%
-\setlength{\espbeamer@border@bottom}{8pt}%
+\newlength{\latexpresents@border@left}%
+\setlength{\latexpresents@border@left}{8pt}%
+\newlength{\latexpresents@border@right}%
+\setlength{\latexpresents@border@right}{8pt}%
+\newlength{\latexpresents@border@top}%
+\setlength{\latexpresents@border@top}{8pt}%
+\newlength{\latexpresents@border@bottom}%
+\setlength{\latexpresents@border@bottom}{8pt}%
 % Gutters
-\newlength{\espbeamer@gutter@column}% The space between columns in column layouts
-\setlength{\espbeamer@gutter@column}{6pt}%
-\newlength{\espbeamer@gutter@row}% The space between rows in row layouts
-\setlength{\espbeamer@gutter@row}{\espbeamer@gutter@column}%
-\newlength{\espbeamer@gutter@frametitle}% The space between the frame title and the content.
-\setlength{\espbeamer@gutter@frametitle}{8pt}% Beamer default is experimentally 8.5pt.
-\newlength{\espbeamer@gutter@footlogo}% The space between the foot logos and the content.
-\setlength{\espbeamer@gutter@footlogo}{2pt}%
-\newlength{\espbeamer@gutter@bio}% The space between the bios and the content.
-\setlength{\espbeamer@gutter@bio}{2pt}%
-\newlength{\espbeamer@gutter@pgnum}% The space between the page number and the content.
-\setlength{\espbeamer@gutter@pgnum}{2pt}%
+\newlength{\latexpresents@gutter@column}% The space between columns in column layouts
+\setlength{\latexpresents@gutter@column}{6pt}%
+\newlength{\latexpresents@gutter@row}% The space between rows in row layouts
+\setlength{\latexpresents@gutter@row}{\latexpresents@gutter@column}%
+\newlength{\latexpresents@gutter@frametitle}% The space between the frame title and the content.
+\setlength{\latexpresents@gutter@frametitle}{8pt}% Beamer default is experimentally 8.5pt.
+\newlength{\latexpresents@gutter@footlogo}% The space between the foot logos and the content.
+\setlength{\latexpresents@gutter@footlogo}{2pt}%
+\newlength{\latexpresents@gutter@bio}% The space between the bios and the content.
+\setlength{\latexpresents@gutter@bio}{2pt}%
+\newlength{\latexpresents@gutter@pgnum}% The space between the page number and the content.
+\setlength{\latexpresents@gutter@pgnum}{2pt}%
 % Title logos
-\newlength{\espbeamer@titlelogo@maxheight}%
-\setlength{\espbeamer@titlelogo@maxheight}{56pt}%
-\newlength{\espbeamer@titlelogo@sep}%
-\setlength{\espbeamer@titlelogo@sep}{12pt}% This may not be the exact logo separation used as title logos are scaled as a group if they are wider than the title page
+\newlength{\latexpresents@titlelogo@maxheight}%
+\setlength{\latexpresents@titlelogo@maxheight}{56pt}%
+\newlength{\latexpresents@titlelogo@sep}%
+\setlength{\latexpresents@titlelogo@sep}{12pt}% This may not be the exact logo separation used as title logos are scaled as a group if they are wider than the title page
 % Footer logos
-\newlength{\espbeamer@footlogo@height}%
-\setlength{\espbeamer@footlogo@height}{28pt}%
-\newlength{\espbeamer@footlogo@sep}%
-\setlength{\espbeamer@footlogo@sep}{12pt}%
+\newlength{\latexpresents@footlogo@height}%
+\setlength{\latexpresents@footlogo@height}{28pt}%
+\newlength{\latexpresents@footlogo@sep}%
+\setlength{\latexpresents@footlogo@sep}{12pt}%
 % Biographical photos (height is derived)
-\newlength{\espbeamer@bio@sep}%
-\setlength{\espbeamer@bio@sep}{1.5pt}%
+\newlength{\latexpresents@bio@sep}%
+\setlength{\latexpresents@bio@sep}{1.5pt}%
 
 
 
 %%% Internally calculated lengths %%%
-\newlength{\espbeamer@footlogo@width}% Width of the footers. Updated in \addfootlogo.
-\setlength{\espbeamer@footlogo@width}{0pt}%
-\newlength{\espbeamer@bio@height}% Height of the bios. Calculated from the default height of a frametitle in \initdims.
-\newlength{\espbeamer@bio@width}% Width of the bios. Updated in \addperson.
-\setlength{\espbeamer@bio@width}{0pt}%
-\newlength{\espbeamer@frametitle@defaultheight}% Default height of the frame title block. Calc'ed from \setframetitle in \initdims.
-\setlength{\espbeamer@frametitle@defaultheight}{0pt}%
-\newlength{\espbeamer@slide@frametitle@height}% Height of the frame title block on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@frametitle@height}{0pt}%
-\newlength{\espbeamer@slide@frametitle@width}% Width of the frame title block on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@frametitle@width}{0pt}%
-\newlength{\espbeamer@slide@pgnum@height}% Height of the slide number on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@pgnum@height}{0pt}%
-\newlength{\espbeamer@slide@pgnum@width}% Width of the slide number on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@pgnum@width}{0pt}%
-\newlength{\espbeamer@slide@topmatter@height}% Height of everything above content on a specific slide. Calc'ed by \calcdims as max of left/right height.
-\setlength{\espbeamer@slide@topmatter@height}{0pt}%
-\newlength{\espbeamer@slide@topmatter@heightleft}% Height of everything above content left on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@topmatter@heightleft}{0pt}%
-\newlength{\espbeamer@slide@topmatter@heightright}% Height of everything above content right on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@topmatter@heightright}{0pt}%
-\newlength{\espbeamer@slide@topmatter@widthleft}% Width from left of top matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@topmatter@widthleft}{0pt}%
-\newlength{\espbeamer@slide@topmatter@widthright}% Width from right of top matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@height}% Height of everything below content on a specific slide. Calc'ed by \calcdims as max of left/right height.
-\setlength{\espbeamer@slide@bottommatter@height}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@heightleft}% Height of everything below content left on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@bottommatter@heightleft}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@heightright}% Height of everything below content right on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@bottommatter@heightright}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@widthleft}% Width from left of bottom matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@bottommatter@widthleft}{0pt}%
-\newlength{\espbeamer@slide@bottommatter@widthright}% Width from right of bottom matter on a specific slide. Calc'ed by \calcdims.
-\setlength{\espbeamer@slide@bottommatter@widthright}{0pt}%
+\newlength{\latexpresents@footlogo@width}% Width of the footers. Updated in \addfootlogo.
+\setlength{\latexpresents@footlogo@width}{0pt}%
+\newlength{\latexpresents@bio@height}% Height of the bios. Calculated from the default height of a frametitle in \initdims.
+\newlength{\latexpresents@bio@width}% Width of the bios. Updated in \addperson.
+\setlength{\latexpresents@bio@width}{0pt}%
+\newlength{\latexpresents@frametitle@defaultheight}% Default height of the frame title block. Calc'ed from \setframetitle in \initdims.
+\setlength{\latexpresents@frametitle@defaultheight}{0pt}%
+\newlength{\latexpresents@slide@frametitle@height}% Height of the frame title block on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@frametitle@height}{0pt}%
+\newlength{\latexpresents@slide@frametitle@width}% Width of the frame title block on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@frametitle@width}{0pt}%
+\newlength{\latexpresents@slide@pgnum@height}% Height of the slide number on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@pgnum@height}{0pt}%
+\newlength{\latexpresents@slide@pgnum@width}% Width of the slide number on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@pgnum@width}{0pt}%
+\newlength{\latexpresents@slide@topmatter@height}% Height of everything above content on a specific slide. Calc'ed by \calcdims as max of left/right height.
+\setlength{\latexpresents@slide@topmatter@height}{0pt}%
+\newlength{\latexpresents@slide@topmatter@heightleft}% Height of everything above content left on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@heightleft}{0pt}%
+\newlength{\latexpresents@slide@topmatter@heightright}% Height of everything above content right on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@heightright}{0pt}%
+\newlength{\latexpresents@slide@topmatter@widthleft}% Width from left of top matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@widthleft}{0pt}%
+\newlength{\latexpresents@slide@topmatter@widthright}% Width from right of top matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@widthright}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@height}% Height of everything below content on a specific slide. Calc'ed by \calcdims as max of left/right height.
+\setlength{\latexpresents@slide@bottommatter@height}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@heightleft}% Height of everything below content left on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@heightleft}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@heightright}% Height of everything below content right on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@heightright}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@widthleft}% Width from left of bottom matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@widthleft}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@widthright}% Width from right of bottom matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@widthright}{0pt}%
 
 
 
 %%% Manually specified lengths %%%
-\newlength{\espbeamer@beamer@heightdiff}% This is Beamer's difference between \pageheight and \textheight regardless of aspect ratio.
-\setlength{\espbeamer@beamer@heightdiff}{4pt}% Found experimentally. Documented without expected use.
+\newlength{\latexpresents@beamer@heightdiff}% This is Beamer's difference between \pageheight and \textheight regardless of aspect ratio.
+\setlength{\latexpresents@beamer@heightdiff}{4pt}% Found experimentally. Documented without expected use.
 %%%%%%%%%%%% END DIMENSIONS %%%%%%%%%%%%%%%%%%
 
 
 
-%%%%%%%%%%%% ESP PRESENTS %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% LATEXPRESENTS %%%%%%%%%%%%%%%%%%
 \input{include/latex.sty}
 \input{include/layouts.sty}
 \input{include/decorations.sty}
@@ -212,18 +212,18 @@
 \input{include/theme_default.sty}
 
 % Load the user's theme (if present), to set affiliations/decorations/etc. and to override and default colours as desired
-\ifx\espbeamer@theme\empty%
+\ifx\latexpresents@theme\empty%
 \else%
-    \input{\espbeamer@theme}
+    \input{\latexpresents@theme}
 \fi%
-%%%%%%%%%%%% END ESP PRESENTS %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% END LATEXPRESENTS %%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%% BEAMER %%%%%%%%%%%%%%%%%%
 % Pass options to Beamer
-\setbeamersize{text margin left=\espbeamer@border@left, text margin right=\espbeamer@border@right}%
+\setbeamersize{text margin left=\latexpresents@border@left, text margin right=\latexpresents@border@right}%
 
 % Beamer specific divisions for elements of a theme. In theory, any entry can appear anywhere
-% \usepackage is the same as \useXtheme{ESP}, but does not expect the files to be at document root
+% \usepackage is the same as \useXtheme{}, but does not expect the files to be at document root
 \usepackage{include/beamercolortheme}%
 \usepackage{include/beamerfonttheme}%
 \usepackage{include/beamerinnertheme}%
@@ -240,11 +240,11 @@
 \AtBeginDocument%
 {%
     % Initialize the \onlyonce counter. I couldn't get it to work with an automatic reset on the Beamer counter "framenumber"...
-    \newcounter{espbeamer@counter@only}
+    \newcounter{latexpresents@counter@only}
 
     % Set the slide numbering (currently only every pdf page or none)
-    \ifespbeamer@pagenumbers%
-        \setbeamertemplate{page number in head/foot}[pagenumber]% - The ESP theme actually renders this in the right-sidebar, but makes use of this standard template to do so.
+    \iflatexpresents@pagenumbers%
+        \setbeamertemplate{page number in head/foot}[pagenumber]% - latexpresents actually renders this itself in the right-sidebar, but makes use of this standard template to do so.
         %[default] The default option is empty.
         %[framenumber] This option inserts the current frame number.
         %[totalframenumber] In addition to the current frame number, this option also shows the total number of frames.

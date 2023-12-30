@@ -8,30 +8,30 @@
 
 \mode<presentation>
 %%% Special pages %%%
-\newlength{\espbeamer@titlepage@toprowheight}% The height of the top row
-\newlength{\espbeamer@titlepage@bottomrowheight}% The height of the bottom row
-\newlength{\espbeamer@titlepage@origlogowidth}% The original width of the logos
+\newlength{\latexpresents@titlepage@toprowheight}% The height of the top row
+\newlength{\latexpresents@titlepage@bottomrowheight}% The height of the bottom row
+\newlength{\latexpresents@titlepage@origlogowidth}% The original width of the logos
 \setbeamertemplate{title page}% The title page
 {%
-    \settowidth{\espbeamer@titlepage@origlogowidth}{\espbeamer@titlelogos}%
+    \settowidth{\latexpresents@titlepage@origlogowidth}{\latexpresents@titlelogos}%
     \multirowlayout[nodecorations, gutter=0pt]%
     {0.6}%
     {%
-        \ifx\espbeamer@titlelogos\@empty%
+        \ifx\latexpresents@titlelogos\@empty%
         \else%
             \vfill%
-            \ifdim\espbeamer@titlepage@origlogowidth>\elementwidth%
+            \ifdim\latexpresents@titlepage@origlogowidth>\elementwidth%
                 \resizebox{\elementwidth}{!}%
                 {%
                     \usebeamercolor*{titlelogo}%
                     \usebeamerfont*{titlelogo}%
-                    \espbeamer@titlelogos{}%
+                    \latexpresents@titlelogos{}%
                 }%
             \else%
                 \usebeamercolor*{titlelogo}%
                 \usebeamerfont*{titlelogo}%
                 \hfil%
-                \espbeamer@titlelogos{}%
+                \latexpresents@titlelogos{}%
                 \hfil%
             \fi%
         \fi%
@@ -52,9 +52,9 @@
         \strut\insertauthor{}\\%
         \usebeamerfont{institute}%
         \usebeamercolor{institute}%
-        \ifx\espbeamer@group\empty%
+        \ifx\latexpresents@group\empty%
         \else%
-            \espbeamer@group\\
+            \latexpresents@group\\
         \fi%
         \strut\insertinstitute{}%
         \vfill%

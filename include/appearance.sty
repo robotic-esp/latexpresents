@@ -4,9 +4,9 @@
 \NewDocumentCommand{\uncoverstep}{+m}
 {%
     % Step counter before so that the first \uncoverstep is slide 2
-    \stepcounter{espbeamer@counter@only}%
+    \stepcounter{latexpresents@counter@only}%
     % All future slides
-    \uncover<\value{espbeamer@counter@only}->%
+    \uncover<\value{latexpresents@counter@only}->%
     {%
         #1
     }%
@@ -15,107 +15,107 @@
 \NewDocumentCommand{\onlyonce}{+m}
 {%
     % Just current slide
-    \only<\value{espbeamer@counter@only}>%
+    \only<\value{latexpresents@counter@only}>%
     {%
         #1
     }%
-    \stepcounter{espbeamer@counter@only}%
+    \stepcounter{latexpresents@counter@only}%
     % Step counter after so that the first \onlyonce is slide 1
 }%
 %%%% REPLACE (for one slide) %%%
 %\NewDocumentCommand{\replaceonce}{+m +m}
 %{%
 %    % Up to the current slide
-%    \only<-\value{espbeamer@counter@only}>%
+%    \only<-\value{latexpresents@counter@only}>%
 %    {%
 %        #1
 %    }%
 %    % Step counter inbetween
-%    \stepcounter{espbeamer@counter@only}%
+%    \stepcounter{latexpresents@counter@only}%
 %    % A new slide
-%    \only<\value{espbeamer@counter@only}>%
+%    \only<\value{latexpresents@counter@only}>%
 %    {%
 %        #2
 %    }%
 %    % Step counter inbetween
-%    \stepcounter{espbeamer@counter@only}%
+%    \stepcounter{latexpresents@counter@only}%
 %    % All future slides
-%    \only<\value{espbeamer@counter@only}->%
+%    \only<\value{latexpresents@counter@only}->%
 %    {%
 %      #1
 %    }%
 %}%
 
 % I no longer see a need for this duration-based function.
-% It requires an additional counter to be initialized in include/beamerthemeESP.sty:
-%   \newcounter{espbeamer@counter@onlylast}
+% It requires an additional counter to be initialized in include/beamertheme.sty:
+%   \newcounter{latexpresents@counter@onlylast}
 %\NewDocumentCommand{\onlyfor}{m +m}
 %{%
-%    \setcounter{espbeamer@counter@onlylast}{\value{espbeamer@counter@only}}
-%    \addtocounter{espbeamer@counter@onlylast}{#1}
-%    \addtocounter{espbeamer@counter@onlylast}{-1}
-%    \only<\value{espbeamer@counter@only}-\value{espbeamer@counter@onlylast}>%
+%    \setcounter{latexpresents@counter@onlylast}{\value{latexpresents@counter@only}}
+%    \addtocounter{latexpresents@counter@onlylast}{#1}
+%    \addtocounter{latexpresents@counter@onlylast}{-1}
+%    \only<\value{latexpresents@counter@only}-\value{latexpresents@counter@onlylast}>%
 %    {%
 %        #2
 %    }%
-%    \addtocounter{espbeamer@counter@only}{#1}%
+%    \addtocounter{latexpresents@counter@only}{#1}%
 %}%
 %%% INCREMENTAL REVEAL %%%
 
 %%% SLIDE TRANSITIONS %%%
 % Require pdfpc > 4.4.0
-\definecomplementarykeys{espbeamer}{transition}{nodebug}{debug}%
-\NewDocumentCommand{\espbeamer@transition@cmd}{O{}}
+\definecomplementarykeys{latexpresents}{transition}{nodebug}{debug}%
+\NewDocumentCommand{\latexpresents@transition@cmd}{O{}}
 {%
-    \ifespbeamer@debug%
-        \presetkeys[espbeamer]{transition}{debug=true}{}%
+    \iflatexpresents@debug%
+        \presetkeys[latexpresents]{transition}{debug=true}{}%
     \else%
-        \presetkeys[espbeamer]{transition}{debug=false}{}%
+        \presetkeys[latexpresents]{transition}{debug=false}{}%
     \fi%
-    \setkeys[espbeamer]{transition}{#1}%
+    \setkeys[latexpresents]{transition}{#1}%
 
-    \ifx\espbeamer@transition@effect\empty%
+    \ifx\latexpresents@transition@effect\empty%
         \transreplace%
-        \ifespbeamer@transition@debug%
+        \iflatexpresents@transition@debug%
             \say{\\ `\detokenize{\\transreplace}\\}%
         \fi%
     \else%
-        \ifx\espbeamer@transition@time\empty%
-            \ifx\espbeamer@transition@angle\empty%
-                \espbeamer@transition@effect%
-                \ifespbeamer@transition@debug%
-                    \say{\\ `\espbeamer@transition@effect`\\}%
+        \ifx\latexpresents@transition@time\empty%
+            \ifx\latexpresents@transition@angle\empty%
+                \latexpresents@transition@effect%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect`\\}%
                 \fi%
             \else%
-                \espbeamer@transition@effect[direction=\espbeamer@transition@angle]%
-                \ifespbeamer@transition@debug%
-                    \say{\\ `\espbeamer@transition@effect[direction=\espbeamer@transition@angle]`\\}%
+                \latexpresents@transition@effect[direction=\latexpresents@transition@angle]%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect[direction=\latexpresents@transition@angle]`\\}%
                 \fi%
             \fi%
         \else%
-            \ifx\espbeamer@transition@angle\empty%
-                \espbeamer@transition@effect[duration=\espbeamer@transition@time]%
-                \ifespbeamer@transition@debug%
-                    \say{\\ `\espbeamer@transition@effect[duration=\espbeamer@transition@time]`\\}%
+            \ifx\latexpresents@transition@angle\empty%
+                \latexpresents@transition@effect[duration=\latexpresents@transition@time]%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect[duration=\latexpresents@transition@time]`\\}%
                 \fi%
             \else%
-                \espbeamer@transition@effect[duration=\espbeamer@transition@time,direction=\espbeamer@transition@angle]%
-                \ifespbeamer@transition@debug%
-                    \say{\\ `\espbeamer@transition@effect[duration=\espbeamer@transition@time,direction=\espbeamer@transition@angle]`\\}%
+                \latexpresents@transition@effect[duration=\latexpresents@transition@time,direction=\latexpresents@transition@angle]%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect[duration=\latexpresents@transition@time,direction=\latexpresents@transition@angle]`\\}%
                 \fi%
             \fi%
         \fi%
     \fi%
 }%
 % effect
-\newcommand*{\espbeamer@transition@effect}{}%
-\newcommand*{\settransitioneffect}[1]{\renewcommand*{\espbeamer@transition@effect}{#1}}%
+\newcommand*{\latexpresents@transition@effect}{}%
+\newcommand*{\settransitioneffect}[1]{\renewcommand*{\latexpresents@transition@effect}{#1}}%
 % duration
-\newcommand*{\espbeamer@transition@time}{}%
-\newcommand*{\settransitiontime}[1]{\renewcommand*{\espbeamer@transition@time}{#1}}%
+\newcommand*{\latexpresents@transition@time}{}%
+\newcommand*{\settransitiontime}[1]{\renewcommand*{\latexpresents@transition@time}{#1}}%
 % direction
-\newcommand*{\espbeamer@transition@angle}{}%
-\newcommand*{\settransitionangle}[1]{\renewcommand*{\espbeamer@transition@angle}{#1}}%
+\newcommand*{\latexpresents@transition@angle}{}%
+\newcommand*{\settransitionangle}[1]{\renewcommand*{\latexpresents@transition@angle}{#1}}%
 % automatic advancement (not really slide transition, despite what Beamer says)
 \newcommand*{\autoadvance}[1]{%
     \transduration{#1}%

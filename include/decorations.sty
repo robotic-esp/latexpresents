@@ -3,7 +3,7 @@
 % Usage: \adddarkmodelogo[optional/path/to/special/titlepage/logo/for/dark/mode]{path/to/logo/for/dark/mode}
 \NewDocumentCommand{\adddarkmodelogo}{O{#2} m}%
 {%
-    \ifespbeamer@dark%
+    \iflatexpresents@dark%
         \addtitlelogo{#1}%
         \addfootlogo{#2}%
     \fi%
@@ -11,7 +11,7 @@
 % Usage: \addlightmodelogo[optional/path/to/special/titlepage/logo/for/light/mode]{path/to/logo/for/light/mode}
 \NewDocumentCommand{\addlightmodelogo}{O{#2} m}%
 {%
-    \ifespbeamer@dark%
+    \iflatexpresents@dark%
     \else
         \addtitlelogo{#1}%
         \addfootlogo{#2}%
@@ -31,70 +31,70 @@
 % https://tex.stackexchange.com/questions/451/when-to-use-edef-noexpand-and-expandafter
 %
 % Usage: \addtitlelogo{path/to/titlelogo}
-\def\espbeamer@titlelogos{}%
-\def\espbeamer@defaulttitlelogos{}%
+\def\latexpresents@titlelogos{}%
+\def\latexpresents@defaulttitlelogos{}%
 \newcommand*{\addtitlelogo}[1]%
 {%
-    \edef\espbeamer@titlelogos%
+    \edef\latexpresents@titlelogos%
     {%
-        \ifx\espbeamer@titlelogos\empty%
+        \ifx\latexpresents@titlelogos\empty%
         \else%
-            \espbeamer@titlelogos%
-            \hskip\espbeamer@titlelogo@sep%
+            \latexpresents@titlelogos%
+            \hskip\latexpresents@titlelogo@sep%
         \fi%
-        \includegraphics[height=\espbeamer@titlelogo@maxheight]{#1}%
+        \includegraphics[height=\latexpresents@titlelogo@maxheight]{#1}%
     }%
 }%
 % Usage: \resettitlelogo{}
 \newcommand*{\savetitlelogos}%
 {%
-    \edef\espbeamer@defaulttitlelogos{\espbeamer@titlelogos}%
+    \edef\latexpresents@defaulttitlelogos{\latexpresents@titlelogos}%
 }%
 % Usage: \savetitlelogo{}
 \newcommand*{\resettitlelogos}%
 {%
-    \edef\espbeamer@titlelogos{\espbeamer@defaulttitlelogos}%
+    \edef\latexpresents@titlelogos{\latexpresents@defaulttitlelogos}%
 }%
 % Usage: \cleartitlelogo{}
 \newcommand*{\cleartitlelogos}%
 {%
-    \def\espbeamer@titlelogos{}%
+    \def\latexpresents@titlelogos{}%
 }%
 
 %%% FOOT LOGOS %%%
 %
 % Usage: \addfootlogo{path/to/footerlogo}
-\def\espbeamer@footlogos{}%
-\def\espbeamer@defaultfootlogos{}%
+\def\latexpresents@footlogos{}%
+\def\latexpresents@defaultfootlogos{}%
 \newcommand*{\addfootlogo}[1]%
 {%
-    \edef\espbeamer@footlogos%
+    \edef\latexpresents@footlogos%
     {%
-        \ifx\espbeamer@footlogos\empty%
+        \ifx\latexpresents@footlogos\empty%
         \else%
-            \espbeamer@footlogos%
-            \hskip\espbeamer@footlogo@sep%
+            \latexpresents@footlogos%
+            \hskip\latexpresents@footlogo@sep%
         \fi%
-        \includegraphics[height=\espbeamer@footlogo@height]{#1}%
+        \includegraphics[height=\latexpresents@footlogo@height]{#1}%
     }%
-    \settowidth{\espbeamer@footlogo@width}{\espbeamer@footlogos}%
+    \settowidth{\latexpresents@footlogo@width}{\latexpresents@footlogos}%
 }%
 % Usage: \savefootlogo{}
 \newcommand*{\savefootlogos}%
 {%
-    \edef\espbeamer@defaultfootlogos{\espbeamer@footlogos}%
+    \edef\latexpresents@defaultfootlogos{\latexpresents@footlogos}%
 }%
 % Usage: \resetfootlogo{}
 \newcommand*{\resetfootlogos}%
 {%
-    \edef\espbeamer@footlogos{\espbeamer@defaultfootlogos}%
-    \settowidth{\espbeamer@footlogo@width}{\espbeamer@footlogos}%
+    \edef\latexpresents@footlogos{\latexpresents@defaultfootlogos}%
+    \settowidth{\latexpresents@footlogo@width}{\latexpresents@footlogos}%
 }%
 % Usage: \clearfootlogo{}
 \newcommand*{\clearfootlogos}%
 {%
-    \def\espbeamer@footlogos{}%
-    \setlength{\espbeamer@footlogo@width}{0pt}%
+    \def\latexpresents@footlogos{}%
+    \setlength{\latexpresents@footlogo@width}{0pt}%
 }%
 %%%%%%%%%%%% END LOGO COMMANDS %%%%%%%%%%%%%%%%%%
 
@@ -103,25 +103,25 @@
 %%%%%%%%%%%% BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
 %
 % Usage: \addperson{path/to/bio}
-\def\espbeamer@bios{}%
+\def\latexpresents@bios{}%
 \newcommand*\addperson[1]%
 {%
-    \edef\espbeamer@bios%
+    \edef\latexpresents@bios%
     {%
-        \includegraphics[height=\espbeamer@bio@height]{#1}%
-        \ifx\espbeamer@bios\empty%
+        \includegraphics[height=\latexpresents@bio@height]{#1}%
+        \ifx\latexpresents@bios\empty%
         \else%
-            \hskip\espbeamer@bio@sep%
-            \espbeamer@bios%
+            \hskip\latexpresents@bio@sep%
+            \latexpresents@bios%
         \fi%
     }%
-    \settowidth{\espbeamer@bio@width}{\espbeamer@bios}%
+    \settowidth{\latexpresents@bio@width}{\latexpresents@bios}%
 }%
 % Usage: \clearpeople{}
 \newcommand*{\clearpeople}%
 {%
-    \def\espbeamer@bios{}%
-    \setlength{\espbeamer@bio@width}{0pt}%
+    \def\latexpresents@bios{}%
+    \setlength{\latexpresents@bio@width}{0pt}%
 }%
 %%%%%%%%%%%% END BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
 
@@ -132,30 +132,30 @@
 %
 % Usage: \setbackdecorations[debug]{}
 %
-\definecomplementarykeys{espbeamer}{setbackdecorations}{nodebug}{debug}%
-%\define@boolkey[espbeamer]{setbackdecorations}{debug}[true]{}%
+\definecomplementarykeys{latexpresents}{setbackdecorations}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{setbackdecorations}{debug}[true]{}%
 \NewDocumentCommand{\setbackdecorations}{O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \presetkeys[espbeamer]{setbackdecorations}{debug=false}{}%
-        \setkeys[espbeamer]{setbackdecorations}{#1}%
+        \presetkeys[latexpresents]{setbackdecorations}{debug=false}{}%
+        \setkeys[latexpresents]{setbackdecorations}{#1}%
 
-        \ifespbeamer@setbackdecorations@debug%
+        \iflatexpresents@setbackdecorations@debug%
             \TPoptions{showboxes = true}%
         \fi%
 
         % Footer logos
-        \ifx\espbeamer@footlogos\@empty%
+        \ifx\latexpresents@footlogos\@empty%
         \else%
-            \begin{textblock*}{\espbeamer@footlogo@width}(\espbeamer@border@left, \paperheight - \espbeamer@border@bottom - \espbeamer@footlogo@height)%
-                \ifespbeamer@setbackdecorations@debug%
+            \begin{textblock*}{\latexpresents@footlogo@width}(\latexpresents@border@left, \paperheight - \latexpresents@border@bottom - \latexpresents@footlogo@height)%
+                \iflatexpresents@setbackdecorations@debug%
                     \textblockcolour{GREEN!25!BACKGROUND}%
                 \fi%
 
-                \begin{minipage}[t][\espbeamer@footlogo@height]{\espbeamer@footlogo@width}%
+                \begin{minipage}[t][\latexpresents@footlogo@height]{\latexpresents@footlogo@width}%
                     \usebeamercolor{logo}%
                     \usebeamerfont{logo}%
-                    \espbeamer@footlogos{}%
+                    \latexpresents@footlogos{}%
                 \end{minipage}%
             \end{textblock*}%
         \fi%
@@ -164,54 +164,54 @@
 %
 % Usage: setfrontdecorations[debug]{}
 %
-\definecomplementarykeys{espbeamer}{setfrontdecorations}{nodebug}{debug}%
-%\define@boolkey[espbeamer]{setfrontdecorations}{debug}[true]{}%
+\definecomplementarykeys{latexpresents}{setfrontdecorations}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{setfrontdecorations}{debug}[true]{}%
 \NewDocumentCommand{\setfrontdecorations}{O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \presetkeys[espbeamer]{setfrontdecorations}{debug=false}{}
-        \setkeys[espbeamer]{setfrontdecorations}{#1}%
+        \presetkeys[latexpresents]{setfrontdecorations}{debug=false}{}
+        \setkeys[latexpresents]{setfrontdecorations}{#1}%
 
-        \ifespbeamer@setfrontdecorations@debug%
+        \iflatexpresents@setfrontdecorations@debug%
             \TPoptions{showboxes = true}%
         \fi%
 
         % Frame title
-        \begin{textblock*}{\espbeamer@slide@frametitle@width}(\espbeamer@border@left, \espbeamer@border@top)%
+        \begin{textblock*}{\latexpresents@slide@frametitle@width}(\latexpresents@border@left, \latexpresents@border@top)%
             \usebeamercolor{frametitle}%
 
-            \ifespbeamer@setfrontdecorations@debug%
+            \iflatexpresents@setfrontdecorations@debug%
                 \textblockcolour{RED!25!BACKGROUND}%
             \fi%
 
-            \begin{minipage}[t][\espbeamer@slide@frametitle@height][t]{\espbeamer@slide@frametitle@width}%
+            \begin{minipage}[t][\latexpresents@slide@frametitle@height][t]{\latexpresents@slide@frametitle@width}%
                 \setframetitle[\insertframetitle{}][\insertframesubtitle{}]%
             \end{minipage}%
         \end{textblock*}%
 
         %Bio block
-        \ifx\espbeamer@bios\@empty%
+        \ifx\latexpresents@bios\@empty%
         \else%
-            \begin{textblock*}{\espbeamer@bio@width}(\paperwidth - \espbeamer@bio@width - \espbeamer@border@right, \espbeamer@border@top)%
-                \ifespbeamer@setfrontdecorations@debug%
+            \begin{textblock*}{\latexpresents@bio@width}(\paperwidth - \latexpresents@bio@width - \latexpresents@border@right, \latexpresents@border@top)%
+                \iflatexpresents@setfrontdecorations@debug%
                     \textblockcolour{ORANGE!25!BACKGROUND}%
                 \fi%
 
-                \begin{minipage}[t][\espbeamer@bio@height][t]{\espbeamer@bio@width}%
+                \begin{minipage}[t][\latexpresents@bio@height][t]{\latexpresents@bio@width}%
                     \usebeamercolor{bio}%
                     \usebeamerfont{bio}%
-                    \espbeamer@bios%
+                    \latexpresents@bios%
                 \end{minipage}
             \end{textblock*}%
         \fi%
 
         % Slide number
-        \begin{textblock*}{\espbeamer@slide@pgnum@width}(\paperwidth - \espbeamer@slide@pgnum@width - \espbeamer@border@right, \paperheight - \espbeamer@border@bottom - \espbeamer@slide@pgnum@height)%
-            \ifespbeamer@setfrontdecorations@debug%
+        \begin{textblock*}{\latexpresents@slide@pgnum@width}(\paperwidth - \latexpresents@slide@pgnum@width - \latexpresents@border@right, \paperheight - \latexpresents@border@bottom - \latexpresents@slide@pgnum@height)%
+            \iflatexpresents@setfrontdecorations@debug%
                 \textblockcolour{YELLOW!25!BACKGROUND}%
             \fi%
 
-            \begin{minipage}[t][\espbeamer@slide@pgnum@height][t]{\espbeamer@slide@pgnum@width}%
+            \begin{minipage}[t][\latexpresents@slide@pgnum@height][t]{\latexpresents@slide@pgnum@width}%
                 \hfill\usebeamertemplate*{page number in head/foot}%
             \end{minipage}
         \end{textblock*}%

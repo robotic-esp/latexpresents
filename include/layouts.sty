@@ -2,7 +2,7 @@
 \newcommand{\backupslides}[1]{\extraslides{#1}}%
 \newcommand{\extraslides}[1]%
 {%
-    \ifespbeamer@handout%
+    \iflatexpresents@handout%
     \else%
         \appendix
         \begin{frame}
@@ -63,96 +63,96 @@
 %
 % Usage: \multicolumnlayout[nodebug/debug,decorations/nodecorations,alignedtop/raggedtop,alignedbottom/raggedbottom,border/noborder,gutter=]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]
 %
-\define@key[espbeamer]{columnlayoutkeys}{gutter}[]{\setlength{\espbeamer@columnlayout@gutter}{#1}}%
-\definecomplementarykeys{espbeamer}{columnlayoutkeys}{decorations}{nodecorations}%
-\definecomplementarykeys{espbeamer}{columnlayoutkeys}{alignedtop}{raggedtop}%
-\definecomplementarykeys{espbeamer}{columnlayoutkeys}{alignedbottom}{raggedbottom}%
-\definecomplementarykeys{espbeamer}{columnlayoutkeys}{border}{noborder}%
-\definecomplementarykeys{espbeamer}{columnlayoutkeys}{nodebug}{debug}%
-%\define@boolkey[espbeamer]{columnlayoutkeys}{debug}[true]{}%
+\define@key[latexpresents]{columnlayoutkeys}{gutter}[]{\setlength{\latexpresents@columnlayout@gutter}{#1}}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{decorations}{nodecorations}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{alignedtop}{raggedtop}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{alignedbottom}{raggedbottom}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{border}{noborder}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{columnlayoutkeys}{debug}[true]{}%
 %
-\newlength{\espbeamer@columnlayout@gutter}%
-\newcounter{espbeamer@columnlayout@numgutters}%
-\newlength{\espbeamer@columnlayout@dividewidth}%
-\newlength{\espbeamer@columnlayout@checkwidth}%
-\newlength{\espbeamer@columnlayout@leftcolumnwidth}%
-\newlength{\espbeamer@columnlayout@middlecolumnwidth}%
-\newlength{\espbeamer@columnlayout@rightcolumnwidth}%
-\newlength{\espbeamer@columnlayout@topleftextent}%
-\newlength{\espbeamer@columnlayout@toprightextent}%
-\newlength{\espbeamer@columnlayout@bottomleftextent}%
-\newlength{\espbeamer@columnlayout@bottomrightextent}%
-\newlength{\espbeamer@columnlayout@columnextent}%
+\newlength{\latexpresents@columnlayout@gutter}%
+\newcounter{latexpresents@columnlayout@numgutters}%
+\newlength{\latexpresents@columnlayout@dividewidth}%
+\newlength{\latexpresents@columnlayout@checkwidth}%
+\newlength{\latexpresents@columnlayout@leftcolumnwidth}%
+\newlength{\latexpresents@columnlayout@middlecolumnwidth}%
+\newlength{\latexpresents@columnlayout@rightcolumnwidth}%
+\newlength{\latexpresents@columnlayout@topleftextent}%
+\newlength{\latexpresents@columnlayout@toprightextent}%
+\newlength{\latexpresents@columnlayout@bottomleftextent}%
+\newlength{\latexpresents@columnlayout@bottomrightextent}%
+\newlength{\latexpresents@columnlayout@columnextent}%
 %
 \NewDocumentCommand{\multicolumnlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \ifespbeamer@debug%
-            \presetkeys[espbeamer]{columnlayoutkeys}{debug=true}{}%
+        \iflatexpresents@debug%
+            \presetkeys[latexpresents]{columnlayoutkeys}{debug=true}{}%
         \else%
-            \presetkeys[espbeamer]{columnlayoutkeys}{debug=false}{}%
+            \presetkeys[latexpresents]{columnlayoutkeys}{debug=false}{}%
         \fi%
-        \ifespbeamer@raggedtop%
-            \presetkeys[espbeamer]{columnlayoutkeys}{raggedtop=true}{}%
+        \iflatexpresents@raggedtop%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedtop=true}{}%
         \else%
-            \presetkeys[espbeamer]{columnlayoutkeys}{raggedtop=false}{}%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedtop=false}{}%
         \fi%
-        \ifespbeamer@raggedbottom%
-            \presetkeys[espbeamer]{columnlayoutkeys}{raggedbottom=true}{}%
+        \iflatexpresents@raggedbottom%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedbottom=true}{}%
         \else%
-            \presetkeys[espbeamer]{columnlayoutkeys}{raggedbottom=false}{}%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedbottom=false}{}%
         \fi%
-        \presetkeys[espbeamer]{columnlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@column}{}
-        \setkeys[espbeamer]{columnlayoutkeys}{#1}%
+        \presetkeys[latexpresents]{columnlayoutkeys}{decorations=true, border=true, gutter=\latexpresents@gutter@column}{}
+        \setkeys[latexpresents]{columnlayoutkeys}{#1}%
 
         % Initialize the \onlyonce counter
-        \setcounter{espbeamer@counter@only}{1}
+        \setcounter{latexpresents@counter@only}{1}
 
         % Set the frame transition
-        \ifespbeamer@columnlayoutkeys@debug%
-            \espbeamer@transition@cmd[debug]%
+        \iflatexpresents@columnlayoutkeys@debug%
+            \latexpresents@transition@cmd[debug]%
         \else%
-            \espbeamer@transition@cmd%
+            \latexpresents@transition@cmd%
         \fi%
 
         % These only apply to this call because of the begingroup
-        \ifespbeamer@rowlayoutkeys@noborder%
-            \setlength{\espbeamer@border@left}{0pt}%
-            \setlength{\espbeamer@border@right}{0pt}%
-            \setlength{\espbeamer@border@top}{0pt}%
-            \setlength{\espbeamer@border@bottom}{0pt}%
+        \iflatexpresents@rowlayoutkeys@noborder%
+            \setlength{\latexpresents@border@left}{0pt}%
+            \setlength{\latexpresents@border@right}{0pt}%
+            \setlength{\latexpresents@border@top}{0pt}%
+            \setlength{\latexpresents@border@bottom}{0pt}%
         \fi%
 
         % Calculate the slide's dimensions
-        \ifespbeamer@columnlayoutkeys@decorations%
+        \iflatexpresents@columnlayoutkeys@decorations%
             \calcdims[decorations]{}%
         \else%
             \calcdims[nodecorations]{}%
         \fi%
 
-        \ifespbeamer@columnlayoutkeys@raggedtop%
-            \setlength{\espbeamer@columnlayout@topleftextent}{\espbeamer@border@left + \espbeamer@slide@topmatter@widthleft}%
-            \setlength{\espbeamer@columnlayout@toprightextent}{\paperwidth - \espbeamer@slide@topmatter@widthright - \espbeamer@border@right}%
+        \iflatexpresents@columnlayoutkeys@raggedtop%
+            \setlength{\latexpresents@columnlayout@topleftextent}{\latexpresents@border@left + \latexpresents@slide@topmatter@widthleft}%
+            \setlength{\latexpresents@columnlayout@toprightextent}{\paperwidth - \latexpresents@slide@topmatter@widthright - \latexpresents@border@right}%
         \fi%
-        \ifespbeamer@columnlayoutkeys@raggedbottom%
-            \setlength{\espbeamer@columnlayout@bottomleftextent}{\espbeamer@border@left + \espbeamer@slide@bottommatter@widthleft}%
-            \setlength{\espbeamer@columnlayout@bottomrightextent}{\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right}%
+        \iflatexpresents@columnlayoutkeys@raggedbottom%
+            \setlength{\latexpresents@columnlayout@bottomleftextent}{\latexpresents@border@left + \latexpresents@slide@bottommatter@widthleft}%
+            \setlength{\latexpresents@columnlayout@bottomrightextent}{\paperwidth - \latexpresents@slide@bottommatter@widthright - \latexpresents@border@right}%
         \fi%
 
         % Calculate the content width/height given the margins.
-        \setlength{\contentposx}{\espbeamer@border@left}%
-        \setlength{\contentposy}{\espbeamer@border@top + \espbeamer@slide@topmatter@height}%
-        \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
-        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom}%
+        \setlength{\contentposx}{\latexpresents@border@left}%
+        \setlength{\contentposy}{\latexpresents@border@top + \latexpresents@slide@topmatter@height}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \latexpresents@border@right}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \latexpresents@slide@bottommatter@height - \latexpresents@border@bottom}%
 
-        \ifespbeamer@columnlayoutkeys@debug%
+        \iflatexpresents@columnlayoutkeys@debug%
             \TPoptions{showboxes = true}%
             \debugmargins{}%
         \fi%
 
         % Set the background frame decorations
-        \ifespbeamer@columnlayoutkeys@decorations%
-            \ifespbeamer@columnlayoutkeys@debug%
+        \iflatexpresents@columnlayoutkeys@decorations%
+            \iflatexpresents@columnlayoutkeys@debug%
                 \setbackdecorations[debug]{}%
             \else%
                 \setbackdecorations{}%
@@ -160,37 +160,37 @@
         \fi%
 
         % Calculate the number of gutters
-        \setcounter{espbeamer@columnlayout@numgutters}{0}
+        \setcounter{latexpresents@columnlayout@numgutters}{0}
         \ifx\relax#4\relax%
         \else%
-            \stepcounter{espbeamer@columnlayout@numgutters}%
+            \stepcounter{latexpresents@columnlayout@numgutters}%
         \fi%
         % Third
         \ifx\relax#6\relax%
         \else%
-            \stepcounter{espbeamer@columnlayout@numgutters}%
+            \stepcounter{latexpresents@columnlayout@numgutters}%
         \fi%
 
         % Calculate lengths of each given element
-        \setlength{\espbeamer@columnlayout@dividewidth}{\contentwidth - \value{espbeamer@columnlayout@numgutters}\espbeamer@columnlayout@gutter}
-        \setlength{\espbeamer@columnlayout@leftcolumnwidth}{#2\espbeamer@columnlayout@dividewidth}%
+        \setlength{\latexpresents@columnlayout@dividewidth}{\contentwidth - \value{latexpresents@columnlayout@numgutters}\latexpresents@columnlayout@gutter}
+        \setlength{\latexpresents@columnlayout@leftcolumnwidth}{#2\latexpresents@columnlayout@dividewidth}%
         % Second
         \ifx\relax#4\relax%
-            \setlength{\espbeamer@columnlayout@middlecolumnwidth}{0pt}%
+            \setlength{\latexpresents@columnlayout@middlecolumnwidth}{0pt}%
         \else%
-            \setlength{\espbeamer@columnlayout@middlecolumnwidth}{#4\espbeamer@columnlayout@dividewidth}%
+            \setlength{\latexpresents@columnlayout@middlecolumnwidth}{#4\latexpresents@columnlayout@dividewidth}%
         \fi%
         % Third
         \ifx\relax#6\relax%
-            \setlength{\espbeamer@columnlayout@rightcolumnwidth}{0pt}%
+            \setlength{\latexpresents@columnlayout@rightcolumnwidth}{0pt}%
         \else%
-            \setlength{\espbeamer@columnlayout@rightcolumnwidth}{#6\espbeamer@columnlayout@dividewidth}%
+            \setlength{\latexpresents@columnlayout@rightcolumnwidth}{#6\latexpresents@columnlayout@dividewidth}%
         \fi%
 
         % Sanity check
-        \setlength{\espbeamer@columnlayout@checkwidth}{\espbeamer@columnlayout@leftcolumnwidth + \espbeamer@columnlayout@middlecolumnwidth + \espbeamer@columnlayout@rightcolumnwidth}
-        \ifdim\espbeamer@columnlayout@checkwidth>\espbeamer@columnlayout@dividewidth%
-            \PackageError{ESPBeamer}%
+        \setlength{\latexpresents@columnlayout@checkwidth}{\latexpresents@columnlayout@leftcolumnwidth + \latexpresents@columnlayout@middlecolumnwidth + \latexpresents@columnlayout@rightcolumnwidth}
+        \ifdim\latexpresents@columnlayout@checkwidth>\latexpresents@columnlayout@dividewidth%
+            \PackageError{latexpresents}%
             {
                 The provided relative element sizes appear to sum to more than 1.0
             }%
@@ -201,51 +201,51 @@
         \setlength{\elementposy}{\contentposy}%
         \setlength{\elementheight}{\contentheight}%
         \setlength{\elementposx}{\contentposx}% Record the top-left of the first column
-        \setlength{\elementwidth}{\espbeamer@columnlayout@leftcolumnwidth}%
+        \setlength{\elementwidth}{\latexpresents@columnlayout@leftcolumnwidth}%
 
         % Adjust top if ragged
-        \ifespbeamer@columnlayoutkeys@raggedtop%
-            \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+        \iflatexpresents@columnlayoutkeys@raggedtop%
+            \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
             % Where are we horizontally?
-            \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+            \ifdim\elementposx>\latexpresents@columnlayout@topleftextent%
                 % Past left topmatter, what about right?
-                \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@toprightextent% "<=" is not a valid comparator
                     % Under right topmatter
-                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightright}%
-                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightright}%
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightright}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightright}%
                 \else%
                     % Under no topmatter
-                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
-                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height}%
                 \fi%
             \else%
                 % Under left topmatter
-                \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightleft}%
-                \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightleft}%
+                \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightleft}%
+                \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightleft}%
             \fi%
         \fi%
 
         % Adjust bottom if ragged
-        \ifespbeamer@columnlayoutkeys@raggedbottom%
-            \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+        \iflatexpresents@columnlayoutkeys@raggedbottom%
+            \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
             % Where are we horizontally?
-            \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+            \ifdim\elementposx>\latexpresents@columnlayout@bottomleftextent%
                 % Past left bottommatter, what about right?
-                \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@bottomrightextent% "<=" is not a valid comparator
                     % Above right bottommatter
-                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightright}%
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightright}%
                 \else%
                     % Above no bottommatter
-                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height}%
                 \fi%
             \else%
                 % Above left bottom matter
-                \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightleft}%
+                \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightleft}%
             \fi%
         \fi%
 
         % Typeset the content of the first column
-        \ifespbeamer@columnlayoutkeys@debug%
+        \iflatexpresents@columnlayoutkeys@debug%
             \layoutelement[debug]{#3}%
         \else%
             \layoutelement{#3}%
@@ -255,8 +255,8 @@
         \ifx\relax#4\relax%
         \else%
             % Debug the 1--2 gutter
-            \ifespbeamer@columnlayoutkeys@debug%
-                \begin{textblock*}{\espbeamer@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
+            \iflatexpresents@columnlayoutkeys@debug%
+                \begin{textblock*}{\latexpresents@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
                     \textblockcolour{GRAY!50!BACKGROUND}%
                     \vbox to \elementheight{\hfill}%
                 \end{textblock*}%
@@ -265,52 +265,52 @@
             % Calc position
             \setlength{\elementposy}{\contentposy}%
             \setlength{\elementheight}{\contentheight}%
-            \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
-            \setlength{\elementwidth}{\espbeamer@columnlayout@middlecolumnwidth}%
+            \addtolength{\elementposx}{\elementwidth + \latexpresents@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\latexpresents@columnlayout@middlecolumnwidth}%
 
             % Adjust top if ragged
-            \ifespbeamer@columnlayoutkeys@raggedtop%
-                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            \iflatexpresents@columnlayoutkeys@raggedtop%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
                 % Where are we horizontally?
-                \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+                \ifdim\elementposx>\latexpresents@columnlayout@topleftextent%
                     % Past left topmatter, what about right?
-                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@toprightextent% "<=" is not a valid comparator
                         % Under right topmatter
-                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightright}%
-                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightright}%
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightright}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightright}%
                     \else%
                         % Under no topmatter
-                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
-                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height}%
                     \fi%
                 \else%
                     % Under left topmatter
-                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightleft}%
-                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightleft}%
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightleft}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightleft}%
                 \fi%
             \fi%
 
             % Adjust bottom if ragged
-            \ifespbeamer@columnlayoutkeys@raggedbottom%
-                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            \iflatexpresents@columnlayoutkeys@raggedbottom%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
                 % Where are we horizontally?
-                \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                \ifdim\elementposx>\latexpresents@columnlayout@bottomleftextent%
                     % Past left bottommatter, what about right?
-                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@bottomrightextent% "<=" is not a valid comparator
                         % Above right bottommatter
-                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightright}%
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightright}%
                     \else%
                         % Above no bottommatter
-                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height}%
                     \fi%
                 \else%
                     % Above left bottom matter
-                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightleft}%
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightleft}%
                 \fi%
             \fi%
 
             % Typeset the content of the second column
-            \ifespbeamer@columnlayoutkeys@debug%
+            \iflatexpresents@columnlayoutkeys@debug%
                 \layoutelement[debug]{#5}%
             \else%
                 \layoutelement{#5}%
@@ -321,8 +321,8 @@
         \ifx\relax#6\relax%
         \else%
             % Debug the 2--3 gutter
-            \ifespbeamer@columnlayoutkeys@debug%
-                \begin{textblock*}{\espbeamer@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
+            \iflatexpresents@columnlayoutkeys@debug%
+                \begin{textblock*}{\latexpresents@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
                     \textblockcolour{GRAY!50!BACKGROUND}%
                     \vbox to \elementheight{\hfill}%
                 \end{textblock*}%
@@ -331,52 +331,52 @@
             % Calc position
             \setlength{\elementposy}{\contentposy}%
             \setlength{\elementheight}{\contentheight}%
-            \addtolength{\elementposx}{\elementwidth + \espbeamer@columnlayout@gutter}% Move to the top-left of this column
-            \setlength{\elementwidth}{\espbeamer@columnlayout@rightcolumnwidth}%
+            \addtolength{\elementposx}{\elementwidth + \latexpresents@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\latexpresents@columnlayout@rightcolumnwidth}%
 
             % Adjust top if ragged
-            \ifespbeamer@columnlayoutkeys@raggedtop%
-                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            \iflatexpresents@columnlayoutkeys@raggedtop%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
                 % Where are we horizontally?
-                \ifdim\elementposx>\espbeamer@columnlayout@topleftextent%
+                \ifdim\elementposx>\latexpresents@columnlayout@topleftextent%
                     % Past left topmatter, what about right?
-                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@toprightextent% "<=" is not a valid comparator
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@toprightextent% "<=" is not a valid comparator
                         % Under right topmatter
-                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightright}%
-                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightright}%
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightright}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightright}%
                     \else%
                         % Under no topmatter
-                        \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height}%
-                        \addtolength{\elementheight}{\espbeamer@slide@topmatter@height}%
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height}%
                     \fi%
                 \else%
                     % Under left topmatter
-                    \addtolength{\elementposy}{-\espbeamer@slide@topmatter@height + \espbeamer@slide@topmatter@heightleft}%
-                    \addtolength{\elementheight}{\espbeamer@slide@topmatter@height - \espbeamer@slide@topmatter@heightleft}%
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightleft}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightleft}%
                 \fi%
             \fi%
 
             % Adjust bottom if ragged
-            \ifespbeamer@columnlayoutkeys@raggedbottom%
-                \setlength{\espbeamer@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            \iflatexpresents@columnlayoutkeys@raggedbottom%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
                 % Where are we horizontally?
-                \ifdim\elementposx>\espbeamer@columnlayout@bottomleftextent%
+                \ifdim\elementposx>\latexpresents@columnlayout@bottomleftextent%
                     % Past left bottommatter, what about right?
-                    \ifdim\espbeamer@columnlayout@columnextent>\espbeamer@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@bottomrightextent% "<=" is not a valid comparator
                         % Above right bottommatter
-                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightright}%
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightright}%
                     \else%
                         % Above no bottommatter
-                        \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height}%
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height}%
                     \fi%
                 \else%
                     % Above left bottom matter
-                    \addtolength{\elementheight}{\espbeamer@slide@bottommatter@height - \espbeamer@slide@bottommatter@heightleft}%
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightleft}%
                 \fi%
             \fi%
 
             % Typeset the content of the third column
-            \ifespbeamer@columnlayoutkeys@debug%
+            \iflatexpresents@columnlayoutkeys@debug%
                 \layoutelement[debug]{#7}%
             \else%
                 \layoutelement{#7}%
@@ -384,8 +384,8 @@
         \fi%
 
         % Set the foreground frame decorations
-        \ifespbeamer@columnlayoutkeys@decorations%
-            \ifespbeamer@columnlayoutkeys@debug%
+        \iflatexpresents@columnlayoutkeys@decorations%
+            \iflatexpresents@columnlayoutkeys@debug%
                 \setfrontdecorations[debug]{}%
             \else%
                 \setfrontdecorations{}%
@@ -398,70 +398,70 @@
 %
 % Usage: \multirowlayout[nodebug/debug,decorations/nodecorations,border/noborder,gutter=]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]
 %
-\define@key[espbeamer]{rowlayoutkeys}{gutter}[]{\setlength{\espbeamer@rowlayout@gutter}{#1}}%
-\definecomplementarykeys{espbeamer}{rowlayoutkeys}{decorations}{nodecorations}%
-\definecomplementarykeys{espbeamer}{rowlayoutkeys}{border}{noborder}%
-\definecomplementarykeys{espbeamer}{rowlayoutkeys}{nodebug}{debug}%
-%\define@boolkey[espbeamer]{rowlayoutkeys}{debug}[true]{}%
+\define@key[latexpresents]{rowlayoutkeys}{gutter}[]{\setlength{\latexpresents@rowlayout@gutter}{#1}}%
+\definecomplementarykeys{latexpresents}{rowlayoutkeys}{decorations}{nodecorations}%
+\definecomplementarykeys{latexpresents}{rowlayoutkeys}{border}{noborder}%
+\definecomplementarykeys{latexpresents}{rowlayoutkeys}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{rowlayoutkeys}{debug}[true]{}%
 %
-\newlength{\espbeamer@rowlayout@gutter}%
-\newcounter{espbeamer@rowlayout@numgutters}%
-\newlength{\espbeamer@rowlayout@divideheight}%
-\newlength{\espbeamer@rowlayout@checkheight}%
-\newlength{\espbeamer@rowlayout@toprowheight}%
-\newlength{\espbeamer@rowlayout@middlerowheight}%
-\newlength{\espbeamer@rowlayout@bottomrowheight}%
+\newlength{\latexpresents@rowlayout@gutter}%
+\newcounter{latexpresents@rowlayout@numgutters}%
+\newlength{\latexpresents@rowlayout@divideheight}%
+\newlength{\latexpresents@rowlayout@checkheight}%
+\newlength{\latexpresents@rowlayout@toprowheight}%
+\newlength{\latexpresents@rowlayout@middlerowheight}%
+\newlength{\latexpresents@rowlayout@bottomrowheight}%
 %
 \NewDocumentCommand{\multirowlayout}{O{} m +m O{} +O{} O{} +O{}}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \ifespbeamer@debug%
-            \presetkeys[espbeamer]{rowlayoutkeys}{debug=true}{}%
+        \iflatexpresents@debug%
+            \presetkeys[latexpresents]{rowlayoutkeys}{debug=true}{}%
         \else%
-            \presetkeys[espbeamer]{rowlayoutkeys}{debug=false}{}%
+            \presetkeys[latexpresents]{rowlayoutkeys}{debug=false}{}%
         \fi%
-        \presetkeys[espbeamer]{rowlayoutkeys}{decorations=true, border=true, gutter=\espbeamer@gutter@row}{}
-        \setkeys[espbeamer]{rowlayoutkeys}{#1}%
+        \presetkeys[latexpresents]{rowlayoutkeys}{decorations=true, border=true, gutter=\latexpresents@gutter@row}{}
+        \setkeys[latexpresents]{rowlayoutkeys}{#1}%
 
         % Initialize the \onlyonce counter
-        \setcounter{espbeamer@counter@only}{1}
+        \setcounter{latexpresents@counter@only}{1}
 
         % Set the frame transition
-        \ifespbeamer@rowlayoutkeys@debug%
-            \espbeamer@transition@cmd[debug]%
+        \iflatexpresents@rowlayoutkeys@debug%
+            \latexpresents@transition@cmd[debug]%
         \else%
-            \espbeamer@transition@cmd%
+            \latexpresents@transition@cmd%
         \fi%
 
         % These only apply to this call because of the begingroup
-        \ifespbeamer@rowlayoutkeys@noborder%
-            \setlength{\espbeamer@border@left}{0pt}%
-            \setlength{\espbeamer@border@right}{0pt}%
-            \setlength{\espbeamer@border@top}{0pt}%
-            \setlength{\espbeamer@border@bottom}{0pt}%
+        \iflatexpresents@rowlayoutkeys@noborder%
+            \setlength{\latexpresents@border@left}{0pt}%
+            \setlength{\latexpresents@border@right}{0pt}%
+            \setlength{\latexpresents@border@top}{0pt}%
+            \setlength{\latexpresents@border@bottom}{0pt}%
         \fi%
 
         % Calculate the slide's dimensions
-        \ifespbeamer@rowlayoutkeys@decorations%
+        \iflatexpresents@rowlayoutkeys@decorations%
             \calcdims[decorations]{}%
         \else%
             \calcdims[nodecorations]{}%
         \fi%
 
         % Calculate the content width/height given the margins
-        \setlength{\contentposx}{\espbeamer@border@left}%
-        \setlength{\contentposy}{\espbeamer@border@top + \espbeamer@slide@topmatter@height}%
-        \setlength{\contentwidth}{\paperwidth - \contentposx - \espbeamer@border@right}%
-        \setlength{\contentheight}{\paperheight - \contentposy - \espbeamer@slide@bottommatter@height - \espbeamer@border@bottom}%
+        \setlength{\contentposx}{\latexpresents@border@left}%
+        \setlength{\contentposy}{\latexpresents@border@top + \latexpresents@slide@topmatter@height}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \latexpresents@border@right}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \latexpresents@slide@bottommatter@height - \latexpresents@border@bottom}%
 
-        \ifespbeamer@rowlayoutkeys@debug%
+        \iflatexpresents@rowlayoutkeys@debug%
             \TPoptions{showboxes = true}%
             \debugmargins{}%
         \fi%
 
         % Set the background frame decorations
-        \ifespbeamer@rowlayoutkeys@decorations%
-            \ifespbeamer@rowlayoutkeys@debug%
+        \iflatexpresents@rowlayoutkeys@decorations%
+            \iflatexpresents@rowlayoutkeys@debug%
                 \setbackdecorations[debug]{}%
             \else%
                 \setbackdecorations{}%
@@ -469,37 +469,37 @@
         \fi%
 
         % Calculate the number of gutters
-        \setcounter{espbeamer@rowlayout@numgutters}{0}
+        \setcounter{latexpresents@rowlayout@numgutters}{0}
         \ifx\relax#4\relax%
         \else%
-            \stepcounter{espbeamer@rowlayout@numgutters}%
+            \stepcounter{latexpresents@rowlayout@numgutters}%
         \fi%
         % Third
         \ifx\relax#6\relax%
         \else%
-            \stepcounter{espbeamer@rowlayout@numgutters}%
+            \stepcounter{latexpresents@rowlayout@numgutters}%
         \fi%
 
         % Calculate lengths of each given element
-        \setlength{\espbeamer@rowlayout@divideheight}{\contentheight - \value{espbeamer@rowlayout@numgutters}\espbeamer@rowlayout@gutter}
-        \setlength{\espbeamer@rowlayout@toprowheight}{#2\espbeamer@rowlayout@divideheight}%
+        \setlength{\latexpresents@rowlayout@divideheight}{\contentheight - \value{latexpresents@rowlayout@numgutters}\latexpresents@rowlayout@gutter}
+        \setlength{\latexpresents@rowlayout@toprowheight}{#2\latexpresents@rowlayout@divideheight}%
         % Second
         \ifx\relax#4\relax%
-            \setlength{\espbeamer@rowlayout@middlerowheight}{0pt}%
+            \setlength{\latexpresents@rowlayout@middlerowheight}{0pt}%
         \else%
-            \setlength{\espbeamer@rowlayout@middlerowheight}{#4\espbeamer@rowlayout@divideheight}%
+            \setlength{\latexpresents@rowlayout@middlerowheight}{#4\latexpresents@rowlayout@divideheight}%
         \fi%
         % Third
         \ifx\relax#6\relax%
-            \setlength{\espbeamer@rowlayout@bottomrowheight}{0pt}%
+            \setlength{\latexpresents@rowlayout@bottomrowheight}{0pt}%
         \else%
-            \setlength{\espbeamer@rowlayout@bottomrowheight}{#6\espbeamer@rowlayout@divideheight}%
+            \setlength{\latexpresents@rowlayout@bottomrowheight}{#6\latexpresents@rowlayout@divideheight}%
         \fi%
 
         % Sanity check
-        \setlength{\espbeamer@rowlayout@checkheight}{\espbeamer@rowlayout@toprowheight + \espbeamer@rowlayout@middlerowheight + \espbeamer@rowlayout@bottomrowheight}
-        \ifdim\espbeamer@rowlayout@checkheight>\espbeamer@rowlayout@divideheight%
-            \PackageError{ESPBeamer}%
+        \setlength{\latexpresents@rowlayout@checkheight}{\latexpresents@rowlayout@toprowheight + \latexpresents@rowlayout@middlerowheight + \latexpresents@rowlayout@bottomrowheight}
+        \ifdim\latexpresents@rowlayout@checkheight>\latexpresents@rowlayout@divideheight%
+            \PackageError{latexpresents}%
             {
                 The provided relative element sizes appear to sum to more than 1.0
             }%
@@ -512,10 +512,10 @@
 
         % First element
         \setlength{\elementposy}{\contentposy}%  Record the top-left of the first row
-        \setlength{\elementheight}{\espbeamer@rowlayout@toprowheight}%
+        \setlength{\elementheight}{\latexpresents@rowlayout@toprowheight}%
 
         % Typeset the content of the first row
-        \ifespbeamer@rowlayoutkeys@debug%
+        \iflatexpresents@rowlayoutkeys@debug%
             \layoutelement[debug]{#3}%
         \else%
             \layoutelement{#3}%
@@ -525,19 +525,19 @@
         \ifx\relax#4\relax%
         \else%
             % Debug the 1--2 gutter
-            \ifespbeamer@rowlayoutkeys@debug%
+            \iflatexpresents@rowlayoutkeys@debug%
                 \begin{textblock*}{\elementwidth}(\elementposx, \elementposy + \elementheight)%
                     \textblockcolour{GRAY!50!BACKGROUND}%
-                    \vbox to \espbeamer@rowlayout@gutter{\hfill}%
+                    \vbox to \latexpresents@rowlayout@gutter{\hfill}%
                 \end{textblock*}%
             \fi%%
 
             % Calc position
-            \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
-            \setlength{\elementheight}{\espbeamer@rowlayout@middlerowheight}%
+            \addtolength{\elementposy}{\elementheight + \latexpresents@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\latexpresents@rowlayout@middlerowheight}%
 
             % Typeset the content of the second row
-            \ifespbeamer@rowlayoutkeys@debug%
+            \iflatexpresents@rowlayoutkeys@debug%
                 \layoutelement[debug]{#5}%
             \else%
                 \layoutelement{#5}%
@@ -548,19 +548,19 @@
         \ifx\relax#6\relax%
         \else%
             % Debug the 2--3 gutter
-            \ifespbeamer@rowlayoutkeys@debug%
+            \iflatexpresents@rowlayoutkeys@debug%
                 \begin{textblock*}{\elementwidth}(\elementposx, \elementposy + \elementheight)%
                     \textblockcolour{GRAY!50!BACKGROUND}%
-                    \vbox to \espbeamer@rowlayout@gutter{\hfill}%
+                    \vbox to \latexpresents@rowlayout@gutter{\hfill}%
                 \end{textblock*}%
             \fi%
 
             % Calc position
-            \addtolength{\elementposy}{\elementheight + \espbeamer@rowlayout@gutter}% Move to the top-left of this row
-            \setlength{\elementheight}{\espbeamer@rowlayout@bottomrowheight}%
+            \addtolength{\elementposy}{\elementheight + \latexpresents@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\latexpresents@rowlayout@bottomrowheight}%
 
             % Typeset the content of the third row
-            \ifespbeamer@rowlayoutkeys@debug%
+            \iflatexpresents@rowlayoutkeys@debug%
                 \layoutelement[debug]{#7}%
             \else%
                 \layoutelement{#7}%
@@ -568,8 +568,8 @@
         \fi%
 
         % Set the foreground frame decorations
-        \ifespbeamer@rowlayoutkeys@decorations%
-            \ifespbeamer@rowlayoutkeys@debug%
+        \iflatexpresents@rowlayoutkeys@decorations%
+            \iflatexpresents@rowlayoutkeys@debug%
                 \setfrontdecorations[debug]{}%
             \else%
                 \setfrontdecorations{}%
@@ -599,20 +599,20 @@
 %
 % Usage: \layoutelement[nodebug/debug]{content}
 %
-\definecomplementarykeys{espbeamer}{layoutelement}{nodebug}{debug}%
-%\define@boolkey[espbeamer]{layoutelement}{debug}[true]{}%
+\definecomplementarykeys{latexpresents}{layoutelement}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{layoutelement}{debug}[true]{}%
 \NewDocumentCommand{\layoutelement}{O{} +m}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
-        \presetkeys[espbeamer]{layoutelement}{debug=false}{}
-        \setkeys[espbeamer]{layoutelement}{#1}%
+        \presetkeys[latexpresents]{layoutelement}{debug=false}{}
+        \setkeys[latexpresents]{layoutelement}{#1}%
 
-        \ifespbeamer@layoutelement@debug%
+        \iflatexpresents@layoutelement@debug%
             \TPoptions{showboxes = true}%
         \fi%
 
         \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
-            \ifespbeamer@layoutelement@debug%
+            \iflatexpresents@layoutelement@debug%
                 \textblockcolour{BLUE!25!BACKGROUND}%
             \fi%
             \begin{minipage}[t][\elementheight][t]{\elementwidth}%
@@ -620,7 +620,7 @@
             \end{minipage}
         \end{textblock*}%
 
-        \ifespbeamer@layoutelement@debug%
+        \iflatexpresents@layoutelement@debug%
             \TPoptions{showboxes = false}%
             \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
                 \begin{minipage}[t][\elementheight][t]{\elementwidth}%
@@ -650,15 +650,15 @@
 \newcommand{\initdims}%
 {%
     % The height of a frame title, when set.
-    \settototalheight{\espbeamer@frametitle@defaultheight}%
+    \settototalheight{\latexpresents@frametitle@defaultheight}%
     {%
         \parbox{\paperwidth}{\setframetitle[\strut][\strut]}%
     }%
 
     % The height of a bio photo, when present
-    \setlength{\espbeamer@bio@height}%
+    \setlength{\latexpresents@bio@height}%
     {%
-        \espbeamer@frametitle@defaultheight + \espbeamer@gutter@frametitle - \espbeamer@gutter@bio%
+        \latexpresents@frametitle@defaultheight + \latexpresents@gutter@frametitle - \latexpresents@gutter@bio%
     }%
 }%
 
@@ -666,137 +666,137 @@
 %
 % Usage: \calcdims[decorations]{}
 %
-\definecomplementarykeys{espbeamer}{calcdims}{decorations}{nodecorations}%
-%\define@boolkey[espbeamer]{calcdims}{decorations}[true]{}%
+\definecomplementarykeys{latexpresents}{calcdims}{decorations}{nodecorations}%
+%\define@boolkey[latexpresents]{calcdims}{decorations}[true]{}%
 %
-\newlength{\espbeamer@calcdims@titlewidth}
-\newlength{\espbeamer@calcdims@subtitlewidth}
+\newlength{\latexpresents@calcdims@titlewidth}
+\newlength{\latexpresents@calcdims@subtitlewidth}
 \NewDocumentCommand{\calcdims}{O{}}%
 {%
 %    % We can't use a begin group, because we want to set lengths globally.
-    \presetkeys[espbeamer]{calcdims}{decorations=true}{}
-    \setkeys[espbeamer]{calcdims}{#1}%
+    \presetkeys[latexpresents]{calcdims}{decorations=true}{}
+    \setkeys[latexpresents]{calcdims}{#1}%
 
     % Frametitle
-    \ifespbeamer@calcdims@decorations%
+    \iflatexpresents@calcdims@decorations%
         \ifx\insertframetitle\@empty%
              % Height
-            \setlength{\espbeamer@slide@frametitle@height}{0pt}%
+            \setlength{\latexpresents@slide@frametitle@height}{0pt}%
              % Width
-            \setlength{\espbeamer@slide@frametitle@width}{0pt}%
+            \setlength{\latexpresents@slide@frametitle@width}{0pt}%
         \else%
              % Height
-            \setlength{\espbeamer@slide@frametitle@height}{\espbeamer@frametitle@defaultheight}%
+            \setlength{\latexpresents@slide@frametitle@height}{\latexpresents@frametitle@defaultheight}%
              % Width
             \ifx\insertframesubtitle\@empty%
-                \settowidth{\espbeamer@slide@frametitle@width}%
+                \settowidth{\latexpresents@slide@frametitle@width}%
                 {%
                     \usebeamerfont{frametitle}%
                     \insertframetitle{}%
                 }%
             \else%
-                \settowidth{\espbeamer@calcdims@titlewidth}%
+                \settowidth{\latexpresents@calcdims@titlewidth}%
                 {%
                     \usebeamerfont{frametitle}%
                     \insertframetitle{}%
                 }%
-                \settowidth{\espbeamer@calcdims@subtitlewidth}%
+                \settowidth{\latexpresents@calcdims@subtitlewidth}%
                 {%
                     \usebeamerfont{framesubtitle}%
                     \insertframesubtitle{}%
                 }%
-                \ifdim\espbeamer@calcdims@titlewidth>\espbeamer@calcdims@subtitlewidth%
-                    \setlength{\espbeamer@slide@frametitle@width}{\espbeamer@calcdims@titlewidth}%
+                \ifdim\latexpresents@calcdims@titlewidth>\latexpresents@calcdims@subtitlewidth%
+                    \setlength{\latexpresents@slide@frametitle@width}{\latexpresents@calcdims@titlewidth}%
                 \else%
-                    \setlength{\espbeamer@slide@frametitle@width}{\espbeamer@calcdims@subtitlewidth}%
+                    \setlength{\latexpresents@slide@frametitle@width}{\latexpresents@calcdims@subtitlewidth}%
                 \fi%
             \fi%
         \fi%
     \else%
         % Height
-        \setlength{\espbeamer@slide@frametitle@height}{0pt}%
+        \setlength{\latexpresents@slide@frametitle@height}{0pt}%
         % Width
-        \setlength{\espbeamer@slide@frametitle@width}{0pt}%
+        \setlength{\latexpresents@slide@frametitle@width}{0pt}%
     \fi%
 
     % Page number
-    \ifespbeamer@calcdims@decorations%
-        \settototalheight{\espbeamer@slide@pgnum@height}{\usebeamertemplate*{page number in head/foot}}%
-        \settowidth{\espbeamer@slide@pgnum@width}{\usebeamertemplate*{page number in head/foot}}%
+    \iflatexpresents@calcdims@decorations%
+        \settototalheight{\latexpresents@slide@pgnum@height}{\usebeamertemplate*{page number in head/foot}}%
+        \settowidth{\latexpresents@slide@pgnum@width}{\usebeamertemplate*{page number in head/foot}}%
     \else%
-        \setlength{\espbeamer@slide@pgnum@height}{0pt}%
-        \setlength{\espbeamer@slide@pgnum@width}{0pt}%
+        \setlength{\latexpresents@slide@pgnum@height}{0pt}%
+        \setlength{\latexpresents@slide@pgnum@width}{0pt}%
     \fi%
 
     % The sizes of footer logos and the bios are calculated by their macros as they are set.
 
     % Combined top matter
-    \ifespbeamer@calcdims@decorations%
+    \iflatexpresents@calcdims@decorations%
         % Left
-        \ifdim\espbeamer@slide@frametitle@width>0pt%
+        \ifdim\latexpresents@slide@frametitle@width>0pt%
             % Height
-            \setlength{\espbeamer@slide@topmatter@heightleft}{\espbeamer@slide@frametitle@height + \espbeamer@gutter@frametitle}%
+            \setlength{\latexpresents@slide@topmatter@heightleft}{\latexpresents@slide@frametitle@height + \latexpresents@gutter@frametitle}%
             % Width
-            \setlength{\espbeamer@slide@topmatter@widthleft}{\espbeamer@slide@frametitle@width + \espbeamer@gutter@frametitle}%
+            \setlength{\latexpresents@slide@topmatter@widthleft}{\latexpresents@slide@frametitle@width + \latexpresents@gutter@frametitle}%
         \else%
-            \setlength{\espbeamer@slide@topmatter@heightleft}{0pt}%
-            \setlength{\espbeamer@slide@topmatter@widthleft}{0pt}%
+            \setlength{\latexpresents@slide@topmatter@heightleft}{0pt}%
+            \setlength{\latexpresents@slide@topmatter@widthleft}{0pt}%
         \fi%
 
         % Right
-        \ifdim\espbeamer@bio@width>0pt%
+        \ifdim\latexpresents@bio@width>0pt%
             % Height
-            \setlength{\espbeamer@slide@topmatter@heightright}{\espbeamer@bio@height + \espbeamer@gutter@bio}%
+            \setlength{\latexpresents@slide@topmatter@heightright}{\latexpresents@bio@height + \latexpresents@gutter@bio}%
             % Width
-            \setlength{\espbeamer@slide@topmatter@widthright}{\espbeamer@gutter@bio + \espbeamer@bio@width}%
+            \setlength{\latexpresents@slide@topmatter@widthright}{\latexpresents@gutter@bio + \latexpresents@bio@width}%
         \else%
-            \setlength{\espbeamer@slide@topmatter@heightright}{0pt}%
-            \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
+            \setlength{\latexpresents@slide@topmatter@heightright}{0pt}%
+            \setlength{\latexpresents@slide@topmatter@widthright}{0pt}%
         \fi%
 
         % Max height
-        \ifdim\espbeamer@slide@topmatter@heightleft>\espbeamer@slide@topmatter@heightright%
-            \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@slide@topmatter@heightleft}%
+        \ifdim\latexpresents@slide@topmatter@heightleft>\latexpresents@slide@topmatter@heightright%
+            \setlength{\latexpresents@slide@topmatter@height}{\latexpresents@slide@topmatter@heightleft}%
         \else%
-            \setlength{\espbeamer@slide@topmatter@height}{\espbeamer@slide@topmatter@heightright}%
+            \setlength{\latexpresents@slide@topmatter@height}{\latexpresents@slide@topmatter@heightright}%
         \fi%
     \else%
-        \setlength{\espbeamer@slide@topmatter@heightleft}{0pt}%
-        \setlength{\espbeamer@slide@topmatter@heightright}{0pt}%
-        \setlength{\espbeamer@slide@topmatter@height}{0pt}%
-        \setlength{\espbeamer@slide@topmatter@widthleft}{\paperwidth}%
-        \setlength{\espbeamer@slide@topmatter@widthright}{0pt}%
+        \setlength{\latexpresents@slide@topmatter@heightleft}{0pt}%
+        \setlength{\latexpresents@slide@topmatter@heightright}{0pt}%
+        \setlength{\latexpresents@slide@topmatter@height}{0pt}%
+        \setlength{\latexpresents@slide@topmatter@widthleft}{\paperwidth}%
+        \setlength{\latexpresents@slide@topmatter@widthright}{0pt}%
     \fi%
 
     % Combined bottom matter
-    \ifespbeamer@calcdims@decorations%
+    \iflatexpresents@calcdims@decorations%
         % Left
-        \ifdim\espbeamer@footlogo@width>0pt%
+        \ifdim\latexpresents@footlogo@width>0pt%
             % Height
-            \setlength{\espbeamer@slide@bottommatter@heightleft}{\espbeamer@gutter@footlogo + \espbeamer@footlogo@height}%
+            \setlength{\latexpresents@slide@bottommatter@heightleft}{\latexpresents@gutter@footlogo + \latexpresents@footlogo@height}%
             % Width
-            \setlength{\espbeamer@slide@bottommatter@widthleft}{\espbeamer@footlogo@width + \espbeamer@gutter@footlogo}%
+            \setlength{\latexpresents@slide@bottommatter@widthleft}{\latexpresents@footlogo@width + \latexpresents@gutter@footlogo}%
         \else%
-            \setlength{\espbeamer@slide@bottommatter@heightleft}{0pt}%
-            \setlength{\espbeamer@slide@bottommatter@widthleft}{0pt}%
+            \setlength{\latexpresents@slide@bottommatter@heightleft}{0pt}%
+            \setlength{\latexpresents@slide@bottommatter@widthleft}{0pt}%
         \fi%
 
         % Right
-        \setlength{\espbeamer@slide@bottommatter@heightright}{\espbeamer@gutter@pgnum + \espbeamer@slide@pgnum@height}%
-        \setlength{\espbeamer@slide@bottommatter@widthright}{\espbeamer@gutter@pgnum + \espbeamer@slide@pgnum@width}%
+        \setlength{\latexpresents@slide@bottommatter@heightright}{\latexpresents@gutter@pgnum + \latexpresents@slide@pgnum@height}%
+        \setlength{\latexpresents@slide@bottommatter@widthright}{\latexpresents@gutter@pgnum + \latexpresents@slide@pgnum@width}%
 
         % Max height
-        \ifdim\espbeamer@slide@bottommatter@heightleft>\espbeamer@slide@bottommatter@heightright%
-            \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@slide@bottommatter@heightleft}%
+        \ifdim\latexpresents@slide@bottommatter@heightleft>\latexpresents@slide@bottommatter@heightright%
+            \setlength{\latexpresents@slide@bottommatter@height}{\latexpresents@slide@bottommatter@heightleft}%
         \else%
-            \setlength{\espbeamer@slide@bottommatter@height}{\espbeamer@slide@bottommatter@heightright}%
+            \setlength{\latexpresents@slide@bottommatter@height}{\latexpresents@slide@bottommatter@heightright}%
         \fi%
     \else%
-        \setlength{\espbeamer@slide@bottommatter@heightleft}{0pt}%
-        \setlength{\espbeamer@slide@bottommatter@heightright}{0pt}%
-        \setlength{\espbeamer@slide@bottommatter@height}{0pt}%
-        \setlength{\espbeamer@slide@bottommatter@widthleft}{\paperwidth}%
-        \setlength{\espbeamer@slide@bottommatter@widthright}{0pt}%
+        \setlength{\latexpresents@slide@bottommatter@heightleft}{0pt}%
+        \setlength{\latexpresents@slide@bottommatter@heightright}{0pt}%
+        \setlength{\latexpresents@slide@bottommatter@height}{0pt}%
+        \setlength{\latexpresents@slide@bottommatter@widthleft}{\paperwidth}%
+        \setlength{\latexpresents@slide@bottommatter@widthright}{0pt}%
     \fi%
 }%
 %%%%%%%%%%%% END LAYOUT HELPERS %%%%%%%%%%%%
@@ -813,45 +813,45 @@
         % Top
         \begin{textblock*}{\paperwidth}(0pt, 0pt)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@border@top{\hfill}%
+            \vbox to \latexpresents@border@top{\hfill}%
         \end{textblock*}%
         % Bottom
-        \begin{textblock*}{\paperwidth}(0pt, \paperheight - \espbeamer@border@bottom)%
+        \begin{textblock*}{\paperwidth}(0pt, \paperheight - \latexpresents@border@bottom)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@border@bottom{\hfill}%
+            \vbox to \latexpresents@border@bottom{\hfill}%
         \end{textblock*}%
         % Left
-        \begin{textblock*}{\espbeamer@border@left}(0pt, 0pt)%
+        \begin{textblock*}{\latexpresents@border@left}(0pt, 0pt)%
             \textblockcolour{GRAY!50!BACKGROUND}%
             \vbox to \paperheight{\hfill}%
         \end{textblock*}%
         % Right
-        \begin{textblock*}{\espbeamer@border@right}(\paperwidth - \espbeamer@border@right, 0pt)%
+        \begin{textblock*}{\latexpresents@border@right}(\paperwidth - \latexpresents@border@right, 0pt)%
             \textblockcolour{GRAY!50!BACKGROUND}%
             \vbox to \paperheight{\hfill}%
         \end{textblock*}%
 
         %Decorations
         % Top left
-        \begin{textblock*}{\espbeamer@slide@topmatter@widthleft}(\espbeamer@border@left, \espbeamer@border@top)%
+        \begin{textblock*}{\latexpresents@slide@topmatter@widthleft}(\latexpresents@border@left, \latexpresents@border@top)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@topmatter@heightleft{\hfill}%
+            \vbox to \latexpresents@slide@topmatter@heightleft{\hfill}%
         \end{textblock*}%
         % Top right
-        \begin{textblock*}{\espbeamer@slide@topmatter@widthright}(\paperwidth - \espbeamer@slide@topmatter@widthright - \espbeamer@border@right, \espbeamer@border@top)%
+        \begin{textblock*}{\latexpresents@slide@topmatter@widthright}(\paperwidth - \latexpresents@slide@topmatter@widthright - \latexpresents@border@right, \latexpresents@border@top)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@topmatter@heightright{\hfill}%
+            \vbox to \latexpresents@slide@topmatter@heightright{\hfill}%
         \end{textblock*}%
 
         % Bottom left
-        \begin{textblock*}{\espbeamer@slide@bottommatter@widthleft}(\espbeamer@border@left, \paperheight - \espbeamer@slide@bottommatter@heightleft - \espbeamer@border@bottom)%
+        \begin{textblock*}{\latexpresents@slide@bottommatter@widthleft}(\latexpresents@border@left, \paperheight - \latexpresents@slide@bottommatter@heightleft - \latexpresents@border@bottom)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@bottommatter@heightleft{\hfill}%
+            \vbox to \latexpresents@slide@bottommatter@heightleft{\hfill}%
         \end{textblock*}%
         % Bottom right
-        \begin{textblock*}{\espbeamer@slide@bottommatter@widthright}(\paperwidth - \espbeamer@slide@bottommatter@widthright - \espbeamer@border@right, \paperheight - \espbeamer@slide@bottommatter@heightright - \espbeamer@border@bottom)%
+        \begin{textblock*}{\latexpresents@slide@bottommatter@widthright}(\paperwidth - \latexpresents@slide@bottommatter@widthright - \latexpresents@border@right, \paperheight - \latexpresents@slide@bottommatter@heightright - \latexpresents@border@bottom)%
             \textblockcolour{GRAY!50!BACKGROUND}%
-            \vbox to \espbeamer@slide@bottommatter@heightright{\hfill}%
+            \vbox to \latexpresents@slide@bottommatter@heightright{\hfill}%
         \end{textblock*}%
     \endgroup%
 }
