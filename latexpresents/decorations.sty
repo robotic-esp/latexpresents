@@ -23,9 +23,9 @@
     \addtitlelogo{#1}%
     \addfootlogo{#2}%
 }%
-\newcommand*{\savelogos}{\savetitlelogos{}\savefootlogos{}}%
-\newcommand*{\resetlogos}{\resettitlelogos{}\resetfootlogos{}}%
-\newcommand*{\clearlogos}{\cleartitlelogos{}\clearfootlogos{}}%
+\NewDocumentCommand{\savelogos}{}{\savetitlelogos{}\savefootlogos{}}%
+\NewDocumentCommand{\resetlogos}{}{\resettitlelogos{}\resetfootlogos{}}%
+\NewDocumentCommand{\clearlogos}{}{\cleartitlelogos{}\clearfootlogos{}}%
 
 %%% TITLE LOGOS %%%
 % https://tex.stackexchange.com/questions/451/when-to-use-edef-noexpand-and-expandafter
@@ -33,7 +33,7 @@
 % Usage: \addtitlelogo{path/to/titlelogo}
 \def\latexpresents@titlelogos{}%
 \def\latexpresents@defaulttitlelogos{}%
-\newcommand*{\addtitlelogo}[1]%
+\NewDocumentCommand{\addtitlelogo}{m}%
 {%
     \edef\latexpresents@titlelogos%
     {%
@@ -46,17 +46,17 @@
     }%
 }%
 % Usage: \resettitlelogo{}
-\newcommand*{\savetitlelogos}%
+\NewDocumentCommand{\savetitlelogos}{}%
 {%
     \edef\latexpresents@defaulttitlelogos{\latexpresents@titlelogos}%
 }%
 % Usage: \savetitlelogo{}
-\newcommand*{\resettitlelogos}%
+\NewDocumentCommand{\resettitlelogos}{}%
 {%
     \edef\latexpresents@titlelogos{\latexpresents@defaulttitlelogos}%
 }%
 % Usage: \cleartitlelogo{}
-\newcommand*{\cleartitlelogos}%
+\NewDocumentCommand{\cleartitlelogos}{}%
 {%
     \def\latexpresents@titlelogos{}%
 }%
@@ -66,7 +66,7 @@
 % Usage: \addfootlogo{path/to/footerlogo}
 \def\latexpresents@footlogos{}%
 \def\latexpresents@defaultfootlogos{}%
-\newcommand*{\addfootlogo}[1]%
+\NewDocumentCommand{\addfootlogo}{m}%
 {%
     \edef\latexpresents@footlogos%
     {%
@@ -80,18 +80,18 @@
     \settowidth{\latexpresents@footlogo@width}{\latexpresents@footlogos}%
 }%
 % Usage: \savefootlogo{}
-\newcommand*{\savefootlogos}%
+\NewDocumentCommand{\savefootlogos}{}%
 {%
     \edef\latexpresents@defaultfootlogos{\latexpresents@footlogos}%
 }%
 % Usage: \resetfootlogo{}
-\newcommand*{\resetfootlogos}%
+\NewDocumentCommand{\resetfootlogos}{}%
 {%
     \edef\latexpresents@footlogos{\latexpresents@defaultfootlogos}%
     \settowidth{\latexpresents@footlogo@width}{\latexpresents@footlogos}%
 }%
 % Usage: \clearfootlogo{}
-\newcommand*{\clearfootlogos}%
+\NewDocumentCommand{\clearfootlogos}{}%
 {%
     \def\latexpresents@footlogos{}%
     \setlength{\latexpresents@footlogo@width}{0pt}%
@@ -104,7 +104,7 @@
 %
 % Usage: \addperson{path/to/bio}
 \def\latexpresents@bios{}%
-\newcommand*\addperson[1]%
+\NewDocumentCommand\addperson{m}%
 {%
     \edef\latexpresents@bios%
     {%
@@ -118,7 +118,7 @@
     \settowidth{\latexpresents@bio@width}{\latexpresents@bios}%
 }%
 % Usage: \clearpeople{}
-\newcommand*{\clearpeople}%
+\NewDocumentCommand{\clearpeople}{}%
 {%
     \def\latexpresents@bios{}%
     \setlength{\latexpresents@bio@width}{0pt}%

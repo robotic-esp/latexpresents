@@ -1,6 +1,6 @@
 %%%%%%%%%%%% SECTIONING %%%%%%%%%%%%
-\newcommand{\backupslides}[1]{\extraslides{#1}}%
-\newcommand{\extraslides}[1]%
+\NewDocumentCommand{\backupslides}{+m}{\extraslides{#1}}%
+\NewDocumentCommand{\extraslides}{+m}%
 {%
     \iflatexpresents@handout%
     \else%
@@ -647,7 +647,7 @@
 %
 % Usage: \initdims{}
 %
-\newcommand{\initdims}%
+\NewDocumentCommand{\initdims}{}%
 {%
     % The height of a frame title, when set.
     \settototalheight{\latexpresents@frametitle@defaultheight}%
@@ -804,7 +804,7 @@
 
 
 %%%%%%%%%%%% DEBUGS %%%%%%%%%%%%
-\newcommand*{\debugmargins}
+\NewDocumentCommand{\debugmargins}{}
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \TPoptions{showboxes = true}%

@@ -1,9 +1,9 @@
-\newcommand{\fullimagelight}[2][]%
+\NewDocumentCommand{\fullimagelight}{O{} m}%
 {%
     \PackageWarning{latexpresents}{fullimagelight is deprecated, use the 'lightcaption' option for fullimage.}%
     \fullimage[#1][lightcaption]{#2}%
 }%
-\newcommand{\fullimagedark}[2][]%
+\NewDocumentCommand{\fullimagedark}{O{} m}%
 {%
     \PackageWarning{latexpresents}{fullimagedark is deprecated, use the 'darkcaption' option for fullimage.}%
     \fullimage[#1][darkcaption]{#2}%

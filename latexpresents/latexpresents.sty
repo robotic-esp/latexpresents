@@ -61,22 +61,22 @@
 % Speaker notes (depending on present/handout option)
 \iflatexpresents@handout%
     % Hide any notes (as done with \RequirePackage[hidenotes]{pdfpc}):
-    \newcommand{\say}[1]{}%
+    \NewDocumentCommand{\say}{+m}{}%
 \else%
     \iflatexpresents@adobe%
         % Hide any notes since \pdfpcnote notes create an on-screen text bubble in Adobe.
         % TODO: Is there any options for Adobe?
-        \newcommand{\say}[1]{}%
+        \NewDocumentCommand{\say}{+m}{}%
     \else%
         \IfFileExists{pdfpc.sty}
         {%
             \RequirePackage{pdfpc}%
-            \newcommand{\say}[1]{\pdfpcnote{##1}}%
+            \NewDocumentCommand{\say}{+m}{\pdfpcnote{##1}}%
         }%
         {%
             % This is a version of \pdfpcnote copied from pdfpc.sty (#1 changed to ##1).
             \RequirePackage{hyperxmp}
-            \newcommand{\say}[1]{%
+            \NewDocumentCommand{\say}{+m}{%
                 \edef\\{\string\n}%
                 \pdfannot width 0pt height 0pt depth 0pt {%
                     /Subtype /Text%

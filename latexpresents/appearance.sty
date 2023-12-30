@@ -108,16 +108,16 @@
     \fi%
 }%
 % effect
-\newcommand*{\latexpresents@transition@effect}{}%
-\newcommand*{\settransitioneffect}[1]{\renewcommand*{\latexpresents@transition@effect}{#1}}%
+\def\latexpresents@transition@effect{}%
+\NewDocumentCommand{\settransitioneffect}{m}{\def\latexpresents@transition@effect{#1}}%
 % duration
-\newcommand*{\latexpresents@transition@time}{}%
-\newcommand*{\settransitiontime}[1]{\renewcommand*{\latexpresents@transition@time}{#1}}%
+\def\latexpresents@transition@time{}%
+\NewDocumentCommand{\settransitiontime}{m}{\def\latexpresents@transition@time{#1}}%
 % direction
-\newcommand*{\latexpresents@transition@angle}{}%
-\newcommand*{\settransitionangle}[1]{\renewcommand*{\latexpresents@transition@angle}{#1}}%
-% automatic advancement (not really slide transition, despite what Beamer says)
-\newcommand*{\autoadvance}[1]{%
+\def\latexpresents@transition@angle{}%
+\NewDocumentCommand{\settransitionangle}{m}{\def\latexpresents@transition@angle{#1}}%
+% automatic advancement (not really ``transition duration'', despite what Beamer calls it)
+\NewDocumentCommand{\autoadvance}{m}{%
     \transduration{#1}%
     \say{\\***AUTO (#1s)***\\}%
 }%
@@ -136,37 +136,37 @@
         \contour{background canvas.bg}{#1}%
     }%
 }
-\newcommand*{\copyrighttext}[1]{\usebeamerfont{copyright}\usebeamercolor*{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK?}
+\NewDocumentCommand{\copyrighttext}{m}{\usebeamerfont{copyright}\usebeamercolor*{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK?}
 
 %%% MATH-COMPATIBLE COLOURED ALERTS %%%
-\newcommand*{\alertBlue}[1]{{\setBlueAlert{}\alert{#1}}}%
-\newcommand*{\alertGreen}[1]{{\setGreenAlert{}\alert{#1}}}%
-\newcommand*{\alertYellow}[1]{{\setYellowAlert{}\alert{#1}}}%
-\newcommand*{\alertOrange}[1]{{\setOrangeAlert{}\alert{#1}}}%
-\newcommand*{\alertRed}[1]{{\setRedAlert{}\alert{#1}}}%
-\newcommand*{\alertGray}[1]{{\setGrayAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertBlue}{m}{{\setBlueAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertGreen}{m}{{\setGreenAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertYellow}{m}{{\setYellowAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertOrange}{m}{{\setOrangeAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertRed}{m}{{\setRedAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertGray}{m}{{\setGrayAlert{}\alert{#1}}}%
 
-\newcommand*{\setBlueAlert}%
+\NewDocumentCommand{\setBlueAlert}{}%
 {%
     \setbeamercolor{alerted text}{fg=BLUE, bg=}%
 }%
-\newcommand*{\setGreenAlert}%
+\NewDocumentCommand{\setGreenAlert}{}%
 {%
     \setbeamercolor{alerted text}{fg=GREEN, bg=}%
 }%
-\newcommand*{\setYellowAlert}%
+\NewDocumentCommand{\setYellowAlert}{}%
 {%
     \setbeamercolor{alerted text}{fg=YELLOW, bg=}%
 }%
-\newcommand*{\setOrangeAlert}%
+\NewDocumentCommand{\setOrangeAlert}{}%
 {%
     \setbeamercolor{alerted text}{fg=ORANGE, bg=}%
 }%
-\newcommand*{\setRedAlert}%
+\NewDocumentCommand{\setRedAlert}{}%
 {%
     \setbeamercolor{alerted text}{fg=RED, bg=}%
 }%
-\newcommand*{\setGrayAlert}%
+\NewDocumentCommand{\setGrayAlert}{}%
 {%
     \setbeamercolor{alerted text}{fg=GRAY, bg=}%
 }%
