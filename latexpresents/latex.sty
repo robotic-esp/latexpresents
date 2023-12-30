@@ -1,14 +1,14 @@
 %%%%%%%%%%%% LATEX FUNCTIONS %%%%%%%%%%%%
-%%% A helper function to define complimentary keys (i.e., key1 != key2)
+%%% A helper function to define complementary keys (i.e., key1 != key2)
 %
-% Usage: \definecomplimentarykeys{prefix}{keyfamily}{key1}{key2}
+% Usage: \definecomplementarykeys{prefix}{keyfamily}{key1}{key2}
 %
 % Generates keys of the form: pre@fam@key1 and pre@fam@key2 as would be created by:
-%   \define@boolkey{prefix}{keyfamily}{key1}[true]{}
-%   \define@boolkey{prefix}{keyfamily}{key2}[true]{}
+%   \define@boolkey[prefix]{keyfamily}{key1}[true]{}
+%   \define@boolkey[prefix]{keyfamily}{key2}[true]{}
 % but tied such that they are mutually exclusive
 % https://tex.stackexchange.com/a/53601
-\NewDocumentCommand{\definecomplimentarykeys}{m m m m}%{pre}{fam}{key1}{key2}
+\NewDocumentCommand{\definecomplementarykeys}{m m m m}%{pre}{fam}{key1}{key2}
 {%
     \define@boolkey[#1]{#2}{#3}[true]%
     {%

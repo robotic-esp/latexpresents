@@ -1,0 +1,858 @@
+%%%%%%%%%%%% SECTIONING %%%%%%%%%%%%
+\NewDocumentCommand{\backupslides}{+m}{\extraslides{#1}}%
+\NewDocumentCommand{\extraslides}{+m}%
+{%
+    \iflatexpresents@handout%
+    \else%
+        \appendix
+        \begin{frame}
+            \onecolumnfull[nodecorations]%
+            {%
+                \vfil%
+                \centering
+                \Huge\textbf{Extra Slides}
+                \vfil%
+            }%
+        \end{frame}
+        #1
+    \fi%
+}%
+%%%%%%%%%%%% END SECTIONING %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LAYOUTS %%%%%%%%%%%%
+%%% ONE-COLUMN LAYOUTS %%%
+\NewDocumentCommand{\oneroweven}{O{} +m}{\onecolumnfull[#1]{#2}}% Usage: [layout flags]{content}
+\NewDocumentCommand{\onerowfull}{O{} +m}{\onecolumnfull[#1]{#2}}% Usage: [layout flags]{content}
+\NewDocumentCommand{\onecolumneven}{O{} +m}{\onecolumnfull[#1]{#2}}% Usage: [layout flags]{content}
+\NewDocumentCommand{\onecolumnfull}{O{} +m}{\multicolumnlayout[#1]{1.0}{#2}}% Usage: [layout flags]{content}
+\NewDocumentCommand{\imagecenter}{O{} O{} m O{} O{}}{\onecolumnfull[#5]{\image[#1][#2]{#3}[#4]}}% Usage: [\image opt1][\image opt2]{\image args}[\image opt3][layout flags]
+\NewDocumentCommand{\pdfpagecenter}{O{} O{} m m O{} O{}}{\onecolumnfull[#6]{\pdfpage[#1][#2]{#3}{#4}[#5]}}% Usage: [\pdfpage opt1][\pdfpage opt2]{\pdfpage arg1}{\pdfpage arg2}[\pdfpage opt3][layout flags]
+\NewDocumentCommand{\videocenter}{O{} O{noprogress,autostart,loop} m m O{}}{\onecolumnfull[#5]{\video[#1][#2]{#3}{#4}}}% Usage: [\video opt1][\video opt2]{\video arg1}{\video arg2}[layout flags]
+
+%%% TWO-COLUMN LAYOUTS %%%
+\NewDocumentCommand{\twocolumneven}{O{} +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.5][#3]}% Usage: [layout flags]{left content}{right content}
+\NewDocumentCommand{\twocolumnbigleft}{O{} +m +m}{\multicolumnlayout[#1]{0.6666}{#2}[0.3333][#3]}% Usage: [layout flags]{left content}{right content}
+\NewDocumentCommand{\twocolumnbigright}{O{} +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.6666][#3]}% Usage: [layout flags]{left content}{right content}
+%%% END TWO-COLUMN LAYOUTS %%%
+
+%%% THREE-COLUMN LAYOUTS %%%
+\NewDocumentCommand{\threecolumneven}{O{} +m +m +m}{\multicolumnlayout[#1]{0.3333}{#2}[0.3333][#3][0.3333][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
+\NewDocumentCommand{\threecolumnbigleft}{O{} +m +m +m}{\multicolumnlayout[#1]{0.5}{#2}[0.25][#3][0.25][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
+\NewDocumentCommand{\threecolumnbigmiddle}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.5][#3][0.25][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
+\NewDocumentCommand{\threecolumnbigright}{O{} +m +m +m}{\multicolumnlayout[#1]{0.25}{#2}[0.25][#3][0.5][#4]}% Usage: [layout flags]{left content}{middle content}{right content}
+%%% END THREE-COLUMN LAYOUTS %%%
+
+%%% TWO-ROW LAYOUTS %%%
+\NewDocumentCommand{\tworoweven}{O{} +m +m}{\multirowlayout[#1]{0.5}{#2}[0.5][#3]}% Usage: [layout flags]{top content}{bottom content}
+\NewDocumentCommand{\tworowbigtop}{O{} +m +m}{\multirowlayout[#1]{0.6666}{#2}[0.3333][#3]}% Usage: [layout flags]{top content}{bottom content}
+\NewDocumentCommand{\tworowbigbottom}{O{} +m +m}{\multirowlayout[#1]{0.3333}{#2}[0.6666][#3]}% Usage: [layout flags]{top content}{bottom content}
+%%% END TWO-ROW LAYOUTS %%%
+
+%%% THREE-ROW LAYOUTS %%%
+\NewDocumentCommand{\threeroweven}{O{} +m +m +m}{\multirowlayout[#1]{0.3333}{#2}[0.3333][#3][0.3333][#4]}% Usage: [layout flags]{top content}{middle content}{bottom content}
+%%% END THREE-ROW LAYOUTS %%%
+%%%%%%%%%%%% END LAYOUTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LOW-LEVEL LAYOUTS %%%%%%%%%%%%
+%
+%%% COLUMNS %%%
+%
+% Usage: \multicolumnlayout[nodebug/debug,decorations/nodecorations,alignedtop/raggedtop,alignedbottom/raggedbottom,border/noborder,gutter=]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]
+%
+\define@key[latexpresents]{columnlayoutkeys}{gutter}[]{\setlength{\latexpresents@columnlayout@gutter}{#1}}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{decorations}{nodecorations}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{alignedtop}{raggedtop}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{alignedbottom}{raggedbottom}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{border}{noborder}%
+\definecomplementarykeys{latexpresents}{columnlayoutkeys}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{columnlayoutkeys}{debug}[true]{}%
+%
+\newlength{\latexpresents@columnlayout@gutter}%
+\newcounter{latexpresents@columnlayout@numgutters}%
+\newlength{\latexpresents@columnlayout@dividewidth}%
+\newlength{\latexpresents@columnlayout@checkwidth}%
+\newlength{\latexpresents@columnlayout@leftcolumnwidth}%
+\newlength{\latexpresents@columnlayout@middlecolumnwidth}%
+\newlength{\latexpresents@columnlayout@rightcolumnwidth}%
+\newlength{\latexpresents@columnlayout@topleftextent}%
+\newlength{\latexpresents@columnlayout@toprightextent}%
+\newlength{\latexpresents@columnlayout@bottomleftextent}%
+\newlength{\latexpresents@columnlayout@bottomrightextent}%
+\newlength{\latexpresents@columnlayout@columnextent}%
+%
+\NewDocumentCommand{\multicolumnlayout}{O{} m +m O{} +O{} O{} +O{}}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \iflatexpresents@debug%
+            \presetkeys[latexpresents]{columnlayoutkeys}{debug=true}{}%
+        \else%
+            \presetkeys[latexpresents]{columnlayoutkeys}{debug=false}{}%
+        \fi%
+        \iflatexpresents@raggedtop%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedtop=true}{}%
+        \else%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedtop=false}{}%
+        \fi%
+        \iflatexpresents@raggedbottom%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedbottom=true}{}%
+        \else%
+            \presetkeys[latexpresents]{columnlayoutkeys}{raggedbottom=false}{}%
+        \fi%
+        \presetkeys[latexpresents]{columnlayoutkeys}{decorations=true, border=true, gutter=\latexpresents@gutter@column}{}
+        \setkeys[latexpresents]{columnlayoutkeys}{#1}%
+
+        % Initialize the \onlyonce counter
+        \setcounter{latexpresents@counter@only}{1}
+
+        % Set the frame transition
+        \iflatexpresents@columnlayoutkeys@debug%
+            \latexpresents@transition@cmd[debug]%
+        \else%
+            \latexpresents@transition@cmd%
+        \fi%
+
+        % These only apply to this call because of the begingroup
+        \iflatexpresents@rowlayoutkeys@noborder%
+            \setlength{\latexpresents@border@left}{0pt}%
+            \setlength{\latexpresents@border@right}{0pt}%
+            \setlength{\latexpresents@border@top}{0pt}%
+            \setlength{\latexpresents@border@bottom}{0pt}%
+        \fi%
+
+        % Calculate the slide's dimensions
+        \iflatexpresents@columnlayoutkeys@decorations%
+            \calcdims[decorations]{}%
+        \else%
+            \calcdims[nodecorations]{}%
+        \fi%
+
+        \iflatexpresents@columnlayoutkeys@raggedtop%
+            \setlength{\latexpresents@columnlayout@topleftextent}{\latexpresents@border@left + \latexpresents@slide@topmatter@widthleft}%
+            \setlength{\latexpresents@columnlayout@toprightextent}{\paperwidth - \latexpresents@slide@topmatter@widthright - \latexpresents@border@right}%
+        \fi%
+        \iflatexpresents@columnlayoutkeys@raggedbottom%
+            \setlength{\latexpresents@columnlayout@bottomleftextent}{\latexpresents@border@left + \latexpresents@slide@bottommatter@widthleft}%
+            \setlength{\latexpresents@columnlayout@bottomrightextent}{\paperwidth - \latexpresents@slide@bottommatter@widthright - \latexpresents@border@right}%
+        \fi%
+
+        % Calculate the content width/height given the margins.
+        \setlength{\contentposx}{\latexpresents@border@left}%
+        \setlength{\contentposy}{\latexpresents@border@top + \latexpresents@slide@topmatter@height}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \latexpresents@border@right}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \latexpresents@slide@bottommatter@height - \latexpresents@border@bottom}%
+
+        \iflatexpresents@columnlayoutkeys@debug%
+            \TPoptions{showboxes = true}%
+            \debugmargins{}%
+        \fi%
+
+        % Set the background frame decorations
+        \iflatexpresents@columnlayoutkeys@decorations%
+            \iflatexpresents@columnlayoutkeys@debug%
+                \setbackdecorations[debug]{}%
+            \else%
+                \setbackdecorations{}%
+            \fi%
+        \fi%
+
+        % Calculate the number of gutters
+        \setcounter{latexpresents@columnlayout@numgutters}{0}
+        \ifx\relax#4\relax%
+        \else%
+            \stepcounter{latexpresents@columnlayout@numgutters}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+        \else%
+            \stepcounter{latexpresents@columnlayout@numgutters}%
+        \fi%
+
+        % Calculate lengths of each given element
+        \setlength{\latexpresents@columnlayout@dividewidth}{\contentwidth - \value{latexpresents@columnlayout@numgutters}\latexpresents@columnlayout@gutter}
+        \setlength{\latexpresents@columnlayout@leftcolumnwidth}{#2\latexpresents@columnlayout@dividewidth}%
+        % Second
+        \ifx\relax#4\relax%
+            \setlength{\latexpresents@columnlayout@middlecolumnwidth}{0pt}%
+        \else%
+            \setlength{\latexpresents@columnlayout@middlecolumnwidth}{#4\latexpresents@columnlayout@dividewidth}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+            \setlength{\latexpresents@columnlayout@rightcolumnwidth}{0pt}%
+        \else%
+            \setlength{\latexpresents@columnlayout@rightcolumnwidth}{#6\latexpresents@columnlayout@dividewidth}%
+        \fi%
+
+        % Sanity check
+        \setlength{\latexpresents@columnlayout@checkwidth}{\latexpresents@columnlayout@leftcolumnwidth + \latexpresents@columnlayout@middlecolumnwidth + \latexpresents@columnlayout@rightcolumnwidth}
+        \ifdim\latexpresents@columnlayout@checkwidth>\latexpresents@columnlayout@dividewidth%
+            \PackageError{latexpresents}%
+            {
+                The provided relative element sizes appear to sum to more than 1.0
+            }%
+            {}%
+        \fi%
+
+        % First element
+        \setlength{\elementposy}{\contentposy}%
+        \setlength{\elementheight}{\contentheight}%
+        \setlength{\elementposx}{\contentposx}% Record the top-left of the first column
+        \setlength{\elementwidth}{\latexpresents@columnlayout@leftcolumnwidth}%
+
+        % Adjust top if ragged
+        \iflatexpresents@columnlayoutkeys@raggedtop%
+            \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            % Where are we horizontally?
+            \ifdim\elementposx>\latexpresents@columnlayout@topleftextent%
+                % Past left topmatter, what about right?
+                \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@toprightextent% "<=" is not a valid comparator
+                    % Under right topmatter
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightright}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightright}%
+                \else%
+                    % Under no topmatter
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height}%
+                \fi%
+            \else%
+                % Under left topmatter
+                \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightleft}%
+                \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightleft}%
+            \fi%
+        \fi%
+
+        % Adjust bottom if ragged
+        \iflatexpresents@columnlayoutkeys@raggedbottom%
+            \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
+            % Where are we horizontally?
+            \ifdim\elementposx>\latexpresents@columnlayout@bottomleftextent%
+                % Past left bottommatter, what about right?
+                \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                    % Above right bottommatter
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightright}%
+                \else%
+                    % Above no bottommatter
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height}%
+                \fi%
+            \else%
+                % Above left bottom matter
+                \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightleft}%
+            \fi%
+        \fi%
+
+        % Typeset the content of the first column
+        \iflatexpresents@columnlayoutkeys@debug%
+            \layoutelement[debug]{#3}%
+        \else%
+            \layoutelement{#3}%
+        \fi%
+
+        % Second element
+        \ifx\relax#4\relax%
+        \else%
+            % Debug the 1--2 gutter
+            \iflatexpresents@columnlayoutkeys@debug%
+                \begin{textblock*}{\latexpresents@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \elementheight{\hfill}%
+                \end{textblock*}%
+            \fi%%
+
+            % Calc position
+            \setlength{\elementposy}{\contentposy}%
+            \setlength{\elementheight}{\contentheight}%
+            \addtolength{\elementposx}{\elementwidth + \latexpresents@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\latexpresents@columnlayout@middlecolumnwidth}%
+
+            % Adjust top if ragged
+            \iflatexpresents@columnlayoutkeys@raggedtop%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
+                \ifdim\elementposx>\latexpresents@columnlayout@topleftextent%
+                    % Past left topmatter, what about right?
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@toprightextent% "<=" is not a valid comparator
+                        % Under right topmatter
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightright}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightright}%
+                    \else%
+                        % Under no topmatter
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height}%
+                    \fi%
+                \else%
+                    % Under left topmatter
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightleft}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightleft}%
+                \fi%
+            \fi%
+
+            % Adjust bottom if ragged
+            \iflatexpresents@columnlayoutkeys@raggedbottom%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
+                \ifdim\elementposx>\latexpresents@columnlayout@bottomleftextent%
+                    % Past left bottommatter, what about right?
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                        % Above right bottommatter
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightright}%
+                    \else%
+                        % Above no bottommatter
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height}%
+                    \fi%
+                \else%
+                    % Above left bottom matter
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightleft}%
+                \fi%
+            \fi%
+
+            % Typeset the content of the second column
+            \iflatexpresents@columnlayoutkeys@debug%
+                \layoutelement[debug]{#5}%
+            \else%
+                \layoutelement{#5}%
+            \fi%
+        \fi%
+
+        % Third element
+        \ifx\relax#6\relax%
+        \else%
+            % Debug the 2--3 gutter
+            \iflatexpresents@columnlayoutkeys@debug%
+                \begin{textblock*}{\latexpresents@columnlayout@gutter}(\elementposx + \elementwidth, \elementposy)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \elementheight{\hfill}%
+                \end{textblock*}%
+            \fi%%
+
+            % Calc position
+            \setlength{\elementposy}{\contentposy}%
+            \setlength{\elementheight}{\contentheight}%
+            \addtolength{\elementposx}{\elementwidth + \latexpresents@columnlayout@gutter}% Move to the top-left of this column
+            \setlength{\elementwidth}{\latexpresents@columnlayout@rightcolumnwidth}%
+
+            % Adjust top if ragged
+            \iflatexpresents@columnlayoutkeys@raggedtop%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
+                \ifdim\elementposx>\latexpresents@columnlayout@topleftextent%
+                    % Past left topmatter, what about right?
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@toprightextent% "<=" is not a valid comparator
+                        % Under right topmatter
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightright}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightright}%
+                    \else%
+                        % Under no topmatter
+                        \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height}%
+                        \addtolength{\elementheight}{\latexpresents@slide@topmatter@height}%
+                    \fi%
+                \else%
+                    % Under left topmatter
+                    \addtolength{\elementposy}{-\latexpresents@slide@topmatter@height + \latexpresents@slide@topmatter@heightleft}%
+                    \addtolength{\elementheight}{\latexpresents@slide@topmatter@height - \latexpresents@slide@topmatter@heightleft}%
+                \fi%
+            \fi%
+
+            % Adjust bottom if ragged
+            \iflatexpresents@columnlayoutkeys@raggedbottom%
+                \setlength{\latexpresents@columnlayout@columnextent}{\elementposx + \elementwidth}%
+                % Where are we horizontally?
+                \ifdim\elementposx>\latexpresents@columnlayout@bottomleftextent%
+                    % Past left bottommatter, what about right?
+                    \ifdim\latexpresents@columnlayout@columnextent>\latexpresents@columnlayout@bottomrightextent% "<=" is not a valid comparator
+                        % Above right bottommatter
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightright}%
+                    \else%
+                        % Above no bottommatter
+                        \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height}%
+                    \fi%
+                \else%
+                    % Above left bottom matter
+                    \addtolength{\elementheight}{\latexpresents@slide@bottommatter@height - \latexpresents@slide@bottommatter@heightleft}%
+                \fi%
+            \fi%
+
+            % Typeset the content of the third column
+            \iflatexpresents@columnlayoutkeys@debug%
+                \layoutelement[debug]{#7}%
+            \else%
+                \layoutelement{#7}%
+            \fi%
+        \fi%
+
+        % Set the foreground frame decorations
+        \iflatexpresents@columnlayoutkeys@decorations%
+            \iflatexpresents@columnlayoutkeys@debug%
+                \setfrontdecorations[debug]{}%
+            \else%
+                \setfrontdecorations{}%
+            \fi%
+        \fi%
+    \endgroup%
+}%
+
+%%% ROWS %%%
+%
+% Usage: \multirowlayout[nodebug/debug,decorations/nodecorations,border/noborder,gutter=]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]
+%
+\define@key[latexpresents]{rowlayoutkeys}{gutter}[]{\setlength{\latexpresents@rowlayout@gutter}{#1}}%
+\definecomplementarykeys{latexpresents}{rowlayoutkeys}{decorations}{nodecorations}%
+\definecomplementarykeys{latexpresents}{rowlayoutkeys}{border}{noborder}%
+\definecomplementarykeys{latexpresents}{rowlayoutkeys}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{rowlayoutkeys}{debug}[true]{}%
+%
+\newlength{\latexpresents@rowlayout@gutter}%
+\newcounter{latexpresents@rowlayout@numgutters}%
+\newlength{\latexpresents@rowlayout@divideheight}%
+\newlength{\latexpresents@rowlayout@checkheight}%
+\newlength{\latexpresents@rowlayout@toprowheight}%
+\newlength{\latexpresents@rowlayout@middlerowheight}%
+\newlength{\latexpresents@rowlayout@bottomrowheight}%
+%
+\NewDocumentCommand{\multirowlayout}{O{} m +m O{} +O{} O{} +O{}}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \iflatexpresents@debug%
+            \presetkeys[latexpresents]{rowlayoutkeys}{debug=true}{}%
+        \else%
+            \presetkeys[latexpresents]{rowlayoutkeys}{debug=false}{}%
+        \fi%
+        \presetkeys[latexpresents]{rowlayoutkeys}{decorations=true, border=true, gutter=\latexpresents@gutter@row}{}
+        \setkeys[latexpresents]{rowlayoutkeys}{#1}%
+
+        % Initialize the \onlyonce counter
+        \setcounter{latexpresents@counter@only}{1}
+
+        % Set the frame transition
+        \iflatexpresents@rowlayoutkeys@debug%
+            \latexpresents@transition@cmd[debug]%
+        \else%
+            \latexpresents@transition@cmd%
+        \fi%
+
+        % These only apply to this call because of the begingroup
+        \iflatexpresents@rowlayoutkeys@noborder%
+            \setlength{\latexpresents@border@left}{0pt}%
+            \setlength{\latexpresents@border@right}{0pt}%
+            \setlength{\latexpresents@border@top}{0pt}%
+            \setlength{\latexpresents@border@bottom}{0pt}%
+        \fi%
+
+        % Calculate the slide's dimensions
+        \iflatexpresents@rowlayoutkeys@decorations%
+            \calcdims[decorations]{}%
+        \else%
+            \calcdims[nodecorations]{}%
+        \fi%
+
+        % Calculate the content width/height given the margins
+        \setlength{\contentposx}{\latexpresents@border@left}%
+        \setlength{\contentposy}{\latexpresents@border@top + \latexpresents@slide@topmatter@height}%
+        \setlength{\contentwidth}{\paperwidth - \contentposx - \latexpresents@border@right}%
+        \setlength{\contentheight}{\paperheight - \contentposy - \latexpresents@slide@bottommatter@height - \latexpresents@border@bottom}%
+
+        \iflatexpresents@rowlayoutkeys@debug%
+            \TPoptions{showboxes = true}%
+            \debugmargins{}%
+        \fi%
+
+        % Set the background frame decorations
+        \iflatexpresents@rowlayoutkeys@decorations%
+            \iflatexpresents@rowlayoutkeys@debug%
+                \setbackdecorations[debug]{}%
+            \else%
+                \setbackdecorations{}%
+            \fi%
+        \fi%
+
+        % Calculate the number of gutters
+        \setcounter{latexpresents@rowlayout@numgutters}{0}
+        \ifx\relax#4\relax%
+        \else%
+            \stepcounter{latexpresents@rowlayout@numgutters}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+        \else%
+            \stepcounter{latexpresents@rowlayout@numgutters}%
+        \fi%
+
+        % Calculate lengths of each given element
+        \setlength{\latexpresents@rowlayout@divideheight}{\contentheight - \value{latexpresents@rowlayout@numgutters}\latexpresents@rowlayout@gutter}
+        \setlength{\latexpresents@rowlayout@toprowheight}{#2\latexpresents@rowlayout@divideheight}%
+        % Second
+        \ifx\relax#4\relax%
+            \setlength{\latexpresents@rowlayout@middlerowheight}{0pt}%
+        \else%
+            \setlength{\latexpresents@rowlayout@middlerowheight}{#4\latexpresents@rowlayout@divideheight}%
+        \fi%
+        % Third
+        \ifx\relax#6\relax%
+            \setlength{\latexpresents@rowlayout@bottomrowheight}{0pt}%
+        \else%
+            \setlength{\latexpresents@rowlayout@bottomrowheight}{#6\latexpresents@rowlayout@divideheight}%
+        \fi%
+
+        % Sanity check
+        \setlength{\latexpresents@rowlayout@checkheight}{\latexpresents@rowlayout@toprowheight + \latexpresents@rowlayout@middlerowheight + \latexpresents@rowlayout@bottomrowheight}
+        \ifdim\latexpresents@rowlayout@checkheight>\latexpresents@rowlayout@divideheight%
+            \PackageError{latexpresents}%
+            {
+                The provided relative element sizes appear to sum to more than 1.0
+            }%
+            {}%
+        \fi%
+
+        % Common elements
+        \setlength{\elementposx}{\contentposx}%
+        \setlength{\elementwidth}{\contentwidth}%
+
+        % First element
+        \setlength{\elementposy}{\contentposy}%  Record the top-left of the first row
+        \setlength{\elementheight}{\latexpresents@rowlayout@toprowheight}%
+
+        % Typeset the content of the first row
+        \iflatexpresents@rowlayoutkeys@debug%
+            \layoutelement[debug]{#3}%
+        \else%
+            \layoutelement{#3}%
+        \fi%
+
+        % Second element
+        \ifx\relax#4\relax%
+        \else%
+            % Debug the 1--2 gutter
+            \iflatexpresents@rowlayoutkeys@debug%
+                \begin{textblock*}{\elementwidth}(\elementposx, \elementposy + \elementheight)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \latexpresents@rowlayout@gutter{\hfill}%
+                \end{textblock*}%
+            \fi%%
+
+            % Calc position
+            \addtolength{\elementposy}{\elementheight + \latexpresents@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\latexpresents@rowlayout@middlerowheight}%
+
+            % Typeset the content of the second row
+            \iflatexpresents@rowlayoutkeys@debug%
+                \layoutelement[debug]{#5}%
+            \else%
+                \layoutelement{#5}%
+            \fi%
+        \fi%
+
+        % Third element
+        \ifx\relax#6\relax%
+        \else%
+            % Debug the 2--3 gutter
+            \iflatexpresents@rowlayoutkeys@debug%
+                \begin{textblock*}{\elementwidth}(\elementposx, \elementposy + \elementheight)%
+                    \textblockcolour{GRAY!50!BACKGROUND}%
+                    \vbox to \latexpresents@rowlayout@gutter{\hfill}%
+                \end{textblock*}%
+            \fi%
+
+            % Calc position
+            \addtolength{\elementposy}{\elementheight + \latexpresents@rowlayout@gutter}% Move to the top-left of this row
+            \setlength{\elementheight}{\latexpresents@rowlayout@bottomrowheight}%
+
+            % Typeset the content of the third row
+            \iflatexpresents@rowlayoutkeys@debug%
+                \layoutelement[debug]{#7}%
+            \else%
+                \layoutelement{#7}%
+            \fi%
+        \fi%
+
+        % Set the foreground frame decorations
+        \iflatexpresents@rowlayoutkeys@decorations%
+            \iflatexpresents@rowlayoutkeys@debug%
+                \setfrontdecorations[debug]{}%
+            \else%
+                \setfrontdecorations{}%
+            \fi%
+        \fi%
+    \endgroup%
+}%
+
+%%% Frame title format %%%
+%
+% Usage: \setframetitle[title][subtitle]
+%
+\NewDocumentCommand{\setframetitle}{O{} O{}}%
+{%
+    \usebeamerfont{frametitle}%
+    \usebeamercolor{frametitle}%
+    \strut#1%
+    % Insert the subtitle on a newline
+    \usebeamerfont{framesubtitle}%
+    \usebeamercolor{framesubtitle}%
+    \vspace{-2pt}%
+    \newline%
+    \strut#2%
+}%
+
+%%% Individual element of a multielement layout %%%
+%
+% Usage: \layoutelement[nodebug/debug]{content}
+%
+\definecomplementarykeys{latexpresents}{layoutelement}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{layoutelement}{debug}[true]{}%
+\NewDocumentCommand{\layoutelement}{O{} +m}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[latexpresents]{layoutelement}{debug=false}{}
+        \setkeys[latexpresents]{layoutelement}{#1}%
+
+        \iflatexpresents@layoutelement@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+
+        \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+            \iflatexpresents@layoutelement@debug%
+                \textblockcolour{BLUE!25!BACKGROUND}%
+            \fi%
+            \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+                #2%
+            \end{minipage}
+        \end{textblock*}%
+
+        \iflatexpresents@layoutelement@debug%
+            \TPoptions{showboxes = false}%
+            \begin{textblock*}{\elementwidth}(\elementposx,\elementposy)%
+                \begin{minipage}[t][\elementheight][t]{\elementwidth}%
+                    \color{TEXT}%
+                    \centering%
+                    \vfil%
+                    \colorbox{BACKGROUND}{x-origin: \printlength{\elementposx}}\\
+                    \colorbox{BACKGROUND}{y-origin: \printlength{\elementposy}}\\
+                    \colorbox{BACKGROUND}{width: \printlength{\elementwidth}}\\
+                    \colorbox{BACKGROUND}{height: \printlength{\elementheight}}%
+                    \vfil%
+                \end{minipage}%
+            \end{textblock*}%
+        \fi%
+    \endgroup%
+}%
+%%%%%%%%%%%% END LOW-LEVEL LAYOUTS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LAYOUT HELPERS %%%%%%%%%%%%
+
+%%% Initialize common slide dimensions %%%
+%
+% Usage: \initdims{}
+%
+\NewDocumentCommand{\initdims}{}%
+{%
+    % The height of a frame title, when set.
+    \settototalheight{\latexpresents@frametitle@defaultheight}%
+    {%
+        \parbox{\paperwidth}{\setframetitle[\strut][\strut]}%
+    }%
+
+    % The height of a bio photo, when present
+    \setlength{\latexpresents@bio@height}%
+    {%
+        \latexpresents@frametitle@defaultheight + \latexpresents@gutter@frametitle - \latexpresents@gutter@bio%
+    }%
+}%
+
+%%% Calculate slide dimensions %%%
+%
+% Usage: \calcdims[decorations]{}
+%
+\definecomplementarykeys{latexpresents}{calcdims}{decorations}{nodecorations}%
+%\define@boolkey[latexpresents]{calcdims}{decorations}[true]{}%
+%
+\newlength{\latexpresents@calcdims@titlewidth}
+\newlength{\latexpresents@calcdims@subtitlewidth}
+\NewDocumentCommand{\calcdims}{O{}}%
+{%
+%    % We can't use a begin group, because we want to set lengths globally.
+    \presetkeys[latexpresents]{calcdims}{decorations=true}{}
+    \setkeys[latexpresents]{calcdims}{#1}%
+
+    % Frametitle
+    \iflatexpresents@calcdims@decorations%
+        \ifx\insertframetitle\@empty%
+             % Height
+            \setlength{\latexpresents@slide@frametitle@height}{0pt}%
+             % Width
+            \setlength{\latexpresents@slide@frametitle@width}{0pt}%
+        \else%
+             % Height
+            \setlength{\latexpresents@slide@frametitle@height}{\latexpresents@frametitle@defaultheight}%
+             % Width
+            \ifx\insertframesubtitle\@empty%
+                \settowidth{\latexpresents@slide@frametitle@width}%
+                {%
+                    \usebeamerfont{frametitle}%
+                    \insertframetitle{}%
+                }%
+            \else%
+                \settowidth{\latexpresents@calcdims@titlewidth}%
+                {%
+                    \usebeamerfont{frametitle}%
+                    \insertframetitle{}%
+                }%
+                \settowidth{\latexpresents@calcdims@subtitlewidth}%
+                {%
+                    \usebeamerfont{framesubtitle}%
+                    \insertframesubtitle{}%
+                }%
+                \ifdim\latexpresents@calcdims@titlewidth>\latexpresents@calcdims@subtitlewidth%
+                    \setlength{\latexpresents@slide@frametitle@width}{\latexpresents@calcdims@titlewidth}%
+                \else%
+                    \setlength{\latexpresents@slide@frametitle@width}{\latexpresents@calcdims@subtitlewidth}%
+                \fi%
+            \fi%
+        \fi%
+    \else%
+        % Height
+        \setlength{\latexpresents@slide@frametitle@height}{0pt}%
+        % Width
+        \setlength{\latexpresents@slide@frametitle@width}{0pt}%
+    \fi%
+
+    % Page number
+    \iflatexpresents@calcdims@decorations%
+        \settototalheight{\latexpresents@slide@pgnum@height}{\usebeamertemplate*{page number in head/foot}}%
+        \settowidth{\latexpresents@slide@pgnum@width}{\usebeamertemplate*{page number in head/foot}}%
+    \else%
+        \setlength{\latexpresents@slide@pgnum@height}{0pt}%
+        \setlength{\latexpresents@slide@pgnum@width}{0pt}%
+    \fi%
+
+    % The sizes of footer logos and the bios are calculated by their macros as they are set.
+
+    % Combined top matter
+    \iflatexpresents@calcdims@decorations%
+        % Left
+        \ifdim\latexpresents@slide@frametitle@width>0pt%
+            % Height
+            \setlength{\latexpresents@slide@topmatter@heightleft}{\latexpresents@slide@frametitle@height + \latexpresents@gutter@frametitle}%
+            % Width
+            \setlength{\latexpresents@slide@topmatter@widthleft}{\latexpresents@slide@frametitle@width + \latexpresents@gutter@frametitle}%
+        \else%
+            \setlength{\latexpresents@slide@topmatter@heightleft}{0pt}%
+            \setlength{\latexpresents@slide@topmatter@widthleft}{0pt}%
+        \fi%
+
+        % Right
+        \ifdim\latexpresents@bio@width>0pt%
+            % Height
+            \setlength{\latexpresents@slide@topmatter@heightright}{\latexpresents@bio@height + \latexpresents@gutter@bio}%
+            % Width
+            \setlength{\latexpresents@slide@topmatter@widthright}{\latexpresents@gutter@bio + \latexpresents@bio@width}%
+        \else%
+            \setlength{\latexpresents@slide@topmatter@heightright}{0pt}%
+            \setlength{\latexpresents@slide@topmatter@widthright}{0pt}%
+        \fi%
+
+        % Max height
+        \ifdim\latexpresents@slide@topmatter@heightleft>\latexpresents@slide@topmatter@heightright%
+            \setlength{\latexpresents@slide@topmatter@height}{\latexpresents@slide@topmatter@heightleft}%
+        \else%
+            \setlength{\latexpresents@slide@topmatter@height}{\latexpresents@slide@topmatter@heightright}%
+        \fi%
+    \else%
+        \setlength{\latexpresents@slide@topmatter@heightleft}{0pt}%
+        \setlength{\latexpresents@slide@topmatter@heightright}{0pt}%
+        \setlength{\latexpresents@slide@topmatter@height}{0pt}%
+        \setlength{\latexpresents@slide@topmatter@widthleft}{\paperwidth}%
+        \setlength{\latexpresents@slide@topmatter@widthright}{0pt}%
+    \fi%
+
+    % Combined bottom matter
+    \iflatexpresents@calcdims@decorations%
+        % Left
+        \ifdim\latexpresents@footlogo@width>0pt%
+            % Height
+            \setlength{\latexpresents@slide@bottommatter@heightleft}{\latexpresents@gutter@footlogo + \latexpresents@footlogo@height}%
+            % Width
+            \setlength{\latexpresents@slide@bottommatter@widthleft}{\latexpresents@footlogo@width + \latexpresents@gutter@footlogo}%
+        \else%
+            \setlength{\latexpresents@slide@bottommatter@heightleft}{0pt}%
+            \setlength{\latexpresents@slide@bottommatter@widthleft}{0pt}%
+        \fi%
+
+        % Right
+        \setlength{\latexpresents@slide@bottommatter@heightright}{\latexpresents@gutter@pgnum + \latexpresents@slide@pgnum@height}%
+        \setlength{\latexpresents@slide@bottommatter@widthright}{\latexpresents@gutter@pgnum + \latexpresents@slide@pgnum@width}%
+
+        % Max height
+        \ifdim\latexpresents@slide@bottommatter@heightleft>\latexpresents@slide@bottommatter@heightright%
+            \setlength{\latexpresents@slide@bottommatter@height}{\latexpresents@slide@bottommatter@heightleft}%
+        \else%
+            \setlength{\latexpresents@slide@bottommatter@height}{\latexpresents@slide@bottommatter@heightright}%
+        \fi%
+    \else%
+        \setlength{\latexpresents@slide@bottommatter@heightleft}{0pt}%
+        \setlength{\latexpresents@slide@bottommatter@heightright}{0pt}%
+        \setlength{\latexpresents@slide@bottommatter@height}{0pt}%
+        \setlength{\latexpresents@slide@bottommatter@widthleft}{\paperwidth}%
+        \setlength{\latexpresents@slide@bottommatter@widthright}{0pt}%
+    \fi%
+}%
+%%%%%%%%%%%% END LAYOUT HELPERS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% DEBUGS %%%%%%%%%%%%
+\NewDocumentCommand{\debugmargins}{}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \TPoptions{showboxes = true}%
+
+        %Margins
+        % Top
+        \begin{textblock*}{\paperwidth}(0pt, 0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \latexpresents@border@top{\hfill}%
+        \end{textblock*}%
+        % Bottom
+        \begin{textblock*}{\paperwidth}(0pt, \paperheight - \latexpresents@border@bottom)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \latexpresents@border@bottom{\hfill}%
+        \end{textblock*}%
+        % Left
+        \begin{textblock*}{\latexpresents@border@left}(0pt, 0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \paperheight{\hfill}%
+        \end{textblock*}%
+        % Right
+        \begin{textblock*}{\latexpresents@border@right}(\paperwidth - \latexpresents@border@right, 0pt)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \paperheight{\hfill}%
+        \end{textblock*}%
+
+        %Decorations
+        % Top left
+        \begin{textblock*}{\latexpresents@slide@topmatter@widthleft}(\latexpresents@border@left, \latexpresents@border@top)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \latexpresents@slide@topmatter@heightleft{\hfill}%
+        \end{textblock*}%
+        % Top right
+        \begin{textblock*}{\latexpresents@slide@topmatter@widthright}(\paperwidth - \latexpresents@slide@topmatter@widthright - \latexpresents@border@right, \latexpresents@border@top)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \latexpresents@slide@topmatter@heightright{\hfill}%
+        \end{textblock*}%
+
+        % Bottom left
+        \begin{textblock*}{\latexpresents@slide@bottommatter@widthleft}(\latexpresents@border@left, \paperheight - \latexpresents@slide@bottommatter@heightleft - \latexpresents@border@bottom)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \latexpresents@slide@bottommatter@heightleft{\hfill}%
+        \end{textblock*}%
+        % Bottom right
+        \begin{textblock*}{\latexpresents@slide@bottommatter@widthright}(\paperwidth - \latexpresents@slide@bottommatter@widthright - \latexpresents@border@right, \paperheight - \latexpresents@slide@bottommatter@heightright - \latexpresents@border@bottom)%
+            \textblockcolour{GRAY!50!BACKGROUND}%
+            \vbox to \latexpresents@slide@bottommatter@heightright{\hfill}%
+        \end{textblock*}%
+    \endgroup%
+}
+%%%%%%%%%%%% END DEBUGS %%%%%%%%%%%%

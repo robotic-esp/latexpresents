@@ -1,0 +1,220 @@
+%%%%%%%%%%%% LOGO COMMANDS %%%%%%%%%%%%%%%%%%
+%
+% Usage: \adddarkmodelogo[optional/path/to/special/titlepage/logo/for/dark/mode]{path/to/logo/for/dark/mode}
+\NewDocumentCommand{\adddarkmodelogo}{O{#2} m}%
+{%
+    \iflatexpresents@dark%
+        \addtitlelogo{#1}%
+        \addfootlogo{#2}%
+    \fi%
+}%
+% Usage: \addlightmodelogo[optional/path/to/special/titlepage/logo/for/light/mode]{path/to/logo/for/light/mode}
+\NewDocumentCommand{\addlightmodelogo}{O{#2} m}%
+{%
+    \iflatexpresents@dark%
+    \else
+        \addtitlelogo{#1}%
+        \addfootlogo{#2}%
+    \fi%
+}%
+% Usage: \addlogo[optional/path/to/special/titlepage/logo]{path/to/logo}
+\NewDocumentCommand{\addlogo}{O{#2} m}%
+{%
+    \addtitlelogo{#1}%
+    \addfootlogo{#2}%
+}%
+\NewDocumentCommand{\savelogos}{}{\savetitlelogos{}\savefootlogos{}}%
+\NewDocumentCommand{\resetlogos}{}{\resettitlelogos{}\resetfootlogos{}}%
+\NewDocumentCommand{\clearlogos}{}{\cleartitlelogos{}\clearfootlogos{}}%
+
+%%% TITLE LOGOS %%%
+% https://tex.stackexchange.com/questions/451/when-to-use-edef-noexpand-and-expandafter
+%
+% Usage: \addtitlelogo{path/to/titlelogo}
+\def\latexpresents@titlelogos{}%
+\def\latexpresents@defaulttitlelogos{}%
+\NewDocumentCommand{\addtitlelogo}{m}%
+{%
+    \edef\latexpresents@titlelogos%
+    {%
+        \ifx\latexpresents@titlelogos\empty%
+        \else%
+            \latexpresents@titlelogos%
+            \hskip\latexpresents@titlelogo@sep%
+        \fi%
+        \includegraphics[height=\latexpresents@titlelogo@maxheight]{#1}%
+    }%
+}%
+% Usage: \resettitlelogo{}
+\NewDocumentCommand{\savetitlelogos}{}%
+{%
+    \edef\latexpresents@defaulttitlelogos{\latexpresents@titlelogos}%
+}%
+% Usage: \savetitlelogo{}
+\NewDocumentCommand{\resettitlelogos}{}%
+{%
+    \edef\latexpresents@titlelogos{\latexpresents@defaulttitlelogos}%
+}%
+% Usage: \cleartitlelogo{}
+\NewDocumentCommand{\cleartitlelogos}{}%
+{%
+    \def\latexpresents@titlelogos{}%
+}%
+
+%%% FOOT LOGOS %%%
+%
+% Usage: \addfootlogo{path/to/footerlogo}
+\def\latexpresents@footlogos{}%
+\def\latexpresents@defaultfootlogos{}%
+\NewDocumentCommand{\addfootlogo}{m}%
+{%
+    \edef\latexpresents@footlogos%
+    {%
+        \ifx\latexpresents@footlogos\empty%
+        \else%
+            \latexpresents@footlogos%
+            \hskip\latexpresents@footlogo@sep%
+        \fi%
+        \includegraphics[height=\latexpresents@footlogo@height]{#1}%
+    }%
+    \settowidth{\latexpresents@footlogo@width}{\latexpresents@footlogos}%
+}%
+% Usage: \savefootlogo{}
+\NewDocumentCommand{\savefootlogos}{}%
+{%
+    \edef\latexpresents@defaultfootlogos{\latexpresents@footlogos}%
+}%
+% Usage: \resetfootlogo{}
+\NewDocumentCommand{\resetfootlogos}{}%
+{%
+    \edef\latexpresents@footlogos{\latexpresents@defaultfootlogos}%
+    \settowidth{\latexpresents@footlogo@width}{\latexpresents@footlogos}%
+}%
+% Usage: \clearfootlogo{}
+\NewDocumentCommand{\clearfootlogos}{}%
+{%
+    \def\latexpresents@footlogos{}%
+    \setlength{\latexpresents@footlogo@width}{0pt}%
+}%
+%%%%%%%%%%%% END LOGO COMMANDS %%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
+%
+% Usage: \addperson{path/to/bio}
+\def\latexpresents@bios{}%
+\NewDocumentCommand\addperson{m}%
+{%
+    \edef\latexpresents@bios%
+    {%
+        \includegraphics[height=\latexpresents@bio@height]{#1}%
+        \ifx\latexpresents@bios\empty%
+        \else%
+            \hskip\latexpresents@bio@sep%
+            \latexpresents@bios%
+        \fi%
+    }%
+    \settowidth{\latexpresents@bio@width}{\latexpresents@bios}%
+}%
+% Usage: \clearpeople{}
+\NewDocumentCommand{\clearpeople}{}%
+{%
+    \def\latexpresents@bios{}%
+    \setlength{\latexpresents@bio@width}{0pt}%
+}%
+%%%%%%%%%%%% END BIO PHOTO COMMANDS %%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% FRAME DECORATIONS %%%%%%%%%%%%
+%%% Frame decorations with control of front/back relative to content%%%
+%
+% Usage: \setbackdecorations[debug]{}
+%
+\definecomplementarykeys{latexpresents}{setbackdecorations}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{setbackdecorations}{debug}[true]{}%
+\NewDocumentCommand{\setbackdecorations}{O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[latexpresents]{setbackdecorations}{debug=false}{}%
+        \setkeys[latexpresents]{setbackdecorations}{#1}%
+
+        \iflatexpresents@setbackdecorations@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+
+        % Footer logos
+        \ifx\latexpresents@footlogos\@empty%
+        \else%
+            \begin{textblock*}{\latexpresents@footlogo@width}(\latexpresents@border@left, \paperheight - \latexpresents@border@bottom - \latexpresents@footlogo@height)%
+                \iflatexpresents@setbackdecorations@debug%
+                    \textblockcolour{GREEN!25!BACKGROUND}%
+                \fi%
+
+                \begin{minipage}[t][\latexpresents@footlogo@height]{\latexpresents@footlogo@width}%
+                    \usebeamercolor{logo}%
+                    \usebeamerfont{logo}%
+                    \latexpresents@footlogos{}%
+                \end{minipage}%
+            \end{textblock*}%
+        \fi%
+    \endgroup%
+}%
+%
+% Usage: setfrontdecorations[debug]{}
+%
+\definecomplementarykeys{latexpresents}{setfrontdecorations}{nodebug}{debug}%
+%\define@boolkey[latexpresents]{setfrontdecorations}{debug}[true]{}%
+\NewDocumentCommand{\setfrontdecorations}{O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[latexpresents]{setfrontdecorations}{debug=false}{}
+        \setkeys[latexpresents]{setfrontdecorations}{#1}%
+
+        \iflatexpresents@setfrontdecorations@debug%
+            \TPoptions{showboxes = true}%
+        \fi%
+
+        % Frame title
+        \begin{textblock*}{\latexpresents@slide@frametitle@width}(\latexpresents@border@left, \latexpresents@border@top)%
+            \usebeamercolor{frametitle}%
+
+            \iflatexpresents@setfrontdecorations@debug%
+                \textblockcolour{RED!25!BACKGROUND}%
+            \fi%
+
+            \begin{minipage}[t][\latexpresents@slide@frametitle@height][t]{\latexpresents@slide@frametitle@width}%
+                \setframetitle[\insertframetitle{}][\insertframesubtitle{}]%
+            \end{minipage}%
+        \end{textblock*}%
+
+        %Bio block
+        \ifx\latexpresents@bios\@empty%
+        \else%
+            \begin{textblock*}{\latexpresents@bio@width}(\paperwidth - \latexpresents@bio@width - \latexpresents@border@right, \latexpresents@border@top)%
+                \iflatexpresents@setfrontdecorations@debug%
+                    \textblockcolour{ORANGE!25!BACKGROUND}%
+                \fi%
+
+                \begin{minipage}[t][\latexpresents@bio@height][t]{\latexpresents@bio@width}%
+                    \usebeamercolor{bio}%
+                    \usebeamerfont{bio}%
+                    \latexpresents@bios%
+                \end{minipage}
+            \end{textblock*}%
+        \fi%
+
+        % Slide number
+        \begin{textblock*}{\latexpresents@slide@pgnum@width}(\paperwidth - \latexpresents@slide@pgnum@width - \latexpresents@border@right, \paperheight - \latexpresents@border@bottom - \latexpresents@slide@pgnum@height)%
+            \iflatexpresents@setfrontdecorations@debug%
+                \textblockcolour{YELLOW!25!BACKGROUND}%
+            \fi%
+
+            \begin{minipage}[t][\latexpresents@slide@pgnum@height][t]{\latexpresents@slide@pgnum@width}%
+                \hfill\usebeamertemplate*{page number in head/foot}%
+            \end{minipage}
+        \end{textblock*}%
+    \endgroup%
+}%
+%%%%%%%%%%%% END FRAME DECORATIONS %%%%%%%%%%%%

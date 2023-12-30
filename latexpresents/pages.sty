@@ -1,10 +1,10 @@
-% \titlepage, \partpage, \sectionpage, and \subsectionpage are defined in beamerinnerthemeESP.sty
+% \titlepage, \partpage, \sectionpage, and \subsectionpage are defined in beamerinnertheme.sty
 
 %%%%%%%%%%%% SPECIAL PAGES %%%%%%%%%%%%
-\newlength{\espbeamer@thanks@origlogowidth}
-\NewDocumentCommand{\thankspage}{+O{Thank you} +O{https://robotic-esp.com}}%
+\newlength{\latexpresents@thanks@origlogowidth}
+\NewDocumentCommand{\thankspage}{+O{Thank you} +O{\latexpresents@contact}}%
 {%
-    \settowidth{\espbeamer@thanks@origlogowidth}{\espbeamer@titlelogos}%
+    \settowidth{\latexpresents@thanks@origlogowidth}{\latexpresents@titlelogos}%
     \multirowlayout[nodecorations, gutter=0pt]%
     {0.5}%
     {%
@@ -16,24 +16,24 @@
     }%
     [0.5]%
     [%
-        \ifx\espbeamer@footlogos\@empty%
+        \ifx\latexpresents@footlogos\@empty%
         \else%
             \centering%
             \vfill%
-            \ifdim\espbeamer@thanks@origlogowidth>0.5\elementwidth%
+            \ifdim\latexpresents@thanks@origlogowidth>0.5\elementwidth%
                 \resizebox{0.5\elementwidth}{!}%
                 {%
                     \usebeamercolor*{logo}%
                     \usebeamerfont*{logo}%
-                    \espbeamer@footlogos{}%
+                    \latexpresents@footlogos{}%
                 }%
             \else%
                 \usebeamercolor*{logo}%
                 \usebeamerfont*{logo}%
-                \espbeamer@footlogos{}%
+                \latexpresents@footlogos{}%
             \fi%
             \vfill%
-            \url{#2}
+            \strut#2
         \fi%
     ]%
 }%

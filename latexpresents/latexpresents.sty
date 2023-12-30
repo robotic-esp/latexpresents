@@ -1,0 +1,261 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{latexpresents/latexpresents}[2023/12/30 v1.0 LaTeXPresents]
+%%%%%%%%%%%% CLASS OPTIONS %%%%%%%%%%%%
+% Setup
+\RequirePackage{kvoptions}% For defining package options as key-value pairs
+\SetupKeyvalOptions%
+{%
+    family = latexpresents,%
+    prefix = latexpresents@%
+}%
+
+% Debug
+\DeclareBoolOption[false]{debug}% latexpresents@debug
+\DeclareComplementaryOption{nodebug}{debug}%
+% Theme
+\DeclareStringOption{theme}% latexpresents@theme
+% Colour theme
+\DeclareBoolOption[false]{dark}% latexpresents@dark
+\DeclareComplementaryOption{light}{dark}%
+% Which multimedia package to use
+\DeclareBoolOption[false]{adobe}% latexpresents@adobe
+\DeclareComplementaryOption{pdfpc}{adobe}%
+% Make a handout or presentation
+\DeclareBoolOption[false]{handout}% latexpresents@handout
+\DeclareComplementaryOption{present}{handout}%
+% Include videos or not (lightweight files)
+\DeclareBoolOption[false]{novideos}% latexpresents@videos
+\DeclareComplementaryOption{videos}{novideos}%
+% Configure frame-numbering scheme
+\DeclareBoolOption[true]{pagenumbers}% latexpresents@pagenumbers
+\DeclareComplementaryOption{nonumbers}{pagenumbers}%
+% Greedily increase height of columns, when possible
+\DeclareBoolOption[false]{raggedtop}% latexpresents@raggedtop
+\DeclareComplementaryOption{alignedtop}{raggedtop}%
+\DeclareBoolOption[true]{raggedbottom}% latexpresents@raggedbottom
+\DeclareComplementaryOption{alignedbottom}{raggedbottom}%
+\ProcessKeyvalOptions*%
+%%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
+
+%%%%%%%%%%%% PACKAGES %%%%%%%%%%%%
+\RequirePackage{tikz}% Part of Beamer, but seems like a good idea when specifying libraries
+\usetikzlibrary{positioning}%
+\RequirePackage{xparse}% For NewDocumentCommand which allows multiple optional arguments with defaults
+\RequirePackage{xkeyval}% For defining macro options as key-value pairs. Extends the base keyval package.
+\RequirePackage{xcolor}% You know, for colours.
+\RequirePackage{calc}% For adding lengths
+\RequirePackage{printlen}% \printlength
+\RequirePackage[absolute,overlay]{textpos}% For absolutely positioned text boxes (titlepage)
+\RequirePackage{contour}% For a custom definition of \underline that looks better.
+\RequirePackage[normalem]{ulem}% For a custom definition of \underline that looks better, with option to not redefine \emph.
+\RequirePackage{datetime2}% Better date formatting, ISO by default.
+\uselengthunit{pt}% Unit for \printlength
+
+%For media (depending on adobe/pdfpc option)
+\iflatexpresents@adobe%
+    \RequirePackage{media9}%
+\else%
+    \RequirePackage{multimedia}%
+\fi%
+
+% Speaker notes (depending on present/handout option)
+\iflatexpresents@handout%
+    % Hide any notes (as done with \RequirePackage[hidenotes]{pdfpc}):
+    \NewDocumentCommand{\say}{+m}{}%
+\else%
+    \iflatexpresents@adobe%
+        % Hide any notes since \pdfpcnote notes create an on-screen text bubble in Adobe.
+        % TODO: Is there any options for Adobe?
+        \NewDocumentCommand{\say}{+m}{}%
+    \else%
+        \IfFileExists{pdfpc.sty}
+        {%
+            \RequirePackage{pdfpc}%
+            \NewDocumentCommand{\say}{+m}{\pdfpcnote{##1}}%
+        }%
+        {%
+            % This is a version of \pdfpcnote copied from pdfpc.sty (#1 changed to ##1).
+            \RequirePackage{hyperxmp}
+            \NewDocumentCommand{\say}{+m}{%
+                \edef\\{\string\n}%
+                \pdfannot width 0pt height 0pt depth 0pt {%
+                    /Subtype /Text%
+                    /Contents (##1)%
+                    /F 6%
+                }%
+                \relax%
+            }%
+        }%
+    \fi%
+\fi%
+
+\textblockcolour{}%
+\textblockrulecolour{TEXT}%
+%%%%%%%%%%%% END PACKAGES %%%%%%%%%%%%
+
+
+%%%%%%%%%%%% DIMENSIONS %%%%%%%%%%%%
+%%% Publically available positions and lengths (Set by latexpresents) %%%
+\newlength{\contentposx}% The starting x-position of all content in a frame.
+\newlength{\contentposy}% The starting y-position of all content in a frame.
+\newlength{\contentwidth}% The total width for all content in a frame.
+\newlength{\contentheight}% The total height for all content in a frame.
+\newlength{\elementposx}% The starting x-position of a frame element (e.g., column).
+\newlength{\elementposy}% The starting y-position of a frame element (e.g., column).
+\newlength{\elementwidth}% The width of a frame element (e.g., column).
+\newlength{\elementheight}% The height of a frame element (e.g., column).
+% Defaults for content
+\setlength{\contentposx}{0pt}
+\setlength{\contentposy}{0pt}
+\setlength{\contentwidth}{\paperwidth}
+\setlength{\contentheight}{\paperheight}
+
+
+
+%%% Internal Parameters %%%
+% Slide spacing
+\newlength{\latexpresents@border@left}%
+\setlength{\latexpresents@border@left}{8pt}%
+\newlength{\latexpresents@border@right}%
+\setlength{\latexpresents@border@right}{8pt}%
+\newlength{\latexpresents@border@top}%
+\setlength{\latexpresents@border@top}{8pt}%
+\newlength{\latexpresents@border@bottom}%
+\setlength{\latexpresents@border@bottom}{8pt}%
+% Gutters
+\newlength{\latexpresents@gutter@column}% The space between columns in column layouts
+\setlength{\latexpresents@gutter@column}{6pt}%
+\newlength{\latexpresents@gutter@row}% The space between rows in row layouts
+\setlength{\latexpresents@gutter@row}{\latexpresents@gutter@column}%
+\newlength{\latexpresents@gutter@frametitle}% The space between the frame title and the content.
+\setlength{\latexpresents@gutter@frametitle}{8pt}% Beamer default is experimentally 8.5pt.
+\newlength{\latexpresents@gutter@footlogo}% The space between the foot logos and the content.
+\setlength{\latexpresents@gutter@footlogo}{2pt}%
+\newlength{\latexpresents@gutter@bio}% The space between the bios and the content.
+\setlength{\latexpresents@gutter@bio}{2pt}%
+\newlength{\latexpresents@gutter@pgnum}% The space between the page number and the content.
+\setlength{\latexpresents@gutter@pgnum}{2pt}%
+% Title logos
+\newlength{\latexpresents@titlelogo@maxheight}%
+\setlength{\latexpresents@titlelogo@maxheight}{56pt}%
+\newlength{\latexpresents@titlelogo@sep}%
+\setlength{\latexpresents@titlelogo@sep}{12pt}% This may not be the exact logo separation used as title logos are scaled as a group if they are wider than the title page
+% Footer logos
+\newlength{\latexpresents@footlogo@height}%
+\setlength{\latexpresents@footlogo@height}{28pt}%
+\newlength{\latexpresents@footlogo@sep}%
+\setlength{\latexpresents@footlogo@sep}{12pt}%
+% Biographical photos (height is derived)
+\newlength{\latexpresents@bio@sep}%
+\setlength{\latexpresents@bio@sep}{1.5pt}%
+
+
+
+%%% Internally calculated lengths %%%
+\newlength{\latexpresents@footlogo@width}% Width of the footers. Updated in \addfootlogo.
+\setlength{\latexpresents@footlogo@width}{0pt}%
+\newlength{\latexpresents@bio@height}% Height of the bios. Calculated from the default height of a frametitle in \initdims.
+\newlength{\latexpresents@bio@width}% Width of the bios. Updated in \addperson.
+\setlength{\latexpresents@bio@width}{0pt}%
+\newlength{\latexpresents@frametitle@defaultheight}% Default height of the frame title block. Calc'ed from \setframetitle in \initdims.
+\setlength{\latexpresents@frametitle@defaultheight}{0pt}%
+\newlength{\latexpresents@slide@frametitle@height}% Height of the frame title block on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@frametitle@height}{0pt}%
+\newlength{\latexpresents@slide@frametitle@width}% Width of the frame title block on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@frametitle@width}{0pt}%
+\newlength{\latexpresents@slide@pgnum@height}% Height of the slide number on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@pgnum@height}{0pt}%
+\newlength{\latexpresents@slide@pgnum@width}% Width of the slide number on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@pgnum@width}{0pt}%
+\newlength{\latexpresents@slide@topmatter@height}% Height of everything above content on a specific slide. Calc'ed by \calcdims as max of left/right height.
+\setlength{\latexpresents@slide@topmatter@height}{0pt}%
+\newlength{\latexpresents@slide@topmatter@heightleft}% Height of everything above content left on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@heightleft}{0pt}%
+\newlength{\latexpresents@slide@topmatter@heightright}% Height of everything above content right on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@heightright}{0pt}%
+\newlength{\latexpresents@slide@topmatter@widthleft}% Width from left of top matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@widthleft}{0pt}%
+\newlength{\latexpresents@slide@topmatter@widthright}% Width from right of top matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@topmatter@widthright}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@height}% Height of everything below content on a specific slide. Calc'ed by \calcdims as max of left/right height.
+\setlength{\latexpresents@slide@bottommatter@height}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@heightleft}% Height of everything below content left on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@heightleft}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@heightright}% Height of everything below content right on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@heightright}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@widthleft}% Width from left of bottom matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@widthleft}{0pt}%
+\newlength{\latexpresents@slide@bottommatter@widthright}% Width from right of bottom matter on a specific slide. Calc'ed by \calcdims.
+\setlength{\latexpresents@slide@bottommatter@widthright}{0pt}%
+
+
+
+%%% Manually specified lengths %%%
+\newlength{\latexpresents@beamer@heightdiff}% This is Beamer's difference between \pageheight and \textheight regardless of aspect ratio.
+\setlength{\latexpresents@beamer@heightdiff}{4pt}% Found experimentally. Documented without expected use.
+%%%%%%%%%%%% END DIMENSIONS %%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% LATEXPRESENTS %%%%%%%%%%%%%%%%%%
+\input{latexpresents/latex.sty}
+\input{latexpresents/layouts.sty}
+\input{latexpresents/decorations.sty}
+\input{latexpresents/pages.sty}
+\input{latexpresents/media.sty}
+\input{latexpresents/appearance.sty}
+\input{latexpresents/theme.sty}
+\input{latexpresents/legacy.sty}
+\initdims{}
+
+% Load the default theme, to define a complete colour pallete
+\input{latexpresents/theme_default.sty}
+
+% Load the user's theme (if present), to set affiliations/decorations/etc. and to override and default colours as desired
+\ifx\latexpresents@theme\empty%
+\else%
+    \input{\latexpresents@theme}
+\fi%
+%%%%%%%%%%%% END LATEXPRESENTS %%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%% BEAMER %%%%%%%%%%%%%%%%%%
+% Pass options to Beamer
+\setbeamersize{text margin left=\latexpresents@border@left, text margin right=\latexpresents@border@right}%
+
+% Beamer specific divisions for elements of a theme. In theory, any entry can appear anywhere
+% \usepackage is the same as \useXtheme{}, but does not expect the files to be at document root
+\usepackage{latexpresents/beamercolortheme}%
+\usepackage{latexpresents/beamerfonttheme}%
+\usepackage{latexpresents/beamerinnertheme}%
+\usepackage{latexpresents/beameroutertheme}%
+%%%%%%%%%%%% END BEAMER %%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%% DOCUMENT INIT %%%%%%%%%%%%
+% Set default transitions
+\settransitioneffect{\transfade}
+\settransitiontime{0.2}
+\settransitionangle{}
+
+% Package initialization run at \begin{document}
+\AtBeginDocument%
+{%
+    % Initialize the \onlyonce counter. I couldn't get it to work with an automatic reset on the Beamer counter "framenumber"...
+    \newcounter{latexpresents@counter@only}
+
+    % Set the slide numbering (currently only every pdf page or none)
+    \iflatexpresents@pagenumbers%
+        \setbeamertemplate{page number in head/foot}[pagenumber]% - latexpresents actually renders this itself in the right-sidebar, but makes use of this standard template to do so.
+        %[default] The default option is empty.
+        %[framenumber] This option inserts the current frame number.
+        %[totalframenumber] In addition to the current frame number, this option also shows the total number of frames.
+        %[appendixframenumber] This options replicates the behaviour of the appendixnumberbeamer package. In the main part before the \appendix command the current frame number and the total number of frames in the main part is displayed. In the appendix only the frame number within the appendix and the total number of frames in the appendix are shown.
+        %[pagenumber] Shows the current page number.
+        %[totalpagenumber] In addition to the current page number also the total page number is displayed.
+    \else%
+        \setbeamertemplate{page number in head/foot}[default]
+    \fi%
+
+    % Save as default
+    \savelogos{}%
+}
+%%%%%%%%%%%% END DOCUMENT INIT %%%%%%%%%%%%

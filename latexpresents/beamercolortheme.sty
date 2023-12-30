@@ -1,32 +1,31 @@
 %%%%%%%%%%% NOTES %%%%%%%%%%%
 %
-% Only use colours defined in the LIGHT VS DARK section as those are switched with the light/dark option.
+% Only use colours that are defined here inside the if DARK/LIGHT section as those will switch with the light/dark option.
 %
 % "parent=" inherits from other definition
 % "use=" requires that the used definition is defined first. Useful for relative definitions (i.e., 50% darker)
 % "fg=structure.fg!25!bg" is 25% structure.fg and 75% structure.bg
 
-\input{include/oxford_colours.sty}
-
 %%%%%% LIGHT VS DARK %%%%%%
-\ifespbeamer@dark
-    \colorlet{BACKGROUND}{black}
-    \colorlet{TEXT}{white}
-    \colorlet{BLUE}{OxfordPaletteLightBlue}
-    \colorlet{GREEN}{OxfordPaletteLightGreen}
-    \colorlet{YELLOW}{OxfordPaletteLightYellow}
-    \colorlet{ORANGE}{OxfordPaletteLightOrange}
-    \colorlet{RED}{OxfordPaletteLightRed}
-    \colorlet{GRAY}{OxfordPaletteGray}
+% Define the colour variables from the theme, based on light/dark presentation mode.
+\iflatexpresents@dark
+    \colorlet{BACKGROUND}{ThemePaletteDarkBackground}
+    \colorlet{TEXT}{ThemePaletteLightText}
+    \colorlet{BLUE}{ThemePaletteLightBlue}
+    \colorlet{GREEN}{ThemePaletteLightGreen}
+    \colorlet{YELLOW}{ThemePaletteLightYellow}
+    \colorlet{ORANGE}{ThemePaletteLightOrange}
+    \colorlet{RED}{ThemePaletteLightRed}
+    \colorlet{GRAY}{ThemePaletteGray}
 \else
-    \colorlet{BACKGROUND}{white}
-    \colorlet{TEXT}{OxfordBlue}
-    \colorlet{BLUE}{OxfordPaletteBlue}
-    \colorlet{GREEN}{OxfordPaletteGreen}
-    \colorlet{YELLOW}{OxfordPaletteYellow}
-    \colorlet{ORANGE}{OxfordPaletteOrange}
-    \colorlet{RED}{OxfordPaletteRed}
-    \colorlet{GRAY}{OxfordPaletteGray}
+    \colorlet{BACKGROUND}{ThemePaletteLightBackground}
+    \colorlet{TEXT}{ThemePaletteDarkText}
+    \colorlet{BLUE}{ThemePaletteBlue}
+    \colorlet{GREEN}{ThemePaletteGreen}
+    \colorlet{YELLOW}{ThemePaletteYellow}
+    \colorlet{ORANGE}{ThemePaletteOrange}
+    \colorlet{RED}{ThemePaletteRed}
+    \colorlet{GRAY}{ThemePaletteGray}
 \fi
 %%%%%% END LIGHT VS DARK %%%%%%
 
@@ -48,7 +47,7 @@
 \setbeamercolor{palette sidebar quaternary}{}%{use=structure,fg=structure.fg}
 
 
-%%% CUSTOM TO ESP %%%
+%%% CUSTOM TO LATEXPRESENTS %%%
 \setbeamercolor{titlelogo}{parent=titlelike}% Titlepage logos
 \setbeamercolor{bio}{parent=logo}% Biography photos
 \setbeamercolor{copyright}{fg=GRAY}% Copyright

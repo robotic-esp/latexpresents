@@ -1,0 +1,749 @@
+%%%%%%%%%%%% IMAGE COMMANDS %%%%%%%%%%%%
+%%% In column image %%%
+%
+% Usage: \image[optional caption][strictcaption/underhangcaption]{path/to/image}[extra options to includegraphics]
+\newlength{\latexpresents@image@captionskip}%
+\newlength{\latexpresents@image@captionheight}%
+\newsavebox{\latexpresents@image@captionbox}%
+\definecomplementarykeys{latexpresents}{imagekeys}{strictcaption}{underhangcaption}%
+\NewDocumentCommand{\image}{O{} O{} m O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[latexpresents]{imagekeys}{strictcaption=true}{}%
+        \setkeys[latexpresents]{imagekeys}{#2}%
+
+        % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+        \ifx\relax#1\relax%
+            \setlength{\latexpresents@image@captionskip}{0pt}%
+            \setlength{\latexpresents@image@captionheight}{0pt}%
+        \else%
+            \savebox{\latexpresents@image@captionbox}%
+            {%
+                \begin{minipage}{\elementwidth}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
+                    \centering%
+                    \strut#1%
+                \end{minipage}%
+            }%
+            \iflatexpresents@imagekeys@strictcaption%
+                % The height of the space between the figure and caption is (approx?) the depth of one-line of text.
+                \settodepth{\latexpresents@image@captionskip}{\usebeamerfont{caption}\strut}%
+                \settototalheight{\latexpresents@image@captionheight}{\usebox{\latexpresents@image@captionbox}}%
+            \else%
+                \setlength{\latexpresents@image@captionskip}{0pt}%
+                \setlength{\latexpresents@image@captionheight}{0pt}%
+            \fi%
+        \fi%
+
+        \centering%
+        \vfil%
+        \includegraphics[width=\elementwidth,height=\elementheight - \latexpresents@image@captionskip - \latexpresents@image@captionheight,keepaspectratio,#4]{#3}%
+        \ifx\relax#1\relax%
+        \else%
+            \usebeamerfont{caption}\\%
+            \usebox{\latexpresents@image@captionbox}%
+        \fi%
+        \vfil%
+    \endgroup%
+}%
+
+%%% Image pairs %%%
+%
+% Usage: \imagestopbottom[optional top caption]{path/to/top/image}[optional bottom caption][strictcaption/underhangcaption]{path/to/bottom/image}[extra options to top includegraphics][extra options to bottom includegraphics]
+\newlength{\latexpresents@imagestopbottom@captiontopskip}%
+\newlength{\latexpresents@imagestopbottom@captiontopheight}%
+\newsavebox{\latexpresents@imagestopbottom@captiontopbox}%
+\newlength{\latexpresents@imagestopbottom@captionbottomskip}%
+\newlength{\latexpresents@imagestopbottom@captionbottomheight}%
+\newsavebox{\latexpresents@imagestopbottom@captionbottombox}%
+\newlength{\latexpresents@imagestopbottom@imageheight}%
+\definecomplementarykeys{latexpresents}{imagestopbottomkeys}{strictcaption}{underhangcaption}%
+\NewDocumentCommand{\imagestopbottom}{O{} m O{} O{} m O{} O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[latexpresents]{imagestopbottomkeys}{strictcaption=true}{}%
+        \setkeys[latexpresents]{imagestopbottomkeys}{#4}%
+
+        % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+        \ifx\relax#1\relax%
+            \setlength{\latexpresents@imagestopbottom@captiontopskip}{0pt}%
+            \setlength{\latexpresents@imagestopbottom@captiontopheight}{0pt}%
+        \else%
+            \savebox{\latexpresents@imagestopbottom@captiontopbox}%
+            {%
+                \begin{minipage}{\elementwidth}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
+                    \centering%
+                    \strut#1%
+                \end{minipage}%
+            }%
+            % The height of the space between the figure and caption is (approx?) the depth of one-line of text.
+            \settodepth{\latexpresents@imagestopbottom@captiontopskip}{\usebeamerfont{caption}\strut}%
+            \settototalheight{\latexpresents@imagestopbottom@captiontopheight}{\usebox{\latexpresents@imagestopbottom@captiontopbox}}%
+        \fi%
+        \ifx\relax#3\relax%
+            \setlength{\latexpresents@imagestopbottom@captionbottomskip}{0pt}%
+            \setlength{\latexpresents@imagestopbottom@captionbottomheight}{0pt}%
+        \else%
+            \savebox{\latexpresents@imagestopbottom@captionbottombox}%
+            {%
+                \begin{minipage}{\elementwidth}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
+                    \centering%
+                    \strut#3%
+                \end{minipage}%
+            }%
+            \iflatexpresents@imagestopbottomkeys@strictcaption%
+                % The height of the space between the figure and caption is (approx?) the depth of one-line of text.
+                \settodepth{\latexpresents@imagestopbottom@captionbottomskip}{\usebeamerfont{caption}\strut}%
+                \settototalheight{\latexpresents@imagestopbottom@captionbottomheight}{\usebox{\latexpresents@imagestopbottom@captionbottombox}}%
+            \else%
+                \setlength{\latexpresents@imagestopbottom@captionbottomskip}{0pt}%
+                \setlength{\latexpresents@imagestopbottom@captionbottomheight}{0pt}%
+            \fi%
+        \fi%
+
+        % The height available for each individual image, splitting any space saved by underhanging a caption between the top/bottom images.
+        % elementheight = imageheight + captionskip + captionheight + gutter + imageheight + captionskip + captionheight
+        \setlength{\latexpresents@imagestopbottom@imageheight}{0.5\elementheight - 0.5\latexpresents@imagestopbottom@captiontopskip - 0.5\latexpresents@imagestopbottom@captiontopheight - 0.5\latexpresents@gutter@row - 0.5\latexpresents@imagestopbottom@captionbottomskip - 0.5\latexpresents@imagestopbottom@captionbottomheight}%
+
+        \vfil%
+        \centering%
+        \includegraphics[width=\elementwidth,height=\latexpresents@imagestopbottom@imageheight,keepaspectratio,#6]{#2}%
+        \ifx\relax#1\relax%
+        \else%
+            \usebeamerfont{caption}\\%
+            \usebox{\latexpresents@imagestopbottom@captiontopbox}%
+        \fi%
+        %I don't exactly know why this -1pt is necessary.
+        \vskip-1pt%
+        \vfil%
+        \vskip\latexpresents@gutter@row%
+        \vfil%
+        \includegraphics[width=\elementwidth,height=\latexpresents@imagestopbottom@imageheight,keepaspectratio,#7]{#5}%
+        \ifx\relax#3\relax%
+        \else%
+            \usebeamerfont{caption}\\%
+            \usebox{\latexpresents@imagestopbottom@captionbottombox}%
+        \fi%
+        \vfil%
+    \endgroup%
+}%
+%
+% Usage: \imagesleftright[optional left caption]{path/to/left/image}[optional right caption][strictcaption/underhangcaption]{path/to/right/image}[extra options to left includegraphics][extra options to right includegraphics]
+\newlength{\latexpresents@imagesleftright@captionleftskip}%
+\newlength{\latexpresents@imagesleftright@captionleftheight}%
+\newsavebox{\latexpresents@imagesleftright@captionleftbox}%
+\newlength{\latexpresents@imagesleftright@captionrightskip}%
+\newlength{\latexpresents@imagesleftright@captionrightheight}%
+\newsavebox{\latexpresents@imagesleftright@captionrightbox}%
+\newlength{\latexpresents@imagesleftright@imagewidth}%
+\definecomplementarykeys{latexpresents}{imagesleftrightkeys}{strictcaption}{underhangcaption}%
+\NewDocumentCommand{\imagesleftright}{O{} m O{} O{} m O{} O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[latexpresents]{imagesleftrightkeys}{strictcaption=true}{}%
+        \setkeys[latexpresents]{imagesleftrightkeys}{#4}%
+
+        %0.505 is to keep rounding from making the images overflow to a new line.
+        \setlength{\latexpresents@imagesleftright@imagewidth}{0.5\elementwidth - 0.505\latexpresents@gutter@column}%
+
+        % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+        \ifx\relax#1\relax%
+            \setlength{\latexpresents@imagesleftright@captionleftskip}{0pt}%
+            \setlength{\latexpresents@imagesleftright@captionleftheight}{0pt}%
+        \else%
+            \savebox{\latexpresents@imagesleftright@captionleftbox}%
+            {%
+                \begin{minipage}{\latexpresents@imagesleftright@imagewidth}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
+                    \centering%
+                    \strut#1%
+                \end{minipage}%
+            }%
+            \iflatexpresents@imagesleftrightkeys@strictcaption%
+                % The height of the space between the figure and caption is (approx?) the depth of one-line of text.
+                \settodepth{\latexpresents@imagesleftright@captionleftskip}{\usebeamerfont{caption}\strut}%
+                \settototalheight{\latexpresents@imagesleftright@captionleftheight}{\usebox{\latexpresents@imagesleftright@captionleftbox}}%
+            \else%
+                \setlength{\latexpresents@imagesleftright@captionleftskip}{0pt}%
+                \setlength{\latexpresents@imagesleftright@captionleftheight}{0pt}%
+            \fi%
+        \fi%
+        \ifx\relax#3\relax%
+            \setlength{\latexpresents@imagesleftright@captionrightskip}{0pt}%
+            \setlength{\latexpresents@imagesleftright@captionrightheight}{0pt}%
+        \else%
+            \savebox{\latexpresents@imagesleftright@captionrightbox}%
+            {%
+                \begin{minipage}{\latexpresents@imagesleftright@imagewidth}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
+                    \centering%
+                    \strut#3%
+                \end{minipage}%
+            }%
+            \iflatexpresents@imagesleftrightkeys@strictcaption%
+                % The height of the space between the figure and caption is (approx?) the depth of one-line of text.
+                \settodepth{\latexpresents@imagesleftright@captionrightskip}{\usebeamerfont{caption}\strut}%
+                \settototalheight{\latexpresents@imagesleftright@captionrightheight}{\usebox{\latexpresents@imagesleftright@captionrightbox}}%
+            \else%
+                \setlength{\latexpresents@imagesleftright@captionrightskip}{0pt}%
+                \setlength{\latexpresents@imagesleftright@captionrightheight}{0pt}%
+            \fi%
+        \fi%
+
+        \vfil%
+        \centering%
+        \includegraphics[width=\latexpresents@imagesleftright@imagewidth,height=\elementheight - \latexpresents@imagesleftright@captionleftskip - \latexpresents@imagesleftright@captionleftheight,keepaspectratio,#6]{#2}%
+        \hfil%
+        \hskip\latexpresents@gutter@column%
+        \hfil%
+        \includegraphics[width=\latexpresents@imagesleftright@imagewidth,height=\elementheight - \latexpresents@imagesleftright@captionrightskip - \latexpresents@imagesleftright@captionrightheight,keepaspectratio,#7]{#5}%
+        \ifx\relax#1\relax%
+        \else%
+            \usebeamerfont{caption}\\%
+            \usebox{\latexpresents@imagesleftright@captionleftbox}%
+        \fi%
+        \ifx\relax#3\relax%
+            \ifx\relax#1\relax%
+            \else%
+                \hfil%
+                \hspace{\latexpresents@gutter@column}%
+                \hfil%
+                \hspace{\latexpresents@imagesleftright@imagewidth}%
+                \strut%
+            \fi%
+        \else%
+            \usebeamerfont{caption}%
+            \ifx\relax#1\relax%
+                \\%
+                \hspace{\latexpresents@imagesleftright@imagewidth}%
+            \fi%
+            \hfil%
+            \hspace{\latexpresents@gutter@column}%
+            \hfil%
+            \usebox{\latexpresents@imagesleftright@captionrightbox}%
+        \fi%
+        \vfil%
+    \endgroup%
+}%
+
+%%% In column page from a pdf %%%
+%
+% Usage: \pdfpage[optional caption][strictcaption/underhangcaption]{page num}{path/to/image}[extra options to includegraphics]
+\NewDocumentCommand{\pdfpage}{O{} O{} m m O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
+        % Only pass the argument on if it exists, as setting the colour will result in a null caption.
+        \ifx\relax#1\relax%
+            \image[][#2]{#4}[page=#3,#5]%
+        \else
+            \image[\color{TEXT}#1][#2]{#4}[page=#3,#5]%
+        \fi
+    \endgroup%
+}%
+% Usage: \pdfpagestopbottom[optional top caption]{top page num}{path/to/top/image}[optional bottom caption][strictcaption/underhangcaption]{bottom page num}{path/to/bottom/image}[extra options to top includegraphics][extra options to bottom includegraphics]
+\NewDocumentCommand{\pdfpagestopbottom}{O{} m m O{} O{} m m O{} O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
+        % Only pass the argument on if it exists, as setting the colour will result in a null caption.
+        \ifx\relax#1\relax%
+            \ifx\relax#4\relax%
+                \imagestopbottom[]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \else
+                \imagestopbottom[]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \fi
+        \else
+            \ifx\relax#4\relax%
+                \imagestopbottom[\color{TEXT}#1]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \else
+                \imagestopbottom[\color{TEXT}#1]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \fi
+        \fi
+    \endgroup%
+}%
+% Usage: \pdfpagesleftright[optional left caption]{left page num}{path/to/left/image}[optional right caption][strictcaption/underhangcaption]{right page num}{path/to/right/image}[extra options to left includegraphics][extra options to right includegraphics]
+\NewDocumentCommand{\pdfpagesleftright}{O{} m m O{} O{} m m O{} O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
+        % Only pass the argument on if it exists, as setting the colour will result in a null caption.
+        \ifx\relax#1\relax%
+            \ifx\relax#4\relax%
+                \imagesleftright[]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \else
+                \imagesleftright[]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \fi
+        \else
+            \ifx\relax#4\relax%
+                \imagesleftright[\color{TEXT}#1]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \else
+                \imagesleftright[\color{TEXT}#1]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
+            \fi
+        \fi
+    \endgroup%
+}%
+
+%%% Full-screen image %%%
+%
+% Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}[extra options for includegraphics]
+\define@boolkey[latexpresents]{fullimagekeys}{darkcaption}[true]%
+{%
+    \iflatexpresents@fullimagekeys@darkcaption%
+        \def\latexpresents@fullimage@caption@textcolour{ThemePaletteLightBackground}%
+        \def\latexpresents@fullimage@caption@backgroundcolour{ThemePaletteDarkText}%
+    \fi%
+}%
+\define@boolkey[latexpresents]{fullimagekeys}{lightcaption}[true]%
+{%
+    \iflatexpresents@fullimagekeys@lightcaption%
+        \def\latexpresents@fullimage@caption@textcolour{ThemePaletteDarkText}%
+        \def\latexpresents@fullimage@caption@backgroundcolour{ThemePaletteLightBackground}%
+    \fi%
+}%
+\define@key[latexpresents]{fullimagekeys}{captiontext}%
+{%
+    \def\latexpresents@fullimage@caption@textcolour{#1}%
+}%
+\define@key[latexpresents]{fullimagekeys}{captionbackground}%
+{%
+    \def\latexpresents@fullimage@caption@backgroundcolour{#1}%
+}%
+\define@choicekey*[latexpresents]{fullimagekeys}{captionposition}[\val\nr]{southwest,south,southeast,east,northeast,north,northwest,west}%
+{%
+    \ifcase\nr\relax%
+        %\nr=0, southwest
+        \setlength{\latexpresents@fullimage@vertical}{\latexpresents@border@bottom}
+        \setlength{\latexpresents@fullimage@horizontal}{\latexpresents@border@left}
+        \def\latexpresents@fullimage@caption@node{\node[above right = \latexpresents@fullimage@vertical and \latexpresents@fullimage@horizontal of image.south west, ffgcaption, anchor = south west]}
+    \or
+        %\nr=1, south
+        \setlength{\latexpresents@fullimage@vertical}{\latexpresents@border@bottom}
+        \def\latexpresents@fullimage@caption@node{\node[above = \latexpresents@fullimage@vertical of image.south, ffgcaption, anchor = south]}
+    \or
+        %\nr=3, southeast
+        \setlength{\latexpresents@fullimage@vertical}{\latexpresents@border@bottom}
+        \setlength{\latexpresents@fullimage@horizontal}{\latexpresents@border@right}
+        \def\latexpresents@fullimage@caption@node{\node[above left = \latexpresents@fullimage@vertical and \latexpresents@fullimage@horizontal of image.south east, ffgcaption, anchor = south east]}
+    \or
+        %\nr=4, east
+        \setlength{\latexpresents@fullimage@horizontal}{\latexpresents@border@right}
+        \def\latexpresents@fullimage@caption@node{\node[left = \latexpresents@fullimage@horizontal of image.east, ffgcaption, anchor = east]}
+    \or
+        %\nr=5, northeast
+        \setlength{\latexpresents@fullimage@vertical}{\latexpresents@border@top}
+        \setlength{\latexpresents@fullimage@horizontal}{\latexpresents@border@right}
+        \def\latexpresents@fullimage@caption@node{\node[below left = \latexpresents@fullimage@vertical and \latexpresents@fullimage@horizontal of image.north east, ffgcaption, anchor = north east]}
+    \or
+        %\nr=6, north
+        \setlength{\latexpresents@fullimage@vertical}{\latexpresents@border@top}
+        \def\latexpresents@fullimage@caption@node{\node[below = \latexpresents@fullimage@vertical of image.north, ffgcaption, anchor = north]}
+    \or
+        %\nr=7, northwest
+        \setlength{\latexpresents@fullimage@vertical}{\latexpresents@border@top}
+        \setlength{\latexpresents@fullimage@horizontal}{\latexpresents@border@left}
+        \def\latexpresents@fullimage@caption@node{\node[below right = \latexpresents@fullimage@vertical and \latexpresents@fullimage@horizontal of image.north west, ffgcaption, anchor = north west]}
+    \or
+        %\nr=8, west
+        \setlength{\latexpresents@fullimage@horizontal}{\latexpresents@border@left}
+        \def\latexpresents@fullimage@caption@node{\node[right = \latexpresents@fullimage@horizontal of image.west, ffgcaption, anchor = west]}
+    \fi%
+}%
+\newlength{\latexpresents@fullimage@vertical}%
+\newlength{\latexpresents@fullimage@horizontal}%
+\NewDocumentCommand{\fullimage}{O{} O{} m O{}}%
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        % captiontext and captionbackground default to the values for darkcaption
+        \presetkeys[latexpresents]{fullimagekeys}{captionposition=southeast,captiontext=ThemePaletteLightBackground,captionbackground=ThemePaletteDarkText,darkcaption=false,lightcaption=false}{}%
+        \setkeys[latexpresents]{fullimagekeys}{#2}%
+
+        % The picture is set in TikZ, so doesn't need the container. But doing this (1) provides an easy way to create the black background and (2) ensures that the enivornment variables (e.g., dimensions) are consistent with all the other frames.
+        % This unfortunately means that we have to store the relevant borders into temporary variables (done in the captionposition key) since the noborder option termporarily zeroes out the global values.
+        \multirowlayout[nodecorations, noborder, gutter=0pt]%
+        {1.0}%
+        {%
+            % Black background
+            \textblockcolour{black}%
+
+            % Adapted from: https://www.ojdo.de/wp/2018/06/finally-the-definitive-full-frame-graphic-commands-for-beamer-in-latex/
+            \tikzset%
+            {%
+                ffgcaption/.style=%
+                {%
+                    font=\small,%
+                    text=\latexpresents@fullimage@caption@textcolour,%
+                    text opacity=1,%
+                    inner sep=0.25\baselineskip,%
+                    fill=\latexpresents@fullimage@caption@backgroundcolour,%
+                    fill opacity=.5,%
+                    rounded corners=0.5ex%
+                }%
+            }%
+            \begin{tikzpicture}[remember picture, overlay]%
+                \node[at=(current page.center), inner sep = 0pt] (image)%
+                {%
+                    \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio,#4]{#3}%
+                };%
+                \ifx\relax#1\relax%
+                \else%
+                \latexpresents@fullimage@caption@node%
+                {%
+                    #1%
+                };%
+                \fi%
+            \end{tikzpicture}%
+        }%
+    \endgroup%
+}
+%%%%%%%%%%%% END IMAGE COMMANDS %%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%% VIDEO COMMANDS %%%%%%%%%%%%
+%%% In column video %%%
+%
+% Usage: \video[optional caption][noprogress/progress, autostart/onclick, loop/once, center/nocenter]{path/to/thumbnail}{path/to/video}
+
+
+% Define keys
+\definecomplementarykeys{latexpresents}{videokeys}{autostart}{onclick}%
+\definecomplementarykeys{latexpresents}{videokeys}{loop}{once}%
+\definecomplementarykeys{latexpresents}{videokeys}{noprogress}{progress}%
+\definecomplementarykeys{latexpresents}{videokeys}{center}{nocenter}%
+\definecomplementarykeys{latexpresents}{videokeys}{strictcaption}{underhangcaption}%
+%
+\iflatexpresents@adobe%
+\else
+    % This is a hack because pdfpc (and most linux viewers) do not currently support \movie's autostart command
+    % (see: https://github.com/pdfpc/pdfpc/issues/495).
+    % This will be cleaned-up/simplified once that change makes it back.
+
+    % A whole bunch of boxes and lengths for the \href hack
+    %%% HREF HACK %%%
+    \newsavebox{\latexpresents@video@posterbox}%
+    \newlength{\latexpresents@video@fudgealignx}%
+    \setlength{\latexpresents@video@fudgealignx}{-1pt}%
+    \newlength{\latexpresents@video@fudgealigny}%
+    \setlength{\latexpresents@video@fudgealigny}{-0.9pt}%
+    \newlength{\latexpresents@video@fudgealignwidth}%
+    \setlength{\latexpresents@video@fudgealignwidth}{-1pt}%-1pt
+    \newlength{\latexpresents@video@fudgealignheight}%
+    \setlength{\latexpresents@video@fudgealignheight}{-1.9pt}%-1.9pt
+    \newbox\latexpresents@video@videobox%
+    \newlength{\latexpresents@video@width}%
+    \newlength{\latexpresents@video@height}%
+    \newlength{\latexpresents@video@depth}%
+    %%% HREF HACK %%%
+
+    % A string of parsed options to the underlying command.
+    \iflatexpresents@handout%
+        % In handout mode, all videos have the same options.
+        \def\latexpresents@video@optionstring{once,showcontrols=true}% No HREF HACK
+    \else
+        % In presentation mode, all videos receive autostarts as we achieve "onclick" by duplicating a static slide infront of an autostart slide.
+        %%% BEAMER MULTIMEDIA %%%
+        %\def\latexpresents@video@optionstring{autostart}%
+        %%% BEAMER MULTIMEDIA %%%
+        %%% HREF HACK %%%
+        \def\latexpresents@video@optionstring{?autostart}%
+        %%% HREF HACK %%%
+    \fi%
+\fi%
+%
+\newlength{\latexpresents@video@captionskip}%
+\newlength{\latexpresents@video@captionheight}%
+\newsavebox{\latexpresents@video@captionbox}%
+\NewDocumentCommand{\video}{O{} O{} m m}
+{%
+    \begingroup% Sets "scope" so settings/keys don't leak.
+        \presetkeys[latexpresents]{videokeys}{autostart=true, loop=true, noprogress=true, center=true, strictcaption=true}{}
+        \setkeys[latexpresents]{videokeys}{#2}%
+
+        % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
+        \ifx\relax#1\relax%
+            \setlength{\latexpresents@video@captionskip}{0pt}%
+            \setlength{\latexpresents@video@captionheight}{0pt}%
+        \else%
+            \savebox{\latexpresents@video@captionbox}%
+            {%
+                \begin{minipage}{\elementwidth}%
+                    \usebeamerfont{caption}%
+                    \usebeamercolor{caption}%
+                    \centering%
+                    \strut#1%
+                \end{minipage}%
+            }%
+            \iflatexpresents@videokeys@strictcaption%
+                % The height of the space between the figure and caption is (approx?) the depth of one-line of text.
+                \settodepth{\latexpresents@video@captionskip}{\usebeamerfont{caption}\strut}%
+                \settototalheight{\latexpresents@video@captionheight}{\usebox{\latexpresents@video@captionbox}}%
+            \else%
+                \setlength{\latexpresents@video@captionskip}{0pt}%
+                \setlength{\latexpresents@video@captionheight}{0pt}%
+            \fi%
+        \fi%
+
+        % Parse the options and configure the poster
+        \iflatexpresents@adobe%
+        \else%
+            \iflatexpresents@handout%
+            \else%
+                %Parse the keys into the option string for the lower-level command. Autostart is already included
+                \iflatexpresents@videokeys@noprogress%
+                   %%% HREF HACK %%%
+                   \edef\latexpresents@video@optionstring{\latexpresents@video@optionstring\&noprogress}%
+                   %%% HREF HACK %%%
+                    %%% BEAMER MULTIMEDIA %%%
+                    %\edef\latexpresents@video@optionstring{\latexpresents@video@optionstring,showcontrols=false}
+               %\else
+                   %\edef\latexpresents@video@optionstring{\latexpresents@video@optionstring,showcontrols=true}
+                    %%% BEAMER MULTIMEDIA %%%
+                \fi%
+                \iflatexpresents@videokeys@loop%
+                    %%% HREF HACK %%%
+                    \edef\latexpresents@video@optionstring{\latexpresents@video@optionstring\&loop}%
+                    %%% HREF HACK %%%
+                    %%% BEAMER MULTIMEDIA %%%
+                    %\edef\latexpresents@video@optionstring{\latexpresents@video@optionstring,loop}
+                %\else
+                    %\edef\latexpresents@video@optionstring{\latexpresents@video@optionstring,once}
+                    %%% BEAMER MULTIMEDIA %%%
+                \fi%
+            \fi%
+
+            %%% HREF HACK: Poster/video size fixes %%%
+            % Fix the size of the \href video relative to the poster
+            % Save the poster so we know its size (and ratio).
+            \savebox{\latexpresents@video@posterbox}%
+            {%
+                \includegraphics[width=\elementwidth,height=\elementheight - \latexpresents@video@captionskip - \latexpresents@video@captionheight,keepaspectratio]{#3}%
+            }%
+
+            % Calculate the size of the video from the poster
+            \settowidth{\latexpresents@video@width}{\usebox{\latexpresents@video@posterbox}}%
+            \settoheight{\latexpresents@video@height}{\usebox{\latexpresents@video@posterbox}}%
+            \settodepth{\latexpresents@video@depth}{\usebox{\latexpresents@video@posterbox}}%
+            %Then adjust to fix the difference in size
+            \addtolength{\latexpresents@video@width}{\latexpresents@video@fudgealignwidth}%
+            \addtolength{\latexpresents@video@height}{\latexpresents@video@fudgealignheight}%
+
+            % Define a box to define the video size, and put the poster inside it.
+            \setbox\latexpresents@video@videobox=\vbox{\vspace{\latexpresents@video@fudgealigny}\usebox{\latexpresents@video@posterbox}}%
+            \wd\latexpresents@video@videobox=\latexpresents@video@width%
+            \ht\latexpresents@video@videobox=\latexpresents@video@height%
+            \dp\latexpresents@video@videobox=\latexpresents@video@depth%
+            %%% HREF HACK: Poster/video size fixes %%%
+        \fi%
+
+        % Actually typeset the poster & video
+        \iflatexpresents@videokeys@center%
+            \centering%
+            \vfil%
+        \fi%
+
+        %If we are starting onclick, create a copy of the video slide showing only the poster.
+        \iflatexpresents@videokeys@onclick%
+            \iflatexpresents@handout%
+            \else%
+                \iflatexpresents@novideos%
+                \else%
+                    \only<1>%
+                    {%
+                        %%% HREF HACK %%%
+                        % When multimedia works, adobe and pdfpc will both just use an image here regardless of present/handout. Until then, we have to switch on both
+                        \iflatexpresents@adobe%
+                        %%% HREF HACK %%%
+                            \includegraphics[width=\elementwidth,height=\elementheight - \latexpresents@video@captionskip - \latexpresents@video@captionheight,keepaspectratio]{#3}%
+                        %%% HREF HACK %%%
+                        \else%
+                            \iflatexpresents@handout%
+                                \includegraphics[width=\elementwidth,height=\elementheight - \latexpresents@video@captionskip - \latexpresents@video@captionheight,keepaspectratio]{#3}%
+                            \else%
+                                %We use an empty href inorder to keep spacing exactly the same.
+                                \href%
+                                {%
+                                    %Do nothing
+                                }%
+                                {%
+                                    % Poster
+                                    % Shift the poster to line up with the video
+                                    \hskip\latexpresents@video@fudgealignx%
+                                    % Insert the video box containing the poster
+                                    \box\latexpresents@video@videobox%
+                                }%
+                            \fi%
+                        \fi%
+                        %%% HREF HACK %%%
+                        % \href can't be followed by a newline
+                        % Set the caption
+                        \ifx\relax#1\relax%
+                        \else%
+                            \usebeamerfont{caption}\\%
+                            %%% HREF HACK %%%
+                            \iflatexpresents@adobe%
+                            \else%
+                                \iflatexpresents@handout% Because handout isn't using the href hack
+                                \else%
+                                    \vspace{-\latexpresents@video@fudgealignheight}%
+                                \fi%
+                            \fi%
+                            %%% HREF HACK %%%
+                            \usebox{\latexpresents@video@captionbox}%
+                        \fi%
+                    }%
+
+                    % Start a second slide that will contain the autostart video
+                    \only<2>%
+                    {%
+                \fi%
+            \fi%
+        \fi%
+
+        % This is the video slide, regardless of autostart/onclick
+        \iflatexpresents@novideos%
+            \includegraphics[width=\elementwidth,height=\elementheight - \latexpresents@video@captionskip - \latexpresents@video@captionheight,keepaspectratio]{#3}%
+        \else
+            \iflatexpresents@adobe%
+                % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
+                % Note that we are defining \x inside a group which is closed when by USING \x, which forces the expansions of the if statements without expanding anything else. I think.
+                % https://tex.stackexchange.com/a/228329
+                % https://tex.stackexchange.com/a/152048
+                \begingroup\edef\x%
+                {%
+                    \endgroup%
+                    \noexpand\includemedia%
+                    \expandafter%
+                    [%
+                        keepaspectratio,%
+                        \iflatexpresents@handout%
+                            playbutton=fancy,% This would apparently need to be "plain" for XeLaTeX according to media9 doc.
+                            activate=onclick,%
+                            deactivate=pageinvisible,%
+                        \else%
+                            playbutton=none,%
+                            activate=pagevisible,%
+                            deactivate=pageinvisible,%
+                        \fi%
+                        passcontext,% passthrough right-clicks to VPlayer instead of Adobe Reader
+                        transparent,% transparent player background
+                        addresource=#4,%
+                        flashvars=%
+                        {%
+                            source=#4%
+                            &autoPlay=true% Automatically starts playback after activation
+                            \iflatexpresents@handout%
+                                &autoRewind=true% Automatically rewind to the first frame after playback has finished
+                            \else%
+                                \iflatexpresents@videokeys@loop%
+                                    &autoRewind=true% Automatically rewind to the first frame after playback has finished
+                                    &loop=true% Media is played in a loop
+                                \fi%
+                            \fi%
+                        }%
+                    ]%
+                    {%
+                        \includegraphics[width=\elementwidth,height=\elementheight - \latexpresents@video@captionskip - \latexpresents@video@captionheight,keepaspectratio]{#3}%
+                    }%
+                    {VPlayer.swf}%
+                }%
+                \x%
+            \else%
+                %%% HREF HACK %%%
+                % When multimedia works, the only difference between pdfpc handout and presentation will be the option string. Until then, we have to switch
+                \iflatexpresents@handout%
+                %%% HREF HACK %%%
+
+                    % Keyval options don't like macros. To make things expand in the proper order, you define a temporary variable \x with expansion tokens and then execute \x.
+                    % Note that we are defining \x inside a group which is closed when by USING \x, which forces the expansions of the if statements without expanding anything else. I think.
+                    % https://tex.stackexchange.com/a/228329
+                    % https://tex.stackexchange.com/a/152048
+                    \begingroup\edef\x%
+                    {%
+                        \endgroup%
+                        \noexpand\movie%
+                        \expandafter%
+                        [%
+                            \latexpresents@video@optionstring%
+                        ]%
+                        {%
+                            \includegraphics[width=\elementwidth,height=\elementheight - \latexpresents@video@captionskip - \latexpresents@video@captionheight,keepaspectratio]{#3}%
+                        }%
+                        {#4}%
+                    }%
+                    \x%
+                    % The \x hack can't have a new line afterwards
+                %%% HREF HACK %%%
+                \else%
+                    \href%
+                    {%
+                        % Video
+                        run:#4\latexpresents@video@optionstring%
+                    }%
+                    {%
+                        % Poster
+                        % Shift the poster to line up with the video
+                        \hskip\latexpresents@video@fudgealignx%
+                        % Insert the video box containing the poster
+                        \box\latexpresents@video@videobox%
+                    }%
+                \fi%
+                %%% HREF HACK %%%
+            \fi%
+        \fi%
+        % \href can't be followed by a newline
+        % Set the caption
+        \ifx\relax#1\relax%
+        \else%
+            \usebeamerfont{caption}\\%
+            %%% HREF HACK %%%
+            \iflatexpresents@adobe%
+            \else%
+                \iflatexpresents@handout% Because handout isn't using the href hack
+                \else%
+                    \vspace{-\latexpresents@video@fudgealignheight}%
+                \fi%
+            \fi%
+            %%% HREF HACK %%%
+            \usebox{\latexpresents@video@captionbox}%
+        \fi%
+
+        % Close the second slide created to support onclick
+        \iflatexpresents@videokeys@onclick%
+            \iflatexpresents@handout%
+            \else%
+                \iflatexpresents@novideos%
+                \else%
+                    }%
+                \fi%
+            \fi%
+        \fi%
+
+        % Center vertically
+        \iflatexpresents@videokeys@center%
+            \vfil%
+        \fi%
+    \endgroup%
+}%
+
+%%% Full-screen image%%%
+%
+% Usage: See \video for options
+\NewDocumentCommand{\fullvideo}{O{noprogress,autostart,loop} m m}%
+{%
+    \multirowlayout[nodecorations, noborder, gutter=0pt]%
+    {1.0}%
+    {%
+        % Black background
+        \textblockcolour{black}%
+        \video[][#1]{#2}{#3}
+    }%
+}
+%%%%%%%%%%%% END VIDEO COMMANDS %%%%%%%%%%%%

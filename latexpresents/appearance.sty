@@ -1,0 +1,173 @@
+%%%%%%%%%%%% APPERANCE COMMANDS %%%%%%%%%%%%
+%TODO: Should only and uncover have different counters?
+%%% INCREMENTAL UNCOVER (Stays) %%%
+\NewDocumentCommand{\uncoverstep}{+m}
+{%
+    % Step counter before so that the first \uncoverstep is slide 2
+    \stepcounter{latexpresents@counter@only}%
+    % All future slides
+    \uncover<\value{latexpresents@counter@only}->%
+    {%
+        #1
+    }%
+}%
+%%% INCREMENTAL ONLY (Goes away) %%%
+\NewDocumentCommand{\onlyonce}{+m}
+{%
+    % Just current slide
+    \only<\value{latexpresents@counter@only}>%
+    {%
+        #1
+    }%
+    \stepcounter{latexpresents@counter@only}%
+    % Step counter after so that the first \onlyonce is slide 1
+}%
+%%%% REPLACE (for one slide) %%%
+%\NewDocumentCommand{\replaceonce}{+m +m}
+%{%
+%    % Up to the current slide
+%    \only<-\value{latexpresents@counter@only}>%
+%    {%
+%        #1
+%    }%
+%    % Step counter inbetween
+%    \stepcounter{latexpresents@counter@only}%
+%    % A new slide
+%    \only<\value{latexpresents@counter@only}>%
+%    {%
+%        #2
+%    }%
+%    % Step counter inbetween
+%    \stepcounter{latexpresents@counter@only}%
+%    % All future slides
+%    \only<\value{latexpresents@counter@only}->%
+%    {%
+%      #1
+%    }%
+%}%
+
+% I no longer see a need for this duration-based function.
+% It requires an additional counter to be initialized in latexpresents/latexpresents.sty:
+%   \newcounter{latexpresents@counter@onlylast}
+%\NewDocumentCommand{\onlyfor}{m +m}
+%{%
+%    \setcounter{latexpresents@counter@onlylast}{\value{latexpresents@counter@only}}
+%    \addtocounter{latexpresents@counter@onlylast}{#1}
+%    \addtocounter{latexpresents@counter@onlylast}{-1}
+%    \only<\value{latexpresents@counter@only}-\value{latexpresents@counter@onlylast}>%
+%    {%
+%        #2
+%    }%
+%    \addtocounter{latexpresents@counter@only}{#1}%
+%}%
+%%% INCREMENTAL REVEAL %%%
+
+%%% SLIDE TRANSITIONS %%%
+% Require pdfpc > 4.4.0
+\definecomplementarykeys{latexpresents}{transition}{nodebug}{debug}%
+\NewDocumentCommand{\latexpresents@transition@cmd}{O{}}
+{%
+    \iflatexpresents@debug%
+        \presetkeys[latexpresents]{transition}{debug=true}{}%
+    \else%
+        \presetkeys[latexpresents]{transition}{debug=false}{}%
+    \fi%
+    \setkeys[latexpresents]{transition}{#1}%
+
+    \ifx\latexpresents@transition@effect\empty%
+        \transreplace%
+        \iflatexpresents@transition@debug%
+            \say{\\ `\detokenize{\\transreplace}\\}%
+        \fi%
+    \else%
+        \ifx\latexpresents@transition@time\empty%
+            \ifx\latexpresents@transition@angle\empty%
+                \latexpresents@transition@effect%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect`\\}%
+                \fi%
+            \else%
+                \latexpresents@transition@effect[direction=\latexpresents@transition@angle]%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect[direction=\latexpresents@transition@angle]`\\}%
+                \fi%
+            \fi%
+        \else%
+            \ifx\latexpresents@transition@angle\empty%
+                \latexpresents@transition@effect[duration=\latexpresents@transition@time]%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect[duration=\latexpresents@transition@time]`\\}%
+                \fi%
+            \else%
+                \latexpresents@transition@effect[duration=\latexpresents@transition@time,direction=\latexpresents@transition@angle]%
+                \iflatexpresents@transition@debug%
+                    \say{\\ `\latexpresents@transition@effect[duration=\latexpresents@transition@time,direction=\latexpresents@transition@angle]`\\}%
+                \fi%
+            \fi%
+        \fi%
+    \fi%
+}%
+% effect
+\def\latexpresents@transition@effect{}%
+\NewDocumentCommand{\settransitioneffect}{m}{\def\latexpresents@transition@effect{#1}}%
+% duration
+\def\latexpresents@transition@time{}%
+\NewDocumentCommand{\settransitiontime}{m}{\def\latexpresents@transition@time{#1}}%
+% direction
+\def\latexpresents@transition@angle{}%
+\NewDocumentCommand{\settransitionangle}{m}{\def\latexpresents@transition@angle{#1}}%
+% automatic advancement (not really ``transition duration'', despite what Beamer calls it)
+\NewDocumentCommand{\autoadvance}{m}{%
+    \transduration{#1}%
+    \say{\\***AUTO (#1s)***\\}%
+}%
+%%% SLIDE TRANSITIONS %%%
+
+%%% UNDERLINE %%%
+%From: https://alexwlchan.net/2017/10/latex-underlines/
+\renewcommand{\ULdepth}{1.45pt}
+\contourlength{0.7pt}
+\renewcommand{\emph}[1]%
+{%
+    \uline{\phantom{#1}}%
+    \llap%
+    {%
+        \usebeamercolor{background canvas}
+        \contour{background canvas.bg}{#1}%
+    }%
+}
+\NewDocumentCommand{\copyrighttext}{m}{\usebeamerfont{copyright}\usebeamercolor*{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK?}
+
+%%% MATH-COMPATIBLE COLOURED ALERTS %%%
+\NewDocumentCommand{\alertBlue}{m}{{\setBlueAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertGreen}{m}{{\setGreenAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertYellow}{m}{{\setYellowAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertOrange}{m}{{\setOrangeAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertRed}{m}{{\setRedAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertGray}{m}{{\setGrayAlert{}\alert{#1}}}%
+
+\NewDocumentCommand{\setBlueAlert}{}%
+{%
+    \setbeamercolor{alerted text}{fg=BLUE, bg=}%
+}%
+\NewDocumentCommand{\setGreenAlert}{}%
+{%
+    \setbeamercolor{alerted text}{fg=GREEN, bg=}%
+}%
+\NewDocumentCommand{\setYellowAlert}{}%
+{%
+    \setbeamercolor{alerted text}{fg=YELLOW, bg=}%
+}%
+\NewDocumentCommand{\setOrangeAlert}{}%
+{%
+    \setbeamercolor{alerted text}{fg=ORANGE, bg=}%
+}%
+\NewDocumentCommand{\setRedAlert}{}%
+{%
+    \setbeamercolor{alerted text}{fg=RED, bg=}%
+}%
+\NewDocumentCommand{\setGrayAlert}{}%
+{%
+    \setbeamercolor{alerted text}{fg=GRAY, bg=}%
+}%
+%%%%%%%%%%%% END APPERANCE COMMANDS %%%%%%%%%%%%

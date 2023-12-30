@@ -1,0 +1,18 @@
+\NewDocumentCommand{\fullimagelight}{O{} m}%
+{%
+    \PackageWarning{latexpresents}{fullimagelight is deprecated, use the 'lightcaption' option for fullimage.}%
+    \fullimage[#1][lightcaption]{#2}%
+}%
+\NewDocumentCommand{\fullimagedark}{O{} m}%
+{%
+    \PackageWarning{latexpresents}{fullimagedark is deprecated, use the 'darkcaption' option for fullimage.}%
+    \fullimage[#1][darkcaption]{#2}%
+}%
+\newenvironment{fullframe}%
+{%
+    \PackageWarning{latexpresents}{fullframe is deprecated, use frame for fullimage and fullvideo.}%
+    \begin{frame}%
+}%
+{%
+    \end{frame}%
+}%
