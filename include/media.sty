@@ -1,16 +1,16 @@
 %%%%%%%%%%%% IMAGE COMMANDS %%%%%%%%%%%%
 %%% In column image %%%
 %
-% Usage: \image[optional caption][optional extra include options][strictcaption/underhangcaption]{path/to/image}
+% Usage: \image[optional caption][strictcaption/underhangcaption]{path/to/image}[extra options to includegraphics]
 \newlength{\espbeamer@image@captionskip}%
 \newlength{\espbeamer@image@captionheight}%
 \newsavebox{\espbeamer@image@captionbox}%
 \definecomplementarykeys{espbeamer}{imagekeys}{strictcaption}{underhangcaption}%
-\NewDocumentCommand{\image}{O{} O{} O{} m}%
+\NewDocumentCommand{\image}{O{} O{} m O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \presetkeys[espbeamer]{imagekeys}{strictcaption=true}{}%
-        \setkeys[espbeamer]{imagekeys}{#3}%
+        \setkeys[espbeamer]{imagekeys}{#2}%
 
         % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
         \ifx\relax#1\relax%
@@ -38,7 +38,7 @@
 
         \centering%
         \vfil%
-        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionskip - \espbeamer@image@captionheight,keepaspectratio,#2]{#4}%
+        \includegraphics[width=\elementwidth,height=\elementheight - \espbeamer@image@captionskip - \espbeamer@image@captionheight,keepaspectratio,#4]{#3}%
         \ifx\relax#1\relax%
         \else%
             \usebeamerfont{caption}\\%
@@ -50,7 +50,7 @@
 
 %%% Image pairs %%%
 %
-% Usage: \imagestopbottom[optional top caption][optional extra top include options]{path/to/top/image}[optional bottom caption][optional extra bottom include options][strictcaption/underhangcaption]{path/to/bottom/image}
+% Usage: \imagestopbottom[optional top caption]{path/to/top/image}[optional bottom caption][strictcaption/underhangcaption]{path/to/bottom/image}[extra options to top includegraphics][extra options to bottom includegraphics]
 \newlength{\espbeamer@imagestopbottom@captiontopskip}%
 \newlength{\espbeamer@imagestopbottom@captiontopheight}%
 \newsavebox{\espbeamer@imagestopbottom@captiontopbox}%
@@ -59,11 +59,11 @@
 \newsavebox{\espbeamer@imagestopbottom@captionbottombox}%
 \newlength{\espbeamer@imagestopbottom@imageheight}%
 \definecomplementarykeys{espbeamer}{imagestopbottomkeys}{strictcaption}{underhangcaption}%
-\NewDocumentCommand{\imagestopbottom}{O{} O{} m O{} O{} O{} m}%
+\NewDocumentCommand{\imagestopbottom}{O{} m O{} O{} m O{} O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \presetkeys[espbeamer]{imagestopbottomkeys}{strictcaption=true}{}%
-        \setkeys[espbeamer]{imagestopbottomkeys}{#6}%
+        \setkeys[espbeamer]{imagestopbottomkeys}{#4}%
 
         % Set the caption and calculate its height. This is slightly wrong for multiline captions (they underhang a small mount) but at least it supports them.
         \ifx\relax#1\relax%
@@ -83,7 +83,7 @@
             \settodepth{\espbeamer@imagestopbottom@captiontopskip}{\usebeamerfont{caption}\strut}%
             \settototalheight{\espbeamer@imagestopbottom@captiontopheight}{\usebox{\espbeamer@imagestopbottom@captiontopbox}}%
         \fi%
-        \ifx\relax#4\relax%
+        \ifx\relax#3\relax%
             \setlength{\espbeamer@imagestopbottom@captionbottomskip}{0pt}%
             \setlength{\espbeamer@imagestopbottom@captionbottomheight}{0pt}%
         \else%
@@ -93,7 +93,7 @@
                     \usebeamerfont{caption}%
                     \usebeamercolor{caption}%
                     \centering%
-                    \strut#4%
+                    \strut#3%
                 \end{minipage}%
             }%
             \ifespbeamer@imagestopbottomkeys@strictcaption%
@@ -112,7 +112,7 @@
 
         \vfil%
         \centering%
-        \includegraphics[width=\elementwidth,height=\espbeamer@imagestopbottom@imageheight,keepaspectratio,#2]{#3}%
+        \includegraphics[width=\elementwidth,height=\espbeamer@imagestopbottom@imageheight,keepaspectratio,#6]{#2}%
         \ifx\relax#1\relax%
         \else%
             \usebeamerfont{caption}\\%
@@ -123,8 +123,8 @@
         \vfil%
         \vskip\espbeamer@gutter@row%
         \vfil%
-        \includegraphics[width=\elementwidth,height=\espbeamer@imagestopbottom@imageheight,keepaspectratio,#5]{#7}%
-        \ifx\relax#4\relax%
+        \includegraphics[width=\elementwidth,height=\espbeamer@imagestopbottom@imageheight,keepaspectratio,#7]{#5}%
+        \ifx\relax#3\relax%
         \else%
             \usebeamerfont{caption}\\%
             \usebox{\espbeamer@imagestopbottom@captionbottombox}%
@@ -133,7 +133,7 @@
     \endgroup%
 }%
 %
-% Usage: \imagesleftright[optional left caption][optional extra left include options]{path/to/left/image}[optional right caption][optional extra right include options][strictcaption/underhangcaption]{path/to/right/image}
+% Usage: \imagesleftright[optional left caption]{path/to/left/image}[optional right caption][strictcaption/underhangcaption]{path/to/right/image}[extra options to left includegraphics][extra options to right includegraphics]
 \newlength{\espbeamer@imagesleftright@captionleftskip}%
 \newlength{\espbeamer@imagesleftright@captionleftheight}%
 \newsavebox{\espbeamer@imagesleftright@captionleftbox}%
@@ -142,11 +142,11 @@
 \newsavebox{\espbeamer@imagesleftright@captionrightbox}%
 \newlength{\espbeamer@imagesleftright@imagewidth}%
 \definecomplementarykeys{espbeamer}{imagesleftrightkeys}{strictcaption}{underhangcaption}%
-\NewDocumentCommand{\imagesleftright}{O{} O{} m O{} O{} O{} m}%
+\NewDocumentCommand{\imagesleftright}{O{} m O{} O{} m O{} O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \presetkeys[espbeamer]{imagesleftrightkeys}{strictcaption=true}{}%
-        \setkeys[espbeamer]{imagesleftrightkeys}{#6}%
+        \setkeys[espbeamer]{imagesleftrightkeys}{#4}%
 
         %0.505 is to keep rounding from making the images overflow to a new line.
         \setlength{\espbeamer@imagesleftright@imagewidth}{0.5\elementwidth - 0.505\espbeamer@gutter@column}%
@@ -174,7 +174,7 @@
                 \setlength{\espbeamer@imagesleftright@captionleftheight}{0pt}%
             \fi%
         \fi%
-        \ifx\relax#4\relax%
+        \ifx\relax#3\relax%
             \setlength{\espbeamer@imagesleftright@captionrightskip}{0pt}%
             \setlength{\espbeamer@imagesleftright@captionrightheight}{0pt}%
         \else%
@@ -184,7 +184,7 @@
                     \usebeamerfont{caption}%
                     \usebeamercolor{caption}%
                     \centering%
-                    \strut#4%
+                    \strut#3%
                 \end{minipage}%
             }%
             \ifespbeamer@imagesleftrightkeys@strictcaption%
@@ -199,17 +199,17 @@
 
         \vfil%
         \centering%
-        \includegraphics[width=\espbeamer@imagesleftright@imagewidth,height=\elementheight - \espbeamer@imagesleftright@captionleftskip - \espbeamer@imagesleftright@captionleftheight,keepaspectratio,#2]{#3}%
+        \includegraphics[width=\espbeamer@imagesleftright@imagewidth,height=\elementheight - \espbeamer@imagesleftright@captionleftskip - \espbeamer@imagesleftright@captionleftheight,keepaspectratio,#6]{#2}%
         \hfil%
         \hskip\espbeamer@gutter@column%
         \hfil%
-        \includegraphics[width=\espbeamer@imagesleftright@imagewidth,height=\elementheight - \espbeamer@imagesleftright@captionrightskip - \espbeamer@imagesleftright@captionrightheight,keepaspectratio,#5]{#7}%
+        \includegraphics[width=\espbeamer@imagesleftright@imagewidth,height=\elementheight - \espbeamer@imagesleftright@captionrightskip - \espbeamer@imagesleftright@captionrightheight,keepaspectratio,#7]{#5}%
         \ifx\relax#1\relax%
         \else%
             \usebeamerfont{caption}\\%
             \usebox{\espbeamer@imagesleftright@captionleftbox}%
         \fi%
-        \ifx\relax#4\relax%
+        \ifx\relax#3\relax%
             \ifx\relax#1\relax%
             \else%
                 \hfil%
@@ -235,57 +235,57 @@
 
 %%% In column page from a pdf %%%
 %
-% Usage: \pdfpage[optional caption][optional extra include options][strictcaption/underhangcaption]{page num}{path/to/image}
-\NewDocumentCommand{\pdfpage}{O{} O{} O{} m m}%
+% Usage: \pdfpage[optional caption][strictcaption/underhangcaption]{page num}{path/to/image}[extra options to includegraphics]
+\NewDocumentCommand{\pdfpage}{O{} O{} m m O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
         % Only pass the argument on if it exists, as setting the colour will result in a null caption.
         \ifx\relax#1\relax%
-            \image[][#2,page=#4][#3]{#5}%
+            \image[][#2]{#4}[page=#3,#5]%
         \else
-            \image[\color{TEXT}#1][#2,page=#4][#3]{#5}%
+            \image[\color{TEXT}#1][#2]{#4}[page=#3,#5]%
         \fi
     \endgroup%
 }%
-% Usage: \pdfpagestopbottom[optional top caption][optional extra top include options]{top page num}{path/to/top/image}[optional bottom caption][optional extra bottom include options][strictcaption/underhangcaption]{bottom page num}{path/to/bottom/image}
-\NewDocumentCommand{\pdfpagestopbottom}{O{} O{} m m O{} O{} O{} m m}%
+% Usage: \pdfpagestopbottom[optional top caption]{top page num}{path/to/top/image}[optional bottom caption][strictcaption/underhangcaption]{bottom page num}{path/to/bottom/image}[extra options to top includegraphics][extra options to bottom includegraphics]
+\NewDocumentCommand{\pdfpagestopbottom}{O{} m m O{} O{} m m O{} O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
         % Only pass the argument on if it exists, as setting the colour will result in a null caption.
         \ifx\relax#1\relax%
-            \ifx\relax#5\relax%
-                \imagestopbottom[][#2,page=#3]{#4}[][#6,page=#8][#7]{#9}%
+            \ifx\relax#4\relax%
+                \imagestopbottom[]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
             \else
-                \imagestopbottom[][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#8][#7]{#9}%
+                \imagestopbottom[]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
             \fi
         \else
-            \ifx\relax#5\relax%
-                \imagestopbottom[\color{TEXT}#1][#2,page=#3]{#4}[][#6,page=#8][#7]{#9}%
+            \ifx\relax#4\relax%
+                \imagestopbottom[\color{TEXT}#1]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
             \else
-                \imagestopbottom[\color{TEXT}#1][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#8][#7]{#9}%
+                \imagestopbottom[\color{TEXT}#1]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
             \fi
         \fi
     \endgroup%
 }%
-% Usage: \pdfpagesleftright[optional left caption][optional extra left include options]{left page num}{path/to/left/image}[optional right caption][optional extra right include options][strictcaption/underhangcaption]{right page num}{path/to/right/image}
-\NewDocumentCommand{\pdfpagesleftright}{O{} O{} m m O{} O{} O{} m m}%
+% Usage: \pdfpagesleftright[optional left caption]{left page num}{path/to/left/image}[optional right caption][strictcaption/underhangcaption]{right page num}{path/to/right/image}[extra options to left includegraphics][extra options to right includegraphics]
+\NewDocumentCommand{\pdfpagesleftright}{O{} m m O{} O{} m m O{} O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         \color{black}% There's a bug/feature in some pdfs where they inherit the font colour.
         % Only pass the argument on if it exists, as setting the colour will result in a null caption.
         \ifx\relax#1\relax%
-            \ifx\relax#5\relax%
-                \imagesleftright[][#2,page=#3]{#4}[][#6,page=#8][#7]{#9}%
+            \ifx\relax#4\relax%
+                \imagesleftright[]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
             \else
-                \imagesleftright[][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#8][#7]{#9}%
+                \imagesleftright[]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
             \fi
         \else
-            \ifx\relax#5\relax%
-                \imagesleftright[\color{TEXT}#1][#2,page=#3]{#4}[][#6,page=#8][#7]{#9}%
+            \ifx\relax#4\relax%
+                \imagesleftright[\color{TEXT}#1]{#3}[][#5]{#7}[page=#2,#8][page=#6,#9]%
             \else
-                \imagesleftright[\color{TEXT}#1][#2,page=#3]{#4}[\color{TEXT}#5][#6,page=#8][#7]{#9}%
+                \imagesleftright[\color{TEXT}#1]{#3}[\color{TEXT}#4][#5]{#7}[page=#2,#8][page=#6,#9]%
             \fi
         \fi
     \endgroup%
@@ -293,7 +293,7 @@
 
 %%% Full-screen image %%%
 %
-% Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}
+% Usage: \fullimage[optional caption][optional caption text colour][optional caption background colour]{path/to/image}[extra options for includegraphics]
 \define@boolkey[espbeamer]{fullimagekeys}{darkcaption}[true]%
 {%
     \ifespbeamer@fullimagekeys@darkcaption%
@@ -358,7 +358,7 @@
 }%
 \newlength{\espbeamer@fullimage@vertical}%
 \newlength{\espbeamer@fullimage@horizontal}%
-\NewDocumentCommand{\fullimage}{O{} O{} m}%
+\NewDocumentCommand{\fullimage}{O{} O{} m O{}}%
 {%
     \begingroup% Sets "scope" so settings/keys don't leak.
         % captiontext and captionbackground default to the values for darkcaption
@@ -390,7 +390,7 @@
             \begin{tikzpicture}[remember picture, overlay]%
                 \node[at=(current page.center), inner sep = 0pt] (image)%
                 {%
-                    \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio]{#3}%
+                    \includegraphics[width=\elementwidth, height=\elementheight, keepaspectratio,#4]{#3}%
                 };%
                 \ifx\relax#1\relax%
                 \else%
