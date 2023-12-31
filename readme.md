@@ -535,6 +535,7 @@ The theme (with associated logo files) could then be used by individuals from di
 \title{Presentation}
 \name{Person}
 \group{Team}
+\date{\today}
 
 \begin{document}
   %...
