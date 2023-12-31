@@ -118,10 +118,10 @@ Commands exist to insert images into an element (i.e., column/row) of a layout:
 | --- | --- |
 | `\image[caption][image options]{image file}[includegraphics options]` | An image with an optional caption that fills as much of its layout element as it can. |
 | `\pdfpage[caption][image options]{page number}{pdf file}[includegraphics options]` | A version of `\image` with page selection. |
-| `\imagestopbottom[top caption]{top image file}[bottom caption][image options]{bottom image file}[top includegraphics options][bottom includegraphics options] | Two images stacked vertically within one layout element. |
-| `\imagesleftright[left caption]{left image file}[right caption][image options]{right image file}[left includegraphics options][right includegraphics options] | Two images stacked horizontally within one layout element. |
-| `\pdfpagestopbottom[top caption]{top page number}{top pdf file}[bottom caption][image options]{bottom page number}{bottom pdf file}[top includegraphics options][bottom includegraphics options] | A version of `\imagestopbottom` with page selection. |
-| `\pdfpagesleftright[left caption]{left page number}{left pdf file}[right caption][image options]{right page number}{right pdf file}[left includegraphics options][right includegraphics options] | A version of `\imagesleftright` with page selection. |
+| `\imagestopbottom[top caption]{top image file}[bottom caption][image options]{bottom image file}[top includegraphics options][bottom includegraphics options]` | Two images stacked vertically within one layout element. |
+| `\imagesleftright[left caption]{left image file}[right caption][image options]{right image file}[left includegraphics options][right includegraphics options]` | Two images stacked horizontally within one layout element. |
+| `\pdfpagestopbottom[top caption]{top page number}{top pdf file}[bottom caption][image options]{bottom page number}{bottom pdf file}[top includegraphics options][bottom includegraphics options]` | A version of `\imagestopbottom` with page selection. |
+| `\pdfpagesleftright[left caption]{left page number}{left pdf file}[right caption][image options]{right page number}{right pdf file}[left includegraphics options][right includegraphics options]` | A version of `\imagesleftright` with page selection. |
 ```tex
 \begin{frame}{Title}
   \twocolumneven%
