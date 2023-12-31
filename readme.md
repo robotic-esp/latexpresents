@@ -85,7 +85,7 @@ The available layout commands are:
 \end{frame}
 ```
 
-### Layout options
+### Layout Options
 The `layout options` for the layout commands are:
 | Option (default in bold) | Description |
 | --- | --- |
@@ -96,7 +96,7 @@ The `layout options` for the layout commands are:
 | `gutter=LENGTH` | The size of the space between columnes/rows. Default is the length `\latexpresents@gutter@column` defined in `latexpresents.sty`. |
 | `nodebug`, `debug` | Debug the layout. Default set by package option. Especially useful for visualizing element (i.e., column/row) size in `\multicolumnlayout`/`\multirowlayout` or with `raggedtop` and `raggedbottom`. |
 
-### Convenience commands
+### Convenience Commands
 Convenience commands exist to combine the one-element layout with media content.
 These are technically both layout and content.
 | Layout + Media | Description |
@@ -189,7 +189,7 @@ These are technically both layout and content.
 \end{frame}
 ```
 
-#### Caption options
+#### Caption Options
 The `caption options` for `\fullimage`'s overlayed caption are:
 | Option (default in bold) | Description |
 | --- | --- |
