@@ -498,7 +498,7 @@ See [Themes](https://github.com/robotic-esp/latexpresents#themes).
 | `GREEN` | A green |
 | `YELLOW` | A yellow |
 | `ORANGE` | An orange |
-| `RED}` | A red |
+| `RED` | A red |
 | `GRAY` | A gray |
 
 
