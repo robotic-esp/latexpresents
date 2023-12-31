@@ -12,7 +12,7 @@ Most slides will have a hierarchy like:
 ```tex
 \begin{frame}{title}
   %Layout command
-    %Content command(s)
+    %Content
 \end{frame}
 ```
 
@@ -46,15 +46,24 @@ The package includes the following options:
 | --- | --- |
 | `theme=PATH/TO/FILE` | Path to user-provided theme file that defines a colour palette and logos. The user-provided theme is applied on top of the default (logo-free) theme, so that a complete palette is always defined. |
 | **`light`**, `dark` | Light or dark presentation. |
-| **`pdfpc`**, `adobe` | Embed videos to support _either_ pdfpc or Adobe Acrobat. Presentation in Linux requires pdfpc. Presentation in Windows or MacOS may use pdfpc or Adobe. |
+| **`pdfpc`**, `adobe` | Target PDF reader. Affects speaker notes and how videos are embedded and other things as necessary. Presentation in Linux currently requires pdfpc. Presentation in Windows or MacOS may target either pdfpc or Adobe Acrobat. Please see note. |
 | **`present`**, `handout` | Compile file as a presentation or as a handout. Handouts simplify transitions and videos and do not include any extra slides. |
 | **`videos`**, `novideos` | Compile file with videos or with replacement images. Combine `novideos` with `handout` to make a lightweight handout. |
 | **`pagenumbers`**, `nonumbers` | Include slide numbers. |
 | **`alignedtop`**, `raggedtop` | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
 | `alignedbottom`, **`raggedbottom`** | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
+| **`titlepage`**, `notitlepage` | Automatic title slide inclusion. |
 | `debug`, **`nodebug`** | Enable global debugging. This includes layout debugging. |
 
+#### Note
+PDFs created for pdfpc currently embed videos with `\href` instead of `\movie`.
+This allows pdfpc to avoid a bug in the open-source low-level PDF library that prevents autoplay but means that
+ 1. the videos are not actually embedded in the file and must be in the same place at presentation as during compile, and
+ 2. PDFs compiled for pdfpc will not work in any other PDF viewer (specifically, the videos won't).
 
+This behaviour will change when the updated version of the library appears in enough versions of Ubuntu.
+
+PDFs created for Adobe Acrobat may work in other PDF viewers, especially on Windows and MacOS.
 
 ## Layouts
 Every frame must contain a layout command.
@@ -109,6 +118,21 @@ These are technically both layout and content.
   \imagecenter[caption]{image.png}%
 \end{frame}
 ```
+
+### Layout Dimensions
+Layout commands provide information about the space available for content (i.e., the space inside of the slide borders and decorations) and the current element (i.e., column or row).
+These LaTeX lengths can be useful for TikZ.
+| Length | Description |
+| --- | --- |
+| `\contentposx` | The x coordinate of the top-left corner of the content area of a slide. |
+| `\contentposy` | The y coordinate of the top-left corner of the content area of a slide. |
+| `\contentwidth` | The width of the content area of a slide. |
+| `\contentheight` | The height of the content area of a slide. |
+| `\elementposx` | The x coordinate of the top-left corner of the current layout element. |
+| `\elementposy` | The y coordinate of the top-left corner of the current layout element. |
+| `\elementwidth` | The width of the current layout element. |
+| `\elementheight` | The height of the current layout element. |
+
 
 
 ## Media
@@ -202,12 +226,119 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 
 
 
-## Theme
-`\name{text}`
-`\group{text}`
-`\institute{text}`
-`\contact{text}`
-`\date{text}`
+## Slide Appearance
+The package provides, modifies, and extends some LaTeX/Beaner commands for presentation appearance.
+
+### Emphasis
+Text can be highlighted or emphasized using an update to LaTeX's `\emph` and extensions to Beamer's `\alert`.
+| Command | Description |
+| --- | --- |
+| `\emph{text}` | Emphasize text with an underline that is tighter to the font baseline and gives way to descenders. |
+| `\alert{text}` | Emphasize text with bold and colour. Colour can defined by `\setXAlert` commands below. |
+| `\alertBlue{text}` | Emphasize text with bold and a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\alertGreen{text}` | Emphasize text with bold and a green from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\alertYellow{text}` | Emphasize text with bold and a yellow from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\alertOrange{text}` | Emphasize text with bold and a orange from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\alertRed{text}` | Emphasize text with bold and a red from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\alertGray{text}` | Emphasize text with bold and a gray from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+```text
+\begin{frame}{title}
+  \onecolumnfull%
+  {%
+    \begin{itemize}
+      \item \emph{Nicely underlined text}
+      \item \alertBlue{Blue and bold text}
+      \item \alertRed{Red and bold text}
+    \end{itemize}
+  }%
+\end{frame}
+```
+
+#### Advanced alert control
+Beamer uses alears in other ways (e.g., overlay specifications), you can set the colour for these as well.
+This will also change the colour of base `\alert` commands.
+| Command | Descritpion |
+| --- | --- |
+| `\setBlueAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setGreenAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setYellowAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setOrangeAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setRedAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setGrayAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+
+
+
+### Slide Transitions
+If your PDF reader supports automatic slide advancement and transition effects (e.g., pdfpc!), they can be specified in your LaTeX source:
+| Command | Description |
+| --- | --- |
+| `\autoadvance{seconds}` | Auto advance out of the current slide after the specified number of seconds. |
+| `\settransitioneffect{\effectcmd}` | Transition effect into the next slide. Must be specified before a layout command. |
+| `\settransitiontime{seconds}` | Duration of the effect into the next slide in seconds. Must be specified before a layout command. |
+| `\settransitionangle{angle}` | Angle of the effect into the next slide. Not meaningful for all transition effects. Must be specified before a layout command. |
+```tex
+\begin{frame}{title}
+  \settransitioneffect{\transfade}%
+  \settransitiontime{0.5}%
+  \onecolumnfull{...}%
+  \autoadvance{2}%
+\end{frame}
+```
+
+#### Transition Effects
+The argument to `\settransitioneffect` is a base Beamer transition command.
+Full details are available in the [Slide Transitions section of the Beamer documentation](http://mirrors.ctan.org/macros/latex/contrib/beamer/doc/beameruserguide.pdf), but include:
+| Transition Effect |
+| --- |
+| `\transblindshorizontal` |
+| `\transblindsvertical` |
+| `\transboxin` |
+| `\transboxout` |
+| `\transcover` |
+| `\transdissolve` |
+| `\transfade` |
+| `\transfly` |
+| `\transglitter` |
+| `\transpush` |
+| `\transreplace` |
+| `\transsplitverticalin` |
+| `\transsplitverticalout` |
+| `\transsplithorizontalin` |
+| `\transsplithorizontalout` |
+| `\transwipe` |
+
+
+
+## Presentation Tools
+The package provides and extends some LaTeX/Beamer commands to make presentation easier.
+
+### Speaker Notes
+The LaTeX source can contain speaker notes for each slide.
+These are currently only include if the package option `pdfpc` is specified as I don't know of an equivalent in Adobe Acrobat.
+| Command | Description |
+| --- | --- |
+| `\say{notes}` | Notes to the speaker for the current slide. Markdown is supported in pdfpc. |
+```tex
+\begin{frame}{title}
+  \onecolumnfull{...}%
+  \say%
+  {%
+      - Introduce speaker's notes\\%
+      - ...\\%
+  }%
+\end{frame}
+```
+
+
+
+### Incremental Slide Construction
+`\uncoverstep{}`
+`\onlyonce{}`
+
+
+## Slide Decorations
+
+### Logos
 `\adddarkmodelogo[]{}`
 `\addlightmodelogo[]{}`
 `\addlogo[]{}`
@@ -219,20 +350,25 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 `\resettitlelogos{}` `\resetfootlogos{}`
 `\cleartitlelogos{}` `\clearfootlogos{}`
 
-## People
+### Collaborators
 `\addperson{image file}`
 `\clearpeople{}`
 
 
-## Other
-`\say{notes}`
-`\thankspage[text][contact]`
-`\uncoverstep`
-`\onlyonce`
-`\settransitioneffect{effeft}`
-`\settransitiontime{time}`
-`\settransitionangle{angle}`
-`\autoadvance{time}`
-`\emph{}`
-`\alertBlue`,`\alertGreen`,`\alertYellow`,`\alertOrange`,`\alertRed`,`\alertGray`
-`\setBlueAlert`,`\setGreenAlert`,`\setYellowAlert`,`\setOrangeAlert`,`\setRedAlert`,`\setGrayAlert`
+
+## Theme
+
+
+## Miscellanea
+| Command | Description |
+| --- | --- |
+| `\title{text}` | Presentation title. Appears on title page. |
+| `\name{text}` | Presenter name. Appears on title page. |
+| `\group{text}` | Low-level institution. Appears on title page. |
+| `\institute{text}` | High-level institution. Appears on title page. |
+| `\date{text}` | Presentation date. Appears on title page. |
+| `\closing{text}` | Closing text. Appears on thanks page. Defaults to 'Thank you'. |
+| `\contact{text}` | Contact details (e.g., `\url{...}`, etc.). Appears on thanks page. Defaults to empty. |
+| `\titlepage` | Manually insert a title page into a frame. |
+| `\thankspage[closing][contact]` | Insert a closing page into a frame. The optional arguments "closing" and "contact" default to values set by `\closing{}` and `\contact{}`. |
+| '\extraslides{frame environments}' | Effectively an appendix. Inserts an "EXTRA SLIDE" slide and all frame environments enclosed within it are NOT included when the package option `handout` is set. |
