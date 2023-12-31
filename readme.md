@@ -112,6 +112,32 @@ These are technically both layout and content.
 
 
 ## Media
+### Fullscreen Media
+Commands exist to present images/videos in (faux) fullscreen.
+These are technically both layout and content.
+| Layout + Media | Description |
+| --- | --- |
+| `\fullimage[caption][caption options]{image file}[includegraphics options]` | A fullscreen image with an optional overlayed caption. |
+| `\fullvideo[video options]{poster file}{video file}` | A fullscreen video. See [Video Options](https://github.com/robotic-esp/latexpresents#video-options) for `video options`. |
+```tex
+\begin{frame}
+  \fullimage[caption]{image.png}%
+\end{frame}
+```
+
+#### Caption Options
+The `caption options` for `\fullimage`'s overlayed caption are:
+| Option (default in bold) | Description |
+| --- | --- |
+| **`darkcaption`**, `lightcaption`| A light-coloured font on a dark background (`darkcaption`) or a dark-coloured font on a light background (`lightcaption`) as defined by the theme palette. |
+| `captionposition=`**`southeast`**, `south`, `southwest`, `west`, `northwest`, `north`, `northeast`, `east` | Position of the caption. |
+| `captiontext=COLOUR` | The colour of the caption text. Defaults to the colour set by `darkcaption`. |
+| `captionbackground=COLOUR` | The colour of the caption background. Defaults to the colour set by `darkcaption`. |
+
+Note that `darkcaption`/`lightcaption` are directly preset combinations of `captiontext=` and `captionbackground=` and that specifying both is undefined behaviour.
+
+
+
 ### Images
 Commands exist to insert images into an element (i.e., column/row) of a layout:
 | Media | Description |
@@ -173,32 +199,6 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 | **`loop`**, `once` | Loop the video repeatedly or play it once. |
 | **`noprogress`**, `progress` | Display video progress bar. |
 | **`strictcaption`**, `underhangcaption` | See [Image Options](https://github.com/robotic-esp/latexpresents#image-options) |
-
-
-
-### Fullscreen Media
-Commands exist to present images/videos in (faux) fullscreen.
-These are technically both layout and content.
-| Media | Description |
-| --- | --- |
-| `\fullimage[caption][caption options]{image file}[includegraphics options]` | A fullscreen image with an optional overlayed caption. |
-| `\fullvideo[video options]{poster file}{video file}` | A fullscreen video. See [Video Options](https://github.com/robotic-esp/latexpresents#video-options) for `video options`. |
-```tex
-\begin{frame}
-  \fullimage[caption]{image.png}%
-\end{frame}
-```
-
-#### Caption Options
-The `caption options` for `\fullimage`'s overlayed caption are:
-| Option (default in bold) | Description |
-| --- | --- |
-| **`darkcaption`**, `lightcaption`| A light-coloured font on a dark background (`darkcaption`) or a dark-coloured font on a light background (`lightcaption`) as defined by the theme palette. |
-| `captionposition=`**`southeast`**, `south`, `southwest`, `west`, `northwest`, `north`, `northeast`, `east` | Position of the caption. |
-| `captiontext=COLOUR` | The colour of the caption text. Defaults to the colour set by `darkcaption`. |
-| `captionbackground=COLOUR` | The colour of the caption background. Defaults to the colour set by `darkcaption`. |
-
-Note that `darkcaption`/`lightcaption` are directly preset combinations of `captiontext=` and `captionbackground=` and that specifying both is undefined behaviour.
 
 
 
