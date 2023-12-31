@@ -1,9 +1,9 @@
 # LaTeX Presents 
 This is a LaTeX presentation package that wraps Beamer with the goal of being:
  - Media friendly (images and video)
- - Quick and easy to use
+ - Quick and easy to use, especially for academic style presentations
  - Visually clean and simple
-
+   
 The excellent [pdfpc](https://pdfpc.github.io/) program is highly recommended to present the resulting PDFs.
 
 The package uses the Beamer `frame` environment and defines [layouts](https://github.com/robotic-esp/latexpresents#layouts) for use within the frame.
@@ -20,7 +20,7 @@ Most slides will have a hierarchy like:
 
 
 
-## Installation
+## Installation and Use
 This package should be checked out as a subfolder to your LaTeX project named `latexpresents`:
 ```bash
 git clone https://github.com/robotic-esp/latexpresents.git latexpresents
@@ -48,7 +48,7 @@ LaTeXPresents requires the Beamer options `t` and `12pt` and is mainly developed
 The package includes the following options:
 | Option (default in bold) | Description |
 | --- | --- |
-| `theme=PATH/TO/FILE` | Path to user-provided theme file that defines a colour palette and logos. The user-provided theme is applied on top of the default (logo-free) theme, so that a complete palette is always defined. |
+| `theme=PATH/TO/FILE` | Path to user-provided theme file that defines a colour palette and logos. The user-provided theme is applied on top of the default (logo-free) theme, so that a complete palette is always defined. See [Themes](https://github.com/robotic-esp/latexpresents#themes) |
 | **`light`**, `dark` | Light or dark presentation. |
 | **`pdfpc`**, `adobe` | Target PDF reader. Affects speaker notes and how videos are embedded and other things as necessary. Presentation in Linux currently requires pdfpc. Presentation in Windows or MacOS may target either pdfpc or Adobe Acrobat. Please see note. |
 | **`present`**, `handout` | Compile file as a presentation or as a handout. Handouts simplify transitions and videos and do not include any extra slides. |
@@ -423,16 +423,32 @@ Slides are decorated by the layout commands with a slide number in the bottom ri
 ```
 
 ### Logos
-`\adddarkmodelogo[]{}`
-`\addlightmodelogo[]{}`
-`\addlogo[]{}`
-`\savelogos{}`
-`\resetlogos{}`
-`\clearlogos{}`
-`\addtitlelogo{}` `\addfootlogo{}`
-`\savetitlelogo{}` `\savefootlogo{}`
-`\resettitlelogos{}` `\resetfootlogos{}`
-`\cleartitlelogos{}` `\clearfootlogos{}`
+Slides can be decorated with logos either for the duration of the presentation (e.g., for the presenting organization) or for a select number of slides (e.g., a collaborating organization).
+Logos appear left-to-right in the order added, and different logos can be specified for the title slide and content slides.
+The logos of content slides appear in the bottom left.
+
+Logos appear on all following slides, including the title and thank you slides, until reset.
+See [Themes](https://github.com/robotic-esp/latexpresents#themes) for defining a common set of logos across multiple presentations.
+
+| Commands | Description |
+| --- | --- |
+| `\addlogo[title logo]{slide logo}` | Add the provided logos. If the optional title logo is not given, then the slide logo is also used as a title logo. |
+| `\addlightmodelogo[title logo]{slide logo}` | Add the provided logos only if in `light` mode. If the optional title logo is not given, then the slide logo is also used as a title logo. |
+| `\adddarkmodelogo[title logo]{slide logo}` | Add the provided logos only if in `dark` mode. If the optional title logo is not given, then the slide logo is also used as a title logo. |
+| `\resetlogos{}` | Reset logos to their saved state. |
+| `\savelogos{}` | Save the current state of logos for future resets. |
+| `\clearlogos{}` | Clear logos until reset. |
+```tex
+\addlogo{logo.png}
+\begin{frame}{title}
+  %Layout command. Only slide with logo.png
+\end{frame}
+\resetlogos{}%
+```
+
+
+
+
 
 ### Collaborators
 Slides can be decorated in the top right with pictures of collaborators.
@@ -450,5 +466,77 @@ Slides can be decorated in the top right with pictures of collaborators.
 ```
 
 
-## Theme
-LaTeX Presents supports theme files so that organizations can define common colour palettes and logo arrangements.
+
+
+
+## Colours
+The package defines the following colour variables from the theme files.
+These colours will change in response to the `dark`/`light` package option and may be useful for TikZ.
+See [Themes](https://github.com/robotic-esp/latexpresents#themes).
+| Colour | Description |
+| --- | --- |
+| `BACKGROUND` | The colour of the slide backgrounds. |
+| `TEXT` | The colour of the slide text. |
+| `BLUE` | A blue |
+| `GREEN` | A green |
+| `YELLOW` | A yellow |
+| `ORANGE` | An orange |
+| `RED}` | A red |
+| `GRAY` | A gray |
+
+
+
+
+## Themes
+LaTeX Presents supports theme files so that organizations can define common colour palettes and logo arrangements for use across multiple people and presentations.
+These theme files should define the colour palette (as desired, defaults come from `theme_default.sty`) and any information, logos, and any other settings you would put in the preamble of your presentation.
+
+An example theme file for an organization with multiple groups:
+```tex
+% Affiliation:
+\institute{Organization\\Conglomerate}% Possibly multiline organization name%
+\closing{Thanks!}% 
+\contact{\url{...}}% Contact details, e.g., website
+
+% Logos
+\addlightmodelogo[title logo]{foot logo}% First title and slide logos, for light mode
+\adddarkmodelogo[title logo]{foot logo}% First title and slide logos, for dark mode
+\addlightmodelogo{logo}% Second title and slide logo, for light mode
+\adddarkmodelogo{logo}% Second title and slide logo, for dark mode
+
+% Default appearance settings
+\settransitioneffect{\transfade}
+
+% Base colours
+\colorlet{ThemePaletteLightBackground}{white}% Background colour in light mode
+\colorlet{ThemePaletteDarkText}{black}% Text colour in light mode
+\colorlet{ThemePaletteDarkBackground}{black}% Background colour in dark mode
+\colorlet{ThemePaletteLightText}{white}% Text colour in dark mode
+
+% Colour palette
+\definecolor{ThemePaletteGray}{HTML}{...}% Used as GRAY
+\definecolor{ThemePaletteBlue}{HTML}{...}% Used as BLUE in light mode
+\definecolor{ThemePaletteGreen}{HTML}{...}% Used as GREEN in light mode
+\definecolor{ThemePaletteOrange}{HTML}{...}% Used as ORANGE in light mode
+\definecolor{ThemePaletteYellow}{HTML}{...}% Used YELLOW in light mode
+\definecolor{ThemePaletteRed}{HTML}{...}% Used as RED in light mode
+\definecolor{ThemePaletteLightBlue}{HTML}{...}% Used as BLUE in dark mode
+\definecolor{ThemePaletteLightGreen}{HTML}{...}% Used as GREEN in dark mode
+\definecolor{ThemePaletteLightOrange}{HTML}{...}% Used as ORANGE in dark mode
+\definecolor{ThemePaletteLightYellow}{HTML}{...}% Used YELLOW in dark mode
+\definecolor{ThemePaletteLightRed}{HTML}{...}% Used as RED in dark mode
+```
+
+The theme (with associated logo files) could then be used by individuals from different teams in their own presentations:
+```tex
+\documentclass[...]{beamer}
+\usepackage[theme=file.sty]{latexpresents/latexpresents.sty}
+
+\title{Presentation}
+\name{Person}
+\group{Team}
+
+\begin{document}
+  %...
+\end{document}
+```
