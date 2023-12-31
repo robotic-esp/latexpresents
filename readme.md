@@ -489,7 +489,7 @@ See [Themes](https://github.com/robotic-esp/latexpresents#themes).
 
 ## Themes
 LaTeX Presents supports theme files so that organizations can define common colour palettes and logo arrangements for use across multiple people and presentations.
-These theme files should define the colour palette (as desired, defaults come from `theme_default.sty`) and any information, logos, and any other settings you would put in the preamble of your presentation.
+These theme files should define the colour palette (as desired, defaults come from `theme_default.sty`) and any information, logos, and other settings that you would want every presentation to include in its preamble.
 
 An example theme file for an organization with multiple groups:
 ```tex
