@@ -34,6 +34,8 @@
 \DeclareComplementaryOption{alignedtop}{raggedtop}%
 \DeclareBoolOption[true]{raggedbottom}% latexpresents@raggedbottom
 \DeclareComplementaryOption{alignedbottom}{raggedbottom}%
+\DeclareBoolOption[true]{titlepage}% latexpresents@titlepage
+\DeclareComplementaryOption{notitlepage}{titlepage}%
 \ProcessKeyvalOptions*%
 %%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
 
@@ -235,6 +237,18 @@
 \settransitioneffect{\transfade}
 \settransitiontime{0.2}
 \settransitionangle{}
+
+\iflatexpresents@titlepage%
+    % Typesetting to be done immediately after \begin{document}.
+    % This shouldn't be done in \AtBeginDocument https://tex.stackexchange.com/a/699567
+    \AddToHook{begindocument/end}%
+    {%
+        % Insert a title page
+        \begin{frame}
+            \titlepage{}
+        \end{frame}
+    }%
+\fi%
 
 % Package initialization run at \begin{document}
 \AtBeginDocument%
