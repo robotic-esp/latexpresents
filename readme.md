@@ -2,7 +2,7 @@
 This is a LaTeX presentation package that wraps Beamer with the goal of being:
  - Media friendly (images and video)
  - Quick and easy to use, especially for academic style presentations
- - Visually clean and simple
+ - Visually consistent and simple
    
 The excellent [pdfpc](https://pdfpc.github.io/) program is highly recommended to present the resulting PDFs.
 
@@ -11,8 +11,7 @@ Each element (i.e., row or column) of a layout can be filled with any LaTeX cont
 Most slides will have a hierarchy like:
 ```tex
 \begin{frame}{title}
-  %Layout command
-    %Content
+  %Layout{%Content}
 \end{frame}
 ```
 
@@ -48,24 +47,27 @@ LaTeXPresents requires the Beamer options `t` and `12pt` and is mainly developed
 The package includes the following options:
 | Option (default in bold) | Description |
 | --- | --- |
-| `theme=PATH/TO/FILE` | Path to user-provided theme file that defines a colour palette and logos. The user-provided theme is applied on top of the default (logo-free) theme, so that a complete palette is always defined. See [Themes](https://github.com/robotic-esp/latexpresents#themes) |
+| `theme=PATH/TO/FILE` | Path to a user-provided theme file that defines a colour palette and logos and other common settings. The user-provided theme is applied on top of the default (logo-free) theme, so that a complete palette is always defined. See [Themes](https://github.com/robotic-esp/latexpresents#themes) |
 | **`light`**, `dark` | Light or dark presentation. |
 | **`pdfpc`**, `adobe` | Target PDF reader. Affects speaker notes and how videos are embedded and other things as necessary. Presentation in Linux currently requires pdfpc. Presentation in Windows or MacOS may target either pdfpc or Adobe Acrobat. Please see note. |
 | **`present`**, `handout` | Compile file as a presentation or as a handout. Handouts simplify transitions and videos and do not include any extra slides. |
 | **`videos`**, `novideos` | Compile file with videos or with replacement images. Combine `novideos` with `handout` to make a lightweight handout. |
 | **`pagenumbers`**, `nonumbers` | Include slide numbers. |
+| **`titlepage`**, `notitlepage` | Automatically include a title slide to keep your source clean. |
 | **`alignedtop`**, `raggedtop` | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
 | `alignedbottom`, **`raggedbottom`** | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
-| **`titlepage`**, `notitlepage` | Automatically include a title slide to keep your source clean. |
 | `debug`, **`nodebug`** | Enable global debugging. This includes layout debugging. |
 
 #### Note
-PDFs created for pdfpc currently embed videos with `\href` instead of `\movie`.
+PDFs created for presentation in pdfpc (i.e., `pdfpc` & `present`) currently embed videos with `\href` instead of using `\movie` from the `multimedia` package.
 This allows pdfpc to avoid a bug in the open-source low-level PDF library that prevents autoplay but means that
  1. the videos are not actually embedded in the file and must be in the same place at presentation as during compile, and
  2. PDFs compiled for pdfpc will not work in any other PDF viewer (specifically, the videos won't).
 
 This behaviour will change when the updated version of the library appears in enough versions of Ubuntu.
+
+Handouts in pdfpc mode (i.e., `pdfpc` & `handout`) will use `\movie` since autostart is always disabled in handouts, anyway.
+This means that they may also be usable with other PDF readers.
 
 PDFs created for Adobe Acrobat may work in other PDF viewers, especially on Windows and MacOS.
 
@@ -76,20 +78,20 @@ PDFs created for Adobe Acrobat may work in other PDF viewers, especially on Wind
 ## Layouts
 Every frame must contain a layout command.
 The available layout commands are:
-| Layout | Description |
-| --- | --- |
-| `\onecolumnfull[layout options]{content}` | One single element. Aliases: `\onerowfull`, `\onecolumneven`, and `\oneroweven`. |
-| `\twocolumneven[layout options]{left content}{right content}` | Two columns of equal size. |
-| `\twocolumnbigleft[layout options]{left content}{right content}` | Two columns, left bigger than right. |
-| `\twocolumnbigright[layout options]{left content}{right content}` | Two columns, right bigger than left. |
-| `\tworoweven[layout options]{top content}{bottom content}` | Two rows of equal size. |
-| `\tworowbigtop[layout options]{top content}{bottom content}` | Two rows, top bigger than the bottom. |
-| `\tworowbigbottom[layout options]{top content}{bottom content}` | Two rows, bottom bigger than the top. |
-| `\threecolumneven[layout options]{left content}{middle content}{right content}` | Three columns of equal size. |
-| `\threecolumnbigleft[layout options]{left content}{middle content}{right content}` | Three columns, left bigger than the middle and right. |
-| `\threecolumnbigmiddle[layout options]{left content}{middle content}{right content}` | Three columns, middle bigger than the left and right. |
-| `\threecolumnbigright[layout options]{left content}{middle content}{right content}` | Three columns, right bigger than the left and middle. |
-| `\threeroweven[layout options]{top content}{middle content}{bottom content}` | Three rows of equal size. |
+| Layout | Description | Element sizes |
+| --- | --- | --- |
+| `\onecolumnfull[layout options]{content}` | One single element. Aliases: `\onerowfull`, `\onecolumneven`, and `\oneroweven`. | 1.0 |
+| `\twocolumneven[layout options]{left content}{right content}` | Two columns of equal size. | 0.5:0.5 |
+| `\twocolumnbigleft[layout options]{left content}{right content}` | Two columns, left bigger than right. | 0.66:0.33 |
+| `\twocolumnbigright[layout options]{left content}{right content}` | Two columns, right bigger than left. | 0.33:0.66 |
+| `\tworoweven[layout options]{top content}{bottom content}` | Two rows of equal size. | 0.5:0.5 |
+| `\tworowbigtop[layout options]{top content}{bottom content}` | Two rows, top bigger than the bottom. | 0.66:0.33 |
+| `\tworowbigbottom[layout options]{top content}{bottom content}` | Two rows, bottom bigger than the top. | 0.33:0.66 |
+| `\threecolumneven[layout options]{left content}{middle content}{right content}` | Three columns of equal size. | 0.33:0.33:0.33 |
+| `\threecolumnbigleft[layout options]{left content}{middle content}{right content}` | Three columns, left bigger than the middle and right. | 0.5:0.25:0.25 |
+| `\threecolumnbigmiddle[layout options]{left content}{middle content}{right content}` | Three columns, middle bigger than the left and right. | 0.25:0.5:0.25 |
+| `\threecolumnbigright[layout options]{left content}{middle content}{right content}` | Three columns, right bigger than the left and middle. | 0.25:0.25:0.5 |
+| `\threeroweven[layout options]{top content}{middle content}{bottom content}` | Three rows of equal size. | 0.33:0.33:0.33 |
 | |
 | `\multicolumnlayout[layout options]{left fractional size}{left content}[middle fractional size][middle content][right fractional size][right content]` | Arbitrary sized 1--3 column layout. The fractional size arguments must each be between 0.0 and 1.0 and together sum to less than 1.0. |
 | `\multirowlayout[layout options]{top fractional size}{top content}[middle fractional size][middle content][bottom fractional size][bottom content]` | Arbitrary sized 1--3 row layout. The fractional size arguments must each be between 0.0 and 1.0 and together sum to less than 1.0. |
@@ -102,6 +104,8 @@ The available layout commands are:
 \end{frame}
 ```
 
+
+
 ### Layout Options
 The `layout options` for the layout commands are:
 | Option (default in bold) | Description |
@@ -110,8 +114,10 @@ The `layout options` for the layout commands are:
 | `alignedbottom`, `raggedbottom` | Align the bottom of all columns or make each one as deep as individually possible. Default set by package option. | 
 | **`decorations`**, `nodecorations` | Show decorations, e.g., title, logos, bio photos, slide number. |
 | **`border`**, `noborder` | A blank-space border around the edges of the slide. |
-| `gutter=LENGTH` | The size of the space between columnes/rows. Default is the length `\latexpresents@gutter@column` defined in `latexpresents.sty`. |
+| `gutter=LENGTH` | The size of the space between layout elements (i.e., columnes/rows). Default is the length `\latexpresents@gutter@column` defined in `latexpresents.sty`. |
 | `nodebug`, `debug` | Debug the layout. Default set by package option. Especially useful for visualizing element (i.e., column/row) size in `\multicolumnlayout`/`\multirowlayout` or with `raggedtop` and `raggedbottom`. |
+
+
 
 ### Convenience Commands
 Convenience commands exist to combine the one-element layout with media content.
@@ -126,6 +132,8 @@ These are technically both layout and content.
   \imagecenter[caption]{image.png}%
 \end{frame}
 ```
+
+
 
 ### Layout Dimensions
 Layout commands provide information about the space available for content (i.e., the space inside of the slide borders and decorations) and the current element (i.e., column or row).
@@ -146,6 +154,8 @@ These LaTeX lengths can be useful for TikZ.
 
 
 ## Media
+Commands exist to insert media (images and videos) to easily be as large as possible while maintaining their aspect ratio.
+
 ### Fullscreen Media
 Commands exist to present images/videos in (faux) fullscreen.
 These are technically both layout and content.
@@ -159,6 +169,8 @@ These are technically both layout and content.
 \end{frame}
 ```
 
+
+
 #### Caption Options
 The `caption options` for `\fullimage`'s overlayed caption are:
 | Option (default in bold) | Description |
@@ -168,7 +180,7 @@ The `caption options` for `\fullimage`'s overlayed caption are:
 | `captiontext=COLOUR` | The colour of the caption text. Defaults to the colour set by `darkcaption`. |
 | `captionbackground=COLOUR` | The colour of the caption background. Defaults to the colour set by `darkcaption`. |
 
-Note that `darkcaption`/`lightcaption` are directly preset combinations of `captiontext=` and `captionbackground=` and that specifying both is undefined behaviour.
+Note that `darkcaption`/`lightcaption` are just presets for`captiontext=` and `captionbackground=` and that specifying  a preset and manual values is undefined behaviour.
 
 
 
@@ -198,8 +210,8 @@ Commands exist to insert images into an element (i.e., column/row) of a layout:
 The same `image options` are available for the `\image` and \`pdfpage` families of commands:
 | Option (default in bold) | Description |
 | --- | --- |
-| **`strictcaption`**, `underhangcaption` | Size the image with or without considering the height of its caption. Not considering the caption height can result in a larger image but the caption appearing outside the element's reserved boundaries. This can be acceptable on an individual basis. |
-| includegraphics options | The contents of this optional argument will be passed on to the underlying `\includegraphics` as extra arguments to those used by the image command, i.e., `\includegraphics[...,options]{...}` |
+| **`strictcaption`**, `underhangcaption` | Size the image with or without considering the height of its caption. Not considering the caption height can result in a larger image but the caption appearing outside the element's reserved space. This can be acceptable on an individual basis. |
+| includegraphics options | The contents of this optional argument will be passed on to the underlying `\includegraphics` as arguments in addition to those used by the image command, i.e., `\includegraphics[...,options]{...}` |
 
 
 
@@ -220,8 +232,8 @@ A command exists to insert videos into an element (i.e., column/row) of a layout
 \end{frame}
 ```
 
-Videos play best when they are encoded with a high number of keyframes, otherwise they often skip the start.
-Linux functions are provided in `cmds/` to encode video files appropriately and create poster images, e.g., for all videos in a folder named `vids/`
+Videos have been found to play best when they are encoded with a high number of keyframes as they otherwise can skip over the start.
+Linux functions are provided in `cmds/` to (backup and) encode video files appropriately and create poster images, e.g., for all videos in a folder named `vids/`
 ```bash
 cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 ```
@@ -229,7 +241,7 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 #### Video Options
 | Option (default in bold) | Description |
 | --- | --- |
-| **`autostart`**, `onclick` | Start the video automatically or after clicking to advance the slide. Note that `onclick` works by creating two identical slides, one with the poster image and one with an autoplaying video. |
+| **`autostart`**, `onclick` | Start the video automatically (`autostart`) or after clicking to advance the slide (`onclick`). Note that `onclick` actually just creates two identical slides, one with the poster image and one with an autoplaying video, with `\only`. |
 | **`loop`**, `once` | Loop the video repeatedly or play it once. |
 | **`noprogress`**, `progress` | Display video progress bar. |
 | **`strictcaption`**, `underhangcaption` | See [Image Options](https://github.com/robotic-esp/latexpresents#image-options) |
@@ -238,7 +250,7 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 
 
 
-## Content Configuration
+## Content & Configuration
 | Command | Description |
 | --- | --- |
 | `\title{text}` | Presentation title. Appears on title page. |
@@ -251,7 +263,7 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 | | |
 | `\titlepage` | Manually insert a title slide in a frame. |
 | `\thankspage[closing][contact]` | Insert a closing slide into a frame. The optional arguments "closing" and "contact" default to values set by `\closing{}` and `\contact{}`. |
-| '\extraslides{tex}' | Effectively an appendix. Inserts a slide saying "Extra Slides" in front of the given frame environments and all those slides ARE NOT INCLUDED when the package option `handout` is set. |
+| '\extraslides{tex}' | Effectively an appendix. Inserts a slide saying "Extra Slides" in front of the given frame environments and all those slides ARE NOT INCLUDED for the `handout` package option. |
 
 
 
@@ -286,16 +298,16 @@ Text can be highlighted or emphasized using an update to LaTeX's `\emph` and ext
 ```
 
 #### Advanced alert control
-Beamer uses alears in other ways (e.g., overlay specifications), you can set the colour for these as well.
+Beamer uses alerts in other ways (e.g., overlay specifications), you can set the colour for these as well.
 This will also change the colour of base `\alert` commands.
 | Command | Descritpion |
 | --- | --- |
 | `\setBlueAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
-| `\setGreenAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
-| `\setYellowAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
-| `\setOrangeAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
-| `\setRedAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
-| `\setGrayAlert` | Set future alert's to a blue from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setGreenAlert` | Set future alert's to a green from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setYellowAlert` | Set future alert's to a yellow from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setOrangeAlert` | Set future alert's to a orange from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setRedAlert` | Set future alert's to a red from the theme. The specific blue can/will change between `light` and `dark` presentations. |
+| `\setGrayAlert` | Set future alert's to a gray from the theme. The specific blue can/will change between `light` and `dark` presentations. |
 
 
 
@@ -347,7 +359,7 @@ The package provides and extends some LaTeX/Beamer commands to make presentation
 
 ### Speaker Notes
 The LaTeX source can contain speaker notes for each slide.
-These are currently only include if the package option `pdfpc` is specified as I don't know of an equivalent in Adobe Acrobat.
+These are currently only included for the `pdfpc` package option as I don't know of an equivalent in Adobe Acrobat.
 | Command | Description |
 | --- | --- |
 | `\say{notes}` | Notes to the speaker for the current slide. Markdown is supported in pdfpc. |
@@ -365,14 +377,14 @@ These are currently only include if the package option `pdfpc` is specified as I
 
 
 ### Incremental Slide Construction
-Beamer provids a really powerful command that allows for multiple slides to be built from the content in a single frame environment.
+Beamer provides a command to build multiple slides from the content in a single frame environment.
 The command `\only<spec>{tex}` only compiles the `tex` code for slides specified by `spec` (e.g., `<1>`, `<2,4>`, `<3->`, `<1,4->`, etc.) and otherwise completely throws away the argument.
 This is a powerful way to build incremental slides, but requires manually updating the `spec` of each `\only`.
-Convenience functions are provided to automate this from the order the content appears in the source using a counter:
+Convenience functions are provided to automate this for simple cases from the order the content appears in the source using a counter:
 | Command | Description |
 | --- | --- |
-| `\uncoverstep{tex}` | Show `tex` on a new slide and keep for all following slides generated from this frame. Equivalent to `\only<counter->{tex}` |
-| `\onlyonce{tex}` | Show `tex` on a new slide and then remove for all following slides generated from this frame. Equivalent to `\only<counter>{tex}` |
+| `\uncoverstep{tex}` | Show `tex` on a new slide and keep it for all following slides generated from this frame. Equivalent to `\only<counter->{tex}` |
+| `\onlyonce{tex}` | Show `tex` on a new slide and then remove it for all following slides generated from this frame. Equivalent to `\only<counter>{tex}` |
 ```tex
 \begin{frame}{title}
   \onecolumnfull%
@@ -410,6 +422,11 @@ Convenience functions are provided to automate this from the order the content a
 
 ## Slide Decorations
 Slides are decorated by the layout commands with a slide number in the bottom right, optional title and optional subtitle in the top left (specified as per Beamer), a slide number in the bottom right, optional logos in the bottom left, and optional pictures of collaborators in the top right.
+
+Note that if a title is present, then space is reserved in the title block for a subtitle even if one is not given.
+This is to make all slides start at the same vertical position, regardless of their specific titling.
+If no title is given, then no space is reserved for a title block.
+
 ```tex
 \begin{frame}
   %Layout command
@@ -422,12 +439,14 @@ Slides are decorated by the layout commands with a slide number in the bottom ri
 \end{frame}
 ```
 
+
+
 ### Logos
 Slides can be decorated with logos either for the duration of the presentation (e.g., for the presenting organization) or for a select number of slides (e.g., a collaborating organization).
 Logos appear left-to-right in the order added, and different logos can be specified for the title slide and content slides.
 The logos of content slides appear in the bottom left.
 
-Logos appear on all following slides, including the title and thank you slides, until reset.
+Logos appear on all following slides, including the title and thanks slides but not fullscreen media, until reset.
 See [Themes](https://github.com/robotic-esp/latexpresents#themes) for defining a common set of logos across multiple presentations.
 
 | Commands | Description |
@@ -441,28 +460,26 @@ See [Themes](https://github.com/robotic-esp/latexpresents#themes) for defining a
 ```tex
 \addlogo{logo.png}
 \begin{frame}{title}
-  %Layout command. Only slide with logo.png
+  %Layout command. With logo.png
 \end{frame}
-\resetlogos{}%
+\resetlogos{}% No other slides have logo.png
 ```
-
-
 
 
 
 ### Collaborators
 Slides can be decorated in the top right with pictures of collaborators.
+Collaborators appear right-to-left in the order added and appear on all following slides until cleared (except for title and thanks slides and fullscreen media).
 | Command | Description |
 | --- | --- |
 | `\addperson{image file}` | Decorate all following slides with the provided image. |
 | `\clearpeople{}` | Remove all collaborator decorations from following slides. |
 ```tex
-\addperson{image.png}%
+\addperson{person.png}%
 \begin{frame}{title}
-  %Layout command
-    %Content command
+  %Layout command. With person.png
 \end{frame}
-\clearpeople{}%
+\clearpeople{}% No other slides have person.png
 ```
 
 
@@ -487,9 +504,10 @@ See [Themes](https://github.com/robotic-esp/latexpresents#themes).
 
 
 
+
 ## Themes
-LaTeX Presents supports theme files so that organizations can define common colour palettes and logo arrangements for use across multiple people and presentations.
-These theme files should define the colour palette (as desired, defaults come from `theme_default.sty`) and any information, logos, and other settings that you would want every presentation to include in its preamble.
+LaTeX Presents supports theme files so that organizations can define a common colour palette and logo arrangements for use across multiple people and presentations.
+These theme files should define the organization's information, logos, and colour palette (as desired, defaults come from `theme_default.sty`) and can also include other settings that you would want every presentation to include in its preamble.
 
 An example theme file for an organization with multiple groups:
 ```tex
