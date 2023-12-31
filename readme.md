@@ -16,6 +16,10 @@ Most slides will have a hierarchy like:
 \end{frame}
 ```
 
+
+
+
+
 ## Installation
 This package should be checked out as a subfolder to your LaTeX project named `latexpresents`:
 ```bash
@@ -64,6 +68,10 @@ This allows pdfpc to avoid a bug in the open-source low-level PDF library that p
 This behaviour will change when the updated version of the library appears in enough versions of Ubuntu.
 
 PDFs created for Adobe Acrobat may work in other PDF viewers, especially on Windows and MacOS.
+
+
+
+
 
 ## Layouts
 Every frame must contain a layout command.
@@ -132,6 +140,8 @@ These LaTeX lengths can be useful for TikZ.
 | `\elementposy` | The y coordinate of the top-left corner of the current layout element. |
 | `\elementwidth` | The width of the current layout element. |
 | `\elementheight` | The height of the current layout element. |
+
+
 
 
 
@@ -226,6 +236,27 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 
 
 
+
+
+## Content Configuration
+| Command | Description |
+| --- | --- |
+| `\title{text}` | Presentation title. Appears on title page. |
+| `\name{text}` | Presenter name. Appears on title page. |
+| `\group{text}` | Low-level institution. Appears on title page. |
+| `\institute{text}` | High-level institution. Appears on title page. |
+| `\date{text}` | Presentation date. Appears on title page. |
+| `\closing{text}` | Closing text. Appears on thanks page. Defaults to 'Thank you'. |
+| `\contact{text}` | Contact details (e.g., `\url{...}`, etc.). Appears on thanks page. Defaults to empty. |
+| | |
+| `\titlepage` | Manually insert a title slide in a frame. |
+| `\thankspage[closing][contact]` | Insert a closing slide into a frame. The optional arguments "closing" and "contact" default to values set by `\closing{}` and `\contact{}`. |
+| '\extraslides{tex}' | Effectively an appendix. Inserts a slide saying "Extra Slides" in front of the given frame environments and all those slides ARE NOT INCLUDED when the package option `handout` is set. |
+
+
+
+
+
 ## Slide Appearance
 The package provides, modifies, and extends some LaTeX/Beaner commands for presentation appearance.
 
@@ -246,9 +277,9 @@ Text can be highlighted or emphasized using an update to LaTeX's `\emph` and ext
   \onecolumnfull%
   {%
     \begin{itemize}
-      \item \emph{Nicely underlined text}
-      \item \alertBlue{Blue and bold text}
-      \item \alertRed{Red and bold text}
+      \item \emph{Underlined}
+      \item \alertBlue{Blue and bold}
+      \item \alertRed{Red and bold}
     \end{itemize}
   }%
 \end{frame}
@@ -280,8 +311,8 @@ If your PDF reader supports automatic slide advancement and transition effects (
 \begin{frame}{title}
   \settransitioneffect{\transfade}%
   \settransitiontime{0.5}%
-  \onecolumnfull{...}%
   \autoadvance{2}%
+  %Layout command
 \end{frame}
 ```
 
@@ -309,6 +340,8 @@ Full details are available in the [Slide Transitions section of the Beamer docum
 
 
 
+
+
 ## Presentation Tools
 The package provides and extends some LaTeX/Beamer commands to make presentation easier.
 
@@ -332,11 +365,62 @@ These are currently only include if the package option `pdfpc` is specified as I
 
 
 ### Incremental Slide Construction
-`\uncoverstep{}`
-`\onlyonce{}`
+Beamer provids a really powerful command that allows for multiple slides to be built from the content in a single frame environment.
+The command `\only<spec>{tex}` only compiles the `tex` code for slides specified by `spec` (e.g., `<1>`, `<2,4>`, `<3->`, `<1,4->`, etc.) and otherwise completely throws away the argument.
+This is a powerful way to build incremental slides, but requires manually updating the `spec` of each `\only`.
+Convenience functions are provided to automate this from the order the content appears in the source using a counter:
+| Command | Description |
+| --- | --- |
+| `\uncoverstep{tex}` | Show `tex` on a new slide and keep for all following slides generated from this frame. Equivalent to `\only<counter->{tex}` |
+| `\onlyonce{tex}` | Show `tex` on a new slide and then remove for all following slides generated from this frame. Equivalent to `\only<counter>{tex}` |
+```tex
+\begin{frame}{title}
+  \onecolumnfull%
+  {%
+    \begin{itemize}%
+        \item First
+        \uncoverstep{\item Second}%
+        \uncoverstep{\item Third}%
+    \end{itemize}%
+  }%
+\end{frame}
+```
+```tex
+\begin{frame}{title}
+  \onecolumnfull%
+  {%
+    \begin{itemize}%
+      \item Question?
+      \onlyonce%
+      {%
+        \item Answer
+      }%
+    \end{itemize}%
+  }%
+\end{frame}
+```
+
+#### Notes
+- These commands currently only work _within_ a layout command (so do not put a layout in their argument)
+- The two commands don't play the nicest together in the same frame.
+
+
+
 
 
 ## Slide Decorations
+Slides are decorated by the layout commands with a slide number in the bottom right, optional title and optional subtitle in the top left (specified as per Beamer), a slide number in the bottom right, optional logos in the bottom left, and optional pictures of collaborators in the top right.
+```tex
+\begin{frame}
+  %Layout command
+\end{frame}
+\begin{frame}{title}
+  %Layout command
+\end{frame}
+\begin{frame}{title}{subtitle}
+  %Layout command
+\end{frame}
+```
 
 ### Logos
 `\adddarkmodelogo[]{}`
@@ -351,24 +435,20 @@ These are currently only include if the package option `pdfpc` is specified as I
 `\cleartitlelogos{}` `\clearfootlogos{}`
 
 ### Collaborators
-`\addperson{image file}`
-`\clearpeople{}`
-
+Slides can be decorated in the top right with pictures of collaborators.
+| Command | Description |
+| --- | --- |
+| `\addperson{image file}` | Decorate all following slides with the provided image. |
+| `\clearpeople{}` | Remove all collaborator decorations from following slides. |
+```tex
+\addperson{image.png}%
+\begin{frame}{title}
+  %Layout command
+    %Content command
+\end{frame}
+\clearpeople{}%
+```
 
 
 ## Theme
-
-
-## Miscellanea
-| Command | Description |
-| --- | --- |
-| `\title{text}` | Presentation title. Appears on title page. |
-| `\name{text}` | Presenter name. Appears on title page. |
-| `\group{text}` | Low-level institution. Appears on title page. |
-| `\institute{text}` | High-level institution. Appears on title page. |
-| `\date{text}` | Presentation date. Appears on title page. |
-| `\closing{text}` | Closing text. Appears on thanks page. Defaults to 'Thank you'. |
-| `\contact{text}` | Contact details (e.g., `\url{...}`, etc.). Appears on thanks page. Defaults to empty. |
-| `\titlepage` | Manually insert a title page into a frame. |
-| `\thankspage[closing][contact]` | Insert a closing page into a frame. The optional arguments "closing" and "contact" default to values set by `\closing{}` and `\contact{}`. |
-| '\extraslides{frame environments}' | Effectively an appendix. Inserts an "EXTRA SLIDE" slide and all frame environments enclosed within it are NOT included when the package option `handout` is set. |
+LaTeX Presents supports theme files so that organizations can define common colour palettes and logo arrangements.
