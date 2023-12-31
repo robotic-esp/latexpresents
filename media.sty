@@ -555,7 +555,7 @@
             \else%
                 \iflatexpresents@novideos%
                 \else%
-                    \only<1>%
+                    \onlyonce%
                     {%
                         %%% HREF HACK %%%
                         % When multimedia works, adobe and pdfpc will both just use an image here regardless of present/handout. Until then, we have to switch on both
@@ -601,7 +601,7 @@
                     }%
 
                     % Start a second slide that will contain the autostart video
-                    \only<2>%
+                    \onlyonce%
                     {%
                 \fi%
             \fi%
