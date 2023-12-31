@@ -28,7 +28,7 @@ git clone https://github.com/robotic-esp/latexpresents.git latexpresents
 This package is then used in your LaTeX project directly as cloned from the repository.
 Your LaTeX document's preamble should look like:
 ```tex
-\documentclass[aspectratio=169,t,12pt]{beamer}
+\documentclass[aspectratio=169,12pt]{beamer}
 % Aspect ratios: 169 (16:9), 1610 (16:10), 149 (14:9), 32 (3:2), 141 (1.41:1), 43 (4:3), 54 (5:4)
 
 \usepackage[package options]{latexpresents/latexpresents.sty}
@@ -39,7 +39,7 @@ Your LaTeX document's preamble should look like:
 %...
 \end{document}
 ```
-LaTeXPresents requires the Beamer options `t` and `12pt` and is mainly developed/tested on the `16:9` aspect ratio, but the other ratios will work (in theory).
+LaTeXPresents is developed/tested with `12pt` font and an `16:9` aspect ratio (sometimes 4:3). Other ratios will work to varying degrees. Other font size may also work, but some spacing bugs may appear in places like media captions.
 
 
 
