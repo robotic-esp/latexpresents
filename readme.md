@@ -56,7 +56,7 @@ The package includes the following options:
 | **`pagenumbers`**, `nonumbers` | Include slide numbers. |
 | **`alignedtop`**, `raggedtop` | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
 | `alignedbottom`, **`raggedbottom`** | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
-| **`titlepage`**, `notitlepage` | Automatic title slide inclusion. |
+| **`titlepage`**, `notitlepage` | Automatically include a title slide to keep your source clean. |
 | `debug`, **`nodebug`** | Enable global debugging. This includes layout debugging. |
 
 #### Note
