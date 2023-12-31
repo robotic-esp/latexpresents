@@ -22,7 +22,7 @@ This package should be checked out as a subfolder to your LaTeX project named `l
 git clone https://github.com/robotic-esp/latexpresents.git latexpresents
 ```
 
-This package is then used in your LaTeX project directly as cloned from the repo.
+This package is then used in your LaTeX project directly as cloned from the repository.
 Your LaTeX document's preamble should look like:
 ```tex
 \documentclass[aspectratio=169,t,12pt]{beamer}
@@ -40,19 +40,19 @@ LaTeXPresents requires the Beamer options `t` and `12pt` and is mainly developed
 
 
 
-## Package Options
+### Package Options
 The package includes the following options:
 | Option (default in bold) | Description |
 | --- | --- |
 | `theme=PATH/TO/FILE` | Path to user-provided theme file that defines a colour palette and logos. The user-provided theme is applied on top of the default (logo-free) theme, so that a complete palette is always defined. |
-| **`light`**,`dark` | Light or dark presentation. |
-| **`pdfpc`**,`adobe` | Embed videos to support _either_ pdfpc or Adobe Acrobat. Presentation in Linux requires pdfpc. Presentation in Windows or MacOS may use pdfpc or Adobe. |
-| **present**,handout | Compile file as a presentation or as a handout. Handouts simplify transitions and videos and do not include any extra slides. |
-| **videos**,novideos | Compile file with videos or with replacement images. Combine `novideos` with `handout` to make a lightweight handout. |
-| **pagenumbers**,nonumbers | Include slide numbers. |
-| **alignedtop**,raggedtop | Set the global layout default. See [Layouts](https://github.com/robotic-esp/latexpresents#layouts) |
-| alignedbottom,**raggedbottom** | Set the global layout default. See [Layouts](https://github.com/robotic-esp/latexpresents#layouts) |
-| debug, **nodebug** | Enable global debugging. This includes layout debugging. |
+| **`light`**, `dark` | Light or dark presentation. |
+| **`pdfpc`**, `adobe` | Embed videos to support _either_ pdfpc or Adobe Acrobat. Presentation in Linux requires pdfpc. Presentation in Windows or MacOS may use pdfpc or Adobe. |
+| **`present`**, `handout` | Compile file as a presentation or as a handout. Handouts simplify transitions and videos and do not include any extra slides. |
+| **`videos`**, `novideos` | Compile file with videos or with replacement images. Combine `novideos` with `handout` to make a lightweight handout. |
+| **`pagenumbers`**, `nonumbers` | Include slide numbers. |
+| **`alignedtop`**, `raggedtop` | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
+| `alignedbottom`, **`raggedbottom`** | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
+| `debug`, **`nodebug`** | Enable global debugging. This includes layout debugging. |
 
 
 
@@ -89,15 +89,15 @@ The available layout commands are:
 The `layout options` for the layout commands are:
 | Option (default in bold) | Description |
 | --- | --- |
-| `alignedtop`,`raggedtop` | Align the top of all columns or make each column as tall as individually possible. Default set by package option. |
-| `alignedbottom`,`raggedbottom` | Align the bottom of all columns or make each one as deep as individually possible. Default set by package option. | 
-| **`decorations`**,`nodecorations` | Show decorations, e.g., title, logos, bio photos, slide number. |
-| **`border`**,`noborder` | A blank-space border around the edges of the slide. |
+| `alignedtop`, `raggedtop` | Align the top of all columns or make each column as tall as individually possible. Default set by package option. |
+| `alignedbottom`, `raggedbottom` | Align the bottom of all columns or make each one as deep as individually possible. Default set by package option. | 
+| **`decorations`**, `nodecorations` | Show decorations, e.g., title, logos, bio photos, slide number. |
+| **`border`**, `noborder` | A blank-space border around the edges of the slide. |
 | `gutter=LENGTH` | The size of the space between columnes/rows. Default is the length `\latexpresents@gutter@column` defined in `latexpresents.sty`. |
-| `nodebug`,`debug` | Debug the layout. Default set by package option. Especially useful for visualizing element (i.e., column/row) size in `\multicolumnlayout`/`\multirowlayout` or with `raggedtop` and `raggedbottom`. |
+| `nodebug`, `debug` | Debug the layout. Default set by package option. Especially useful for visualizing element (i.e., column/row) size in `\multicolumnlayout`/`\multirowlayout` or with `raggedtop` and `raggedbottom`. |
 
 ### Convenience commands
-Concenience commands exist to combine the one-element layout with media content.
+Convenience commands exist to combine the one-element layout with media content.
 These are technically both layout and content.
 | Layout + Media | Description |
 | --- | --- |
@@ -111,33 +111,8 @@ These are technically both layout and content.
 ```
 
 
-
-## Fullscreen Media
-Commands exist to present images/videos in (faux) fullscreen.
-These are technically both layout and content.
-| Media | Description |
-| --- | --- |
-| `\fullimage[caption][caption options]{image file}[includegraphics options]` | A fullscreen image with an optional overlayed caption. |
-| `\fullvideo[video options]{poster file}{video file}` | A fullscreen video. See [Videos](https://github.com/robotic-esp/latexpresents#videos) for `video options`. |
-```tex
-\begin{frame}
-  \fullimage[caption]{image.png}%
-\end{frame}
-```
-
-### Caption options
-The `caption options` for `\fullimage`'s overlayed caption are:
-| Option (default in bold) | Description |
-| --- | --- |
-| **`darkcaption`**,`lightcaption`| A light-coloured font on a dark background (`darkcaption`) or a dark-coloured font on a light background (`lightcaption`) as defined by the theme palette. |
-| `captionposition=`**`southeast`**,`south`,`southwest`,`west`,`northwest`,`north`,`northeast`,`east` | Position of the caption. |
-| `captiontext=COLOUR` | The colour of the caption text. Defaults to the colour set by `darkcaption`. |
-| `captionbackground=COLOUR` | The colour of the caption background. Defaults to the colour set by `darkcaption`. |
-Note that `darkcaption`/`lightcaption` are directly preset combinations of `captiontext=` and `captionbackground=` and that specifying both is undefined behaviour.
-
-
-
-## Images
+## Media
+### Images
 Commands exist to insert images into an element (i.e., column/row) of a layout:
 | Media | Description |
 | --- | --- |
@@ -159,16 +134,16 @@ Commands exist to insert images into an element (i.e., column/row) of a layout:
 \end{frame}
 ```
 
-### Image Options
-The same `image options` are available for tje `\image` and \`pdfpage` families of commands:
+#### Image Options
+The same `image options` are available for the `\image` and \`pdfpage` families of commands:
 | Option (default in bold) | Description |
 | --- | --- |
-| **`strictcaption`**,`underhangcaption` | Size the image with or without considering the height of its caption. No consdiering the caption height can result in a larger image but the caption appearing outside the element's reserved boundaries. This can be acceptable on an individual basis. |
+| **`strictcaption`**, `underhangcaption` | Size the image with or without considering the height of its caption. Not considering the caption height can result in a larger image but the caption appearing outside the element's reserved boundaries. This can be acceptable on an individual basis. |
 | includegraphics options | The contents of this optional argument will be passed on to the underlying `\includegraphics` as extra arguments to those used by the image command, i.e., `\includegraphics[...,options]{...}` |
 
 
 
-## Videos
+### Videos
 A command exists to insert videos into an element (i.e., column/row) of a layout:
 | Media | Description |
 | --- | --- |
@@ -191,13 +166,39 @@ Linux functions are provided in `cmds/` to encode video files appropriately and 
 cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 ```
 
-### Video Options
+#### Video Options
 | Option (default in bold) | Description |
 | --- | --- |
-| **`autostart`**,`onclick` | Start the video automatically or after clicking to advance the slide. Note that `onclick` works by creating two identical slides, one with the poster image and one with an autoplaying video. |
-| **`loop`**,`once` | Loop the video repeatedly or play it once. |
-| **`noprogress`**,`progress` | Display video progress bar. |
-| **`strictcaption`**,`underhangcaption` | See [Images](https://github.com/robotic-esp/latexpresents#images |
+| **`autostart`**, `onclick` | Start the video automatically or after clicking to advance the slide. Note that `onclick` works by creating two identical slides, one with the poster image and one with an autoplaying video. |
+| **`loop`**, `once` | Loop the video repeatedly or play it once. |
+| **`noprogress`**, `progress` | Display video progress bar. |
+| **`strictcaption`**, `underhangcaption` | See [Image Options](https://github.com/robotic-esp/latexpresents#image-options) |
+
+
+
+### Fullscreen Media
+Commands exist to present images/videos in (faux) fullscreen.
+These are technically both layout and content.
+| Media | Description |
+| --- | --- |
+| `\fullimage[caption][caption options]{image file}[includegraphics options]` | A fullscreen image with an optional overlayed caption. |
+| `\fullvideo[video options]{poster file}{video file}` | A fullscreen video. See [Video Options](https://github.com/robotic-esp/latexpresents#video-options) for `video options`. |
+```tex
+\begin{frame}
+  \fullimage[caption]{image.png}%
+\end{frame}
+```
+
+#### Caption options
+The `caption options` for `\fullimage`'s overlayed caption are:
+| Option (default in bold) | Description |
+| --- | --- |
+| **`darkcaption`**, `lightcaption`| A light-coloured font on a dark background (`darkcaption`) or a dark-coloured font on a light background (`lightcaption`) as defined by the theme palette. |
+| `captionposition=`**`southeast`**, `south`, `southwest`, `west`, `northwest`, `north`, `northeast`, `east` | Position of the caption. |
+| `captiontext=COLOUR` | The colour of the caption text. Defaults to the colour set by `darkcaption`. |
+| `captionbackground=COLOUR` | The colour of the caption background. Defaults to the colour set by `darkcaption`. |
+
+Note that `darkcaption`/`lightcaption` are directly preset combinations of `captiontext=` and `captionbackground=` and that specifying both is undefined behaviour.
 
 
 
@@ -205,7 +206,7 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 `\name{text}`
 `\group{text}`
 `\institute{text}`
-`\contact{text}
+`\contact{text}`
 `\date{text}`
 `\adddarkmodelogo[]{}`
 `\addlightmodelogo[]{}`
