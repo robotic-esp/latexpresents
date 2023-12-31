@@ -2,7 +2,7 @@
 
 %%%%%%%%%%%% SPECIAL PAGES %%%%%%%%%%%%
 \newlength{\latexpresents@thanks@origlogowidth}
-\NewDocumentCommand{\thankspage}{+O{Thank you} +O{\latexpresents@contact}}%
+\NewDocumentCommand{\thankspage}{+O{\latexpresents@closing} +O{\latexpresents@contact}}%
 {%
     \settowidth{\latexpresents@thanks@origlogowidth}{\latexpresents@titlelogos}%
     \multirowlayout[nodecorations, gutter=0pt]%
