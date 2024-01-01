@@ -402,10 +402,13 @@ Convenience functions are provided to automate this for simple cases from the or
   \onecolumnfull%
   {%
     \begin{itemize}%
-      \item Question?
       \onlyonce%
       {%
-        \item Answer
+          \item Question?
+      }%
+      \onlyonce%
+      {%
+          \item Answer.
       }%
     \end{itemize}%
   }%
