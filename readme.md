@@ -15,7 +15,7 @@ Most slides will have a hierarchy like:
 \end{frame}
 ```
 
-## Example
+> [!TIP]
 A very [simple example of using LaTeX Presents is available on GitHub](https://github.com/robotic-esp/latexpresents_example).
 You can [see the PDF here](https://github.com/robotic-esp/latexpresents_example/blob/main/demo_presentation.pdf).
 
