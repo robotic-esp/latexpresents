@@ -3,7 +3,7 @@ This is a LaTeX presentation package that wraps Beamer with the goal of being:
  - Media friendly (images and video)
  - Quick and easy to use, especially for academic style presentations
  - Visually consistent and simple
-   
+
 The excellent [pdfpc](https://pdfpc.github.io/) program is highly recommended to present the resulting PDFs.
 
 The package uses the Beamer `frame` environment and defines [layouts](https://github.com/robotic-esp/latexpresents#layouts) for use within the frame.
@@ -15,7 +15,9 @@ Most slides will have a hierarchy like:
 \end{frame}
 ```
 
-
+## Example
+A very [simple example of using LaTeX Presents is available on GitHub](https://github.com/robotic-esp/latexpresents_example).
+You can [see the PDF here](https://github.com/robotic-esp/latexpresents_example/blob/main/demo_presentation.pdf).
 
 
 
