@@ -16,8 +16,8 @@ Most slides will have a hierarchy like:
 ```
 
 > [!TIP]
-A very [simple example of using LaTeX Presents is available on GitHub](https://github.com/robotic-esp/latexpresents_example).
-You can [see the PDF here](https://github.com/robotic-esp/latexpresents_example/blob/main/demo_presentation.pdf).
+> A very [simple example of using LaTeX Presents is available on GitHub](https://github.com/robotic-esp/latexpresents_example).
+> You can [see the PDF here](https://github.com/robotic-esp/latexpresents_example/blob/main/demo_presentation.pdf).
 
 
 
@@ -60,18 +60,18 @@ The package includes the following options:
 | `alignedbottom`, **`raggedbottom`** | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
 | `debug`, **`nodebug`** | Enable global debugging. This includes layout debugging. |
 
-#### Note
+> [!IMPORTANT]
 PDFs created for presentation in pdfpc (i.e., `pdfpc` & `present`) currently embed videos with `\href` instead of using `\movie` from the `multimedia` package.
-This allows pdfpc to avoid a bug in the open-source low-level PDF library that prevents autoplay but means that
- 1. the videos are not actually embedded in the file and must be in the same place at presentation as during compile, and
- 2. PDFs compiled for pdfpc will not work in any other PDF viewer (specifically, the videos won't).
-
-This behaviour will change when the updated version of the library appears in enough versions of Ubuntu.
-
-Handouts in pdfpc mode (i.e., `pdfpc` & `handout`) will use `\movie` since autostart is always disabled in handouts, anyway.
-This means that they may also be usable with other PDF readers.
-
-PDFs created for Adobe Acrobat may work in other PDF viewers, especially on Windows and MacOS.
+> This allows pdfpc to avoid a bug in the open-source low-level PDF library that prevents autoplay but means that
+>  1. the videos are not actually embedded in the file and must be in the same place at presentation as during compile, and
+>  2. PDFs compiled for pdfpc will not work in any other PDF viewer (specifically, the videos won't).
+> 
+> This behaviour will change when the updated version of the library appears in enough versions of Ubuntu.
+> 
+> Handouts in pdfpc mode (i.e., `pdfpc` & `handout`) will use `\movie` since autostart is always disabled in handouts anyway.
+> This means that they may also be usable with other PDF readers.
+> 
+> PDFs created for Adobe Acrobat may work in other PDF viewers, especially on Windows and MacOS.
 
 
 
@@ -182,7 +182,8 @@ The `caption options` for `\fullimage`'s overlayed caption are:
 | `captiontext=COLOUR` | The colour of the caption text. Defaults to the colour set by `darkcaption`. |
 | `captionbackground=COLOUR` | The colour of the caption background. Defaults to the colour set by `darkcaption`. |
 
-Note that `darkcaption`/`lightcaption` are just presets for`captiontext=` and `captionbackground=` and that specifying  a preset and manual values is undefined behaviour.
+> [!NOTE]
+> `darkcaption`/`lightcaption` are just presets for`captiontext=` and `captionbackground=` and specifying a preset and manual values is undefined behaviour.
 
 
 
@@ -234,11 +235,12 @@ A command exists to insert videos into an element (i.e., column/row) of a layout
 \end{frame}
 ```
 
-Videos have been found to play best when they are encoded with a high number of keyframes as they otherwise can skip over the start.
-Linux functions are provided in `cmds/` to (backup and) encode video files appropriately and create poster images, e.g., for all videos in a folder named `vids/`
-```bash
-cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
-```
+> [!IMPORTANT]
+> Videos have been found to play best when they are encoded with a high number of keyframes as they otherwise can skip over the start.
+> Linux functions are provided in `cmds/` to (backup and) encode video files appropriately and create poster images, e.g., for all videos in a folder named `vids/`
+> ```bash
+> cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
+> ```
 
 #### Video Options
 | Option (default in bold) | Description |
@@ -329,6 +331,8 @@ If your PDF reader supports automatic slide advancement and transition effects (
   %Layout command
 \end{frame}
 ```
+> [!IMPORTANT]
+> Transition effects _must_ be configured before the layout command.
 
 #### Transition Effects
 The argument to `\settransitioneffect` is a base Beamer transition command.
@@ -417,9 +421,9 @@ Convenience functions are provided to automate this for simple cases from the or
 \end{frame}
 ```
 
-#### Notes
-- These commands currently only work _within_ a layout command (so do not put a layout in their argument)
-- The two commands don't play the nicest together in the same frame.
+> [!IMPORTANT]
+> These commands currently only work _within_ a layout command (so do not put a layout in their argument).
+> The two commands also don't play the nicest together when used in the same frame.
 
 
 
