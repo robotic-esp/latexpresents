@@ -263,7 +263,7 @@ cmds/encode_videos.sh vids/ && cmds/thumbnail_videos.sh vids/
 | | |
 | `\titlepage` | Manually insert a title slide in a frame. |
 | `\thankspage[closing][contact]` | Insert a closing slide into a frame. The optional arguments "closing" and "contact" default to values set by `\closing{}` and `\contact{}`. |
-| '\extraslides{tex}' | Effectively an appendix. Inserts a slide saying "Extra Slides" in front of the given frame environments and all those slides ARE NOT INCLUDED for the `handout` package option. |
+| `\extraslides{tex}` | Effectively an appendix. Inserts a slide saying "Extra Slides" in front of the given frame environments and all those slides ARE NOT INCLUDED for the `handout` package option. |
 
 
 
