@@ -384,7 +384,7 @@ Convenience functions are provided to automate this for simple cases from the or
 | Command | Description |
 | --- | --- |
 | `\uncoverstep{tex}` | Show `tex` on a new slide and keep it for all following slides generated from this frame. Equivalent to `\only<counter->{tex}` |
-| `\onlyonce{tex}` | Show `tex` on a new slide and then remove it for all following slides generated from this frame. Equivalent to `\only<counter>{tex}` |
+| `\onlyonce{tex}` | Show `tex` on a  slide and then remove it for all following slides generated from this frame. Equivalent to `\only<counter>{tex}` |
 ```tex
 \begin{frame}{title}
   \onecolumnfull%
