@@ -5,17 +5,26 @@
 {%
     \iflatexpresents@handout%
     \else%
-    \appendix
-    \begin{frame}
-        \onecolumnfull[nodecorations]%
-        {%
-            \vfil%
-            \centering
-            \Huge\textbf{Extra Slides}
-            \vfil%
-        }%
-    \end{frame}
-    #1
+        % Insert the closing page, if requested
+        \iflatexpresents@closingpage%
+            % Set the boolean to false so that the closing page isn't added again by \end{document}
+            \setboolean{latexpresents@closingpage}{false}
+            % Insert the closing page
+            \begin{frame}
+                \closingpage{}
+            \end{frame}
+        \fi
+        \appendix
+        \begin{frame}
+            \onecolumnfull[nodecorations]%
+            {%
+                \vfil%
+                \centering
+                \Huge\textbf{Extra Slides}
+                \vfil%
+            }%
+        \end{frame}
+        #1
     \fi%
 }%
 %%%%%%%%%%%% END SPECIAL SECTIONS %%%%%%%%%%%%

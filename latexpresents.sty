@@ -26,6 +26,12 @@
 % Include videos or not (lightweight files)
 \DeclareBoolOption[false]{novideos}% latexpresents@videos
 \DeclareComplementaryOption{videos}{novideos}%
+% Include a title page automatically or not
+\DeclareBoolOption[true]{titlepage}% latexpresents@titlepage
+\DeclareComplementaryOption{notitlepage}{titlepage}%
+% Include a closing page automatically or not
+\DeclareBoolOption[true]{closingpage}% latexpresents@closingpage
+\DeclareComplementaryOption{noclosingpage}{closingpage}%
 % Configure frame-numbering scheme
 \DeclareBoolOption[true]{pagenumbers}% latexpresents@pagenumbers
 \DeclareComplementaryOption{nonumbers}{pagenumbers}%
@@ -34,8 +40,6 @@
 \DeclareComplementaryOption{alignedtop}{raggedtop}%
 \DeclareBoolOption[true]{raggedbottom}% latexpresents@raggedbottom
 \DeclareComplementaryOption{alignedbottom}{raggedbottom}%
-\DeclareBoolOption[true]{titlepage}% latexpresents@titlepage
-\DeclareComplementaryOption{notitlepage}{titlepage}%
 \ProcessKeyvalOptions*%
 %%%%%%%%%%%% END CLASS OPTIONS %%%%%%%%%%%%
 
@@ -249,6 +253,18 @@
         \end{frame}
     }%
 \fi%
+
+% Typesetting to be done immediately before \end{document}.
+\AtEndDocument%
+{%
+    %Check if the closing page needs to be set. This could be set false by the user (package option) or if \extraslides has already inserted a closing page.
+    \iflatexpresents@closingpage%
+        % Insert a closing page
+        \begin{frame}
+            \closingpage{}
+        \end{frame}
+    \fi%
+}%
 
 % Package initialization run at \begin{document}
 \AtBeginDocument%

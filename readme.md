@@ -1,7 +1,8 @@
 # LaTeX Presents 
-This is a LaTeX presentation package that wraps Beamer with the goal of being:
+This is a LaTeX presentation package that sits on top of Beamer with the goals of being:
+ - Less verbose to write
  - Media friendly (images and video)
- - Quick and easy to use, especially for academic style presentations
+ - Quick and easy to use, especially for academic style presentations with affiliations and collaborations
  - Visually consistent and simple
 
 The excellent [pdfpc](https://pdfpc.github.io/) program is highly recommended to present the resulting PDFs.
@@ -56,6 +57,7 @@ The package includes the following options:
 | **`videos`**, `novideos` | Compile file with videos or with replacement images. Combine `novideos` with `handout` to make a lightweight handout. |
 | **`pagenumbers`**, `nonumbers` | Include slide numbers. |
 | **`titlepage`**, `notitlepage` | Automatically include a title slide to keep your source clean. |
+| **`closingpage`**, `noclosingpage` | Automatically include a closing slide to keep your source clean. |
 | **`alignedtop`**, `raggedtop` | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
 | `alignedbottom`, **`raggedbottom`** | Set the global layout default. See [Layout Options](https://github.com/robotic-esp/latexpresents#layout-options) |
 | `debug`, **`nodebug`** | Enable global debugging. This includes layout debugging. |
@@ -262,12 +264,12 @@ A command exists to insert videos into an element (i.e., column/row) of a layout
 | `\group{text}` | Low-level institution. Appears on title page. |
 | `\institute{text}` | High-level institution. Appears on title page. |
 | `\date{text}` | Presentation date. Appears on title page. |
-| `\closing{text}` | Closing text. Appears on thanks page. Defaults to 'Thank you'. |
-| `\contact{text}` | Contact details (e.g., `\url{...}`, etc.). Appears on thanks page. Defaults to empty. |
+| `\closing{text}` | Closing text. Appears on closing page. Defaults to 'Thank you'. |
+| `\contact{text}` | Contact details (e.g., `\url{...}`, etc.). Appears on closing page. Defaults to empty. |
 | | |
-| `\titlepage` | Manually insert a title slide in a frame. |
-| `\thankspage[closing][contact]` | Insert a closing slide into a frame. The optional arguments "closing" and "contact" default to values set by `\closing{}` and `\contact{}`. |
-| `\extraslides{tex}` | Effectively an appendix. Inserts a slide saying "Extra Slides" in front of the given frame environments and all those slides ARE NOT INCLUDED for the `handout` package option. |
+| `\titlepage` | Manually insert a title slide into a frame. |
+| `\thankspage` | Manually insert a closing slide into a frame. |
+| `\extraslides{tex}` | Effectively an appendix. Inserts the closing slide (if enabled) and a slide saying "Extra Slides" and then the given frame environments. All those slides in the argument WILL NOT BE INCLUDED for the `handout` package option. |
 
 
 
