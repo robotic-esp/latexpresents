@@ -18,6 +18,11 @@
 }%
 \NewDocumentCommand{\backupslides}{+m}%
 {%
-    \PackageWarning{latexpresents}{backupslides is deprecated, use extraslides instead.}%
+    \PackageWarning{latexpresents}{\backupslides is deprecated, use \extraslides instead.}%
     \extraslides{#1}%
+}%
+\NewDocumentCommand{\thankspage}{+O{} +O{}}%
+{%
+    \PackageWarning{latexpresents}{\thankspage is deprecated, use \closingpage instead as configured via \closing and \contact.}%
+    \closingpage{}
 }%

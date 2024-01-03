@@ -23,10 +23,10 @@
 
 
 %%%%%%%%%%%% SPECIAL PAGES %%%%%%%%%%%%
-\newlength{\latexpresents@thanks@origlogowidth}
-\NewDocumentCommand{\thankspage}{+O{\latexpresents@closing} +O{\latexpresents@contact}}%
+\newlength{\latexpresents@closing@origlogowidth}
+\NewDocumentCommand{\closingpage}{}%
 {%
-    \settowidth{\latexpresents@thanks@origlogowidth}{\latexpresents@titlelogos}%
+    \settowidth{\latexpresents@closing@origlogowidth}{\latexpresents@titlelogos}%
     \multirowlayout[nodecorations, gutter=0pt]%
     {0.5}%
     {%
@@ -34,7 +34,7 @@
         \usebeamercolor{thanks}%
         \centering%
         \vfill%
-        #1%
+        \strut\latexpresents@closing%
     }%
     [0.5]%
     [%
@@ -42,7 +42,7 @@
         \else%
             \centering%
             \vfill%
-            \ifdim\latexpresents@thanks@origlogowidth>0.5\elementwidth%
+            \ifdim\latexpresents@closing@origlogowidth>0.5\elementwidth%
                 \resizebox{0.5\elementwidth}{!}%
                 {%
                     \usebeamercolor*{logo}%
@@ -55,7 +55,7 @@
                 \latexpresents@footlogos{}%
             \fi%
             \vfill%
-            \strut#2
+            \strut\latexpresents@contact
         \fi%
     ]%
 }%
