@@ -16,3 +16,8 @@
 {%
     \end{frame}%
 }%
+\NewDocumentCommand{\backupslides}{+m}%
+{%
+    \PackageWarning{latexpresents}{backupslides is deprecated, use extraslides instead.}%
+    \extraslides{#1}%
+}%

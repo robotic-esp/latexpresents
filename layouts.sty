@@ -1,26 +1,3 @@
-%%%%%%%%%%%% SECTIONING %%%%%%%%%%%%
-\NewDocumentCommand{\backupslides}{+m}{\extraslides{#1}}%
-\NewDocumentCommand{\extraslides}{+m}%
-{%
-    \iflatexpresents@handout%
-    \else%
-        \appendix
-        \begin{frame}
-            \onecolumnfull[nodecorations]%
-            {%
-                \vfil%
-                \centering
-                \Huge\textbf{Extra Slides}
-                \vfil%
-            }%
-        \end{frame}
-        #1
-    \fi%
-}%
-%%%%%%%%%%%% END SECTIONING %%%%%%%%%%%%
-
-
-
 %%%%%%%%%%%% LAYOUTS %%%%%%%%%%%%
 %%% ONE-COLUMN LAYOUTS %%%
 \NewDocumentCommand{\oneroweven}{O{} +m}{\onecolumnfull[#1]{#2}}% Usage: [layout flags]{content}

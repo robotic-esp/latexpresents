@@ -1,5 +1,27 @@
 % \titlepage, \partpage, \sectionpage, and \subsectionpage are defined in beamerinnertheme.sty
 
+%%%%%%%%%%%% SPECIAL SECTIONS %%%%%%%%%%%%
+\NewDocumentCommand{\extraslides}{+m}%
+{%
+    \iflatexpresents@handout%
+    \else%
+    \appendix
+    \begin{frame}
+        \onecolumnfull[nodecorations]%
+        {%
+            \vfil%
+            \centering
+            \Huge\textbf{Extra Slides}
+            \vfil%
+        }%
+    \end{frame}
+    #1
+    \fi%
+}%
+%%%%%%%%%%%% END SPECIAL SECTIONS %%%%%%%%%%%%
+
+
+
 %%%%%%%%%%%% SPECIAL PAGES %%%%%%%%%%%%
 \newlength{\latexpresents@thanks@origlogowidth}
 \NewDocumentCommand{\thankspage}{+O{\latexpresents@closing} +O{\latexpresents@contact}}%
