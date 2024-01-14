@@ -34,7 +34,7 @@ Your LaTeX document's preamble should look like:
 \documentclass[aspectratio=169,12pt]{beamer}
 % Aspect ratios: 169 (16:9), 1610 (16:10), 149 (14:9), 32 (3:2), 141 (1.41:1), 43 (4:3), 54 (5:4)
 
-\usepackage[package options]{latexpresents/latexpresents.sty}
+\usepackage[package options]{latexpresents/latexpresents}
 
 %...
 
