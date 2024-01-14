@@ -25,7 +25,7 @@ Most slides will have a hierarchy like:
 ## Installation and Use
 This package should be checked out as a subfolder to your LaTeX project named `latexpresents`:
 ```bash
-git clone https://github.com/robotic-esp/latexpresents.git latexpresents
+git clone git@github.com:robotic-esp/latexpresents.git
 ```
 
 This package is then used in your LaTeX project directly as cloned from the repository.
