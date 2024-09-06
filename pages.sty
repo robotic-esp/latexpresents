@@ -42,9 +42,9 @@
     }%
     [0.5]%
     [%
+        \centering%
         \ifx\latexpresents@footlogos\@empty%
         \else%
-            \centering%
             \vfill%
             \ifdim\latexpresents@closing@origlogowidth>0.5\elementwidth%
                 \resizebox{0.5\elementwidth}{!}%
@@ -58,9 +58,9 @@
                 \usebeamerfont*{logo}%
                 \latexpresents@footlogos{}%
             \fi%
-            \vfill%
-            \strut\latexpresents@contact
         \fi%
+        \vfill%
+        \strut\latexpresents@contact
     ]%
 }%
 %%%%%%%%%%%% END SPECIAL PAGES %%%%%%%%%%%%
