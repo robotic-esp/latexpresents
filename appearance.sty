@@ -136,6 +136,15 @@
         \contour{background canvas.bg}{#1}%
     }%
 }
+\NewDocumentCommand{\strout}{+m}%
+{%
+    #1%
+    \llap%
+    {%
+        \usebeamercolor{background canvas}
+        \contour{background canvas.bg}{\rule[\heightof{#1}/2 - 0.075ex]{\widthof{#1}}{0.1ex}}%
+    }%
+}
 \NewDocumentCommand{\copyrighttext}{m}{\usebeamerfont{copyright}\usebeamercolor*{copyright}\textcopyright{}#1 -- THIS DOESN'T WORK?}
 
 %%% MATH-COMPATIBLE COLOURED ALERTS %%%
@@ -145,29 +154,34 @@
 \NewDocumentCommand{\alertOrange}{m}{{\setOrangeAlert{}\alert{#1}}}%
 \NewDocumentCommand{\alertRed}{m}{{\setRedAlert{}\alert{#1}}}%
 \NewDocumentCommand{\alertGray}{m}{{\setGrayAlert{}\alert{#1}}}%
+\NewDocumentCommand{\alertColor}{m m}{{\setAlertColor{#1}\alert{#2}}}%
 
 \NewDocumentCommand{\setBlueAlert}{}%
 {%
-    \setbeamercolor{alerted text}{fg=BLUE, bg=}%
+    \setAlertColor{BLUE}%
 }%
 \NewDocumentCommand{\setGreenAlert}{}%
 {%
-    \setbeamercolor{alerted text}{fg=GREEN, bg=}%
+    \setAlertColor{GREEN}%
 }%
 \NewDocumentCommand{\setYellowAlert}{}%
 {%
-    \setbeamercolor{alerted text}{fg=YELLOW, bg=}%
+    \setAlertColor{YELLOW}%
 }%
 \NewDocumentCommand{\setOrangeAlert}{}%
 {%
-    \setbeamercolor{alerted text}{fg=ORANGE, bg=}%
+    \setAlertColor{ORANGE}%
 }%
 \NewDocumentCommand{\setRedAlert}{}%
 {%
-    \setbeamercolor{alerted text}{fg=RED, bg=}%
+    \setAlertColor{RED}%
 }%
 \NewDocumentCommand{\setGrayAlert}{}%
 {%
-    \setbeamercolor{alerted text}{fg=GRAY, bg=}%
+    \setAlertColor{GRAY}%
+}%
+\NewDocumentCommand{\setAlertColor}{m}%
+{%
+    \setbeamercolor{alerted text}{fg=#1, bg=}%
 }%
 %%%%%%%%%%%% END APPERANCE COMMANDS %%%%%%%%%%%%
